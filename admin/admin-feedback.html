@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en" x-data="{ sidebarOpen: false }">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Admin – Feedback | LegalLoom</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/alpinejs" defer></script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Outfit', sans-serif;
+      background-color: #f9fafb;
+    }
+  </style>
+</head>
+
+<body class="text-gray-900">
+<div class="flex min-h-screen" x-data="feedbackPanel">
+
+  <!-- Sidebar -->
+  <aside class="fixed inset-y-0 left-0 w-64 bg-white shadow-lg z-40 transform transition-transform duration-200 sm:translate-x-0" :class="{ '-translate-x-full': !sidebarOpen }">
+    <div class="flex flex-col h-full px-6 py-6">
+      <div class="flex items-center justify-between mb-8">
+        <h1 class="text-2xl font-bold text-indigo-600">Admin Panel</h1>
+        <button class="sm:hidden" @click="sidebarOpen = false">
+          <svg class="w-6 h-6 text-gray-600" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path d="M6 18L18 6M6 6l12 12" />
+          </svg>
+        </button>
+      </div>
+      <nav class="flex flex-col gap-4 text-slate-700 text-sm font-medium">
+        <a href="admin-dash.html" class="flex items-center gap-2 hover:text-indigo-600">
+          <i data-lucide="layout-dashboard" class="w-5 h-5 text-indigo-500"></i>
+          Dashboard
+        </a>
+
+        <a href="admin-user-management.html" class="flex items-center gap-2 hover:text-indigo-600">
+          <i data-lucide="users" class="w-5 h-5 text-indigo-500"></i>
+          User Management
+        </a>
+
+        <a href="admin-docs-log.html" class="flex items-center gap-2 hover:text-indigo-600">
+          <i data-lucide="file-text" class="w-5 h-5 text-indigo-500"></i>
+          Document Logs
+        </a>
+
+        <a href="admin-feedback.html" class="flex items-center gap-2 hover:text-indigo-600">
+          <i data-lucide="mail" class="w-5 h-5 text-indigo-500"></i>
+          Feedback
+        </a>
+
+        <a href="admin-analytics.html" class="flex items-center gap-2 hover:text-indigo-600">
+          <i data-lucide="bar-chart-2" class="w-5 h-5 text-indigo-500"></i>
+          Analytics
+        </a>
+
+        <a href="admin-system-settings.html" class="flex items-center gap-2 hover:text-indigo-600">
+          <i data-lucide="settings" class="w-5 h-5 text-indigo-500"></i>
+          System Settings
+        </a>
+
+        <a href="admin-ai-logs.html" class="flex items-center gap-2 hover:text-indigo-600">
+          <i data-lucide="brain" class="w-5 h-5 text-indigo-500"></i>
+          AI Logs
+        </a>
+
+        <a href="admin-templates.html" class="flex items-center gap-2 hover:text-indigo-600">
+          <i data-lucide="folder" class="w-5 h-5 text-indigo-500"></i>
+          Templates
+        </a>
+
+        <a href="admin-announcement.html" class="flex items-center gap-2 hover:text-indigo-600">
+          <i data-lucide="megaphone" class="w-5 h-5 text-indigo-500"></i>
+          Announcements
+        </a>
+
+        <a href="admin-audit-logs.html" class="flex items-center gap-2 hover:text-indigo-600">
+          <i data-lucide="shield-check" class="w-5 h-5 text-indigo-500"></i>
+          Audit Logs
+        </a>
+
+        <a href="#" class="mt-6 flex items-center gap-2 text-red-500 hover:text-red-600">
+          <i data-lucide="log-out" class="w-5 h-5"></i>
+          Logout
+        </a>
+      </nav>
+    </div>
+  </aside>
+
+  <!-- Main -->
+  <main class="flex-1 sm:ml-64 p-8">
+    <section class="bg-white rounded-xl shadow p-6" x-data>
+      <h2 class="text-3xl font-bold text-slate-800 mb-2">📬 User Feedback</h2>
+      <p class="text-slate-600 mb-6">Review, filter, and manage user feedback on LegalLoom.</p>
+
+      <!-- Filters + Per Page -->
+      <div class="flex flex-wrap gap-4 mb-6">
+        <select x-model="sentiment" class="border border-slate-300 rounded-lg px-3 py-2 text-sm">
+          <option value="">All Sentiments</option>
+          <option value="positive">👍 Positive</option>
+          <option value="negative">👎 Negative</option>
+        </select>
+
+        <input type="date" x-model="dateFilter" class="border border-slate-300 rounded-lg px-3 py-2 text-sm" />
+
+        <select x-model="tagFilter" class="border border-slate-300 rounded-lg px-3 py-2 text-sm">
+          <option value="">All Tags</option>
+          <option value="UX">🎨 UX</option>
+          <option value="Bug">🐞 Bug</option>
+          <option value="Feature">🌟 Feature Request</option>
+        </select>
+
+        <div class="ml-auto">
+          <label class="text-sm text-slate-600">Show:</label>
+          <select x-model.number="perPage" class="border border-slate-300 rounded px-2 py-2 text-sm">
+            <option value="5">5</option>
+            <option value="10">10</option>
+            <option value="20">20</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Feedback Cards -->
+      <div class="space-y-4">
+        <template x-for="entry in paginatedFeedback()" :key="entry.id">
+          <div class="bg-slate-50 border border-slate-200 p-4 rounded-lg space-y-1">
+            <div class="flex justify-between items-center mb-1">
+              <span class="text-sm font-semibold text-slate-800" x-text="entry.user"></span>
+              <span class="text-xs text-slate-500" x-text="entry.date"></span>
+            </div>
+
+            <p class="text-sm text-slate-700" x-text="entry.message"></p>
+
+            <div class="flex items-center justify-between mt-2">
+              <span class="text-xs px-2 py-1 rounded-full font-medium"
+                    :class="entry.sentiment === 'positive' ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'"
+                    x-text="entry.sentiment === 'positive' ? '👍 Positive' : '👎 Negative'">
+              </span>
+
+              <div class="flex items-center gap-2">
+                <span x-show="entry.reviewed" class="text-xs text-slate-400">✅ Reviewed</span>
+                <button @click="entry.reviewed = true"
+                        x-show="!entry.reviewed"
+                        class="text-xs text-indigo-600 hover:underline">Mark as Reviewed</button>
+              </div>
+            </div>
+
+            <!-- Tag Selector -->
+            <div class="mt-2 flex items-center gap-2">
+              <label class="text-xs text-slate-500">Tag:</label>
+              <select x-model="entry.tag"
+                      class="text-xs border rounded px-2 py-1 text-slate-700 bg-white focus:outline-none">
+                <option value="">None</option>
+                <option value="UX">🎨 UX</option>
+                <option value="Bug">🐞 Bug</option>
+                <option value="Feature">🌟 Feature Request</option>
+              </select>
+              <span x-show="entry.tag" 
+                    class="text-xs font-semibold px-2 py-1 rounded-full"
+                    :class="{
+                      'bg-purple-100 text-purple-700': entry.tag === 'UX',
+                      'bg-red-100 text-red-700': entry.tag === 'Bug',
+                      'bg-blue-100 text-blue-700': entry.tag === 'Feature'
+                    }">
+                <template x-if="entry.tag === 'UX'">🎨 UX</template>
+                <template x-if="entry.tag === 'Bug'">🐞 Bug</template>
+                <template x-if="entry.tag === 'Feature'">🌟 Feature</template>
+              </span>
+            </div>
+          </div>
+        </template>
+      </div>
+
+      <!-- Pagination -->
+      <div class="flex justify-center items-center gap-4 mt-6">
+        <button @click="currentPage = Math.max(1, currentPage - 1)"
+                class="px-3 py-1 rounded bg-slate-200 text-sm text-slate-700 hover:bg-slate-300"
+                :disabled="currentPage === 1">← Prev</button>
+
+        <span class="text-sm text-slate-700">
+          Page <span x-text="currentPage"></span> of <span x-text="totalPages()"></span>
+        </span>
+
+        <button @click="currentPage = Math.min(totalPages(), currentPage + 1)"
+                class="px-3 py-1 rounded bg-slate-200 text-sm text-slate-700 hover:bg-slate-300"
+                :disabled="currentPage === totalPages()">Next →</button>
+      </div>
+
+    </section>
+  </main>
+</div>
+
+<!-- Alpine Script -->
+<script>
+  document.addEventListener('alpine:init', () => {
+    Alpine.data('feedbackPanel', () => ({
+      sentiment: '',
+      dateFilter: '',
+      tagFilter: '',
+      perPage: 10,
+      currentPage: 1,
+      feedback: [
+        { id: 1, user: 'Alex Johnson', message: 'Great experience using the clause builder!', sentiment: 'positive', date: '2025-07-02', reviewed: false, tag: 'UX' },
+        { id: 2, user: 'Priya Kapoor', message: 'The legal email generator crashed midway.', sentiment: 'negative', date: '2025-07-01', reviewed: false, tag: 'Bug' },
+        { id: 3, user: 'Ravi Desai', message: 'Loved the UI! Works smoothly.', sentiment: 'positive', date: '2025-06-29', reviewed: true, tag: 'UX' },
+        { id: 4, user: 'Emily Nguyen', message: 'I wish there were more language options in clause templates.', sentiment: 'negative', date: '2025-06-30', reviewed: false, tag: 'Feature' },
+        { id: 5, user: 'Carlos Ruiz', message: 'Translation to Spanish wasn’t very accurate.', sentiment: 'negative', date: '2025-06-28', reviewed: false, tag: 'Bug' },
+        { id: 6, user: 'Aanya Sharma', message: 'The clause suggestions are amazing!', sentiment: 'positive', date: '2025-06-27', reviewed: true, tag: 'Feature' },
+        { id: 7, user: 'Liam O’Brien', message: 'Loading speed is slightly slow.', sentiment: 'negative', date: '2025-06-26', reviewed: false, tag: 'UX' },
+        { id: 8, user: 'Yuki Tanaka', message: 'Love how clean and usable the UI is!', sentiment: 'positive', date: '2025-06-25', reviewed: true, tag: 'UX' },
+        // add more entries as needed
+      ],
+
+      filteredFeedback() {
+        return this.feedback.filter(entry => {
+          const sentimentMatch = this.sentiment === '' || entry.sentiment === this.sentiment;
+          const dateMatch = !this.dateFilter || entry.date === this.dateFilter;
+          const tagMatch = this.tagFilter === '' || entry.tag === this.tagFilter;
+          return sentimentMatch && dateMatch && tagMatch;
+        });
+      },
+
+      paginatedFeedback() {
+        const start = (this.currentPage - 1) * this.perPage;
+        return this.filteredFeedback().slice(start, start + this.perPage);
+      },
+
+      totalPages() {
+        return Math.ceil(this.filteredFeedback().length / this.perPage);
+      }
+    }));
+  });
+</script>
+
+<script>
+  lucide.createIcons();
+</script>
+
+</body>
+</html>

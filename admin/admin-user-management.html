@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en" x-data="{ sidebarOpen: false, filter: 'all', search: '' }">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Admin – User Management | LegalLoom</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/alpinejs" defer></script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700&display=swap" rel="stylesheet" />
+  <style>
+    body {
+      font-family: 'Outfit', sans-serif;
+      background-color: #f9fafb;
+    }
+  </style>
+</head>
+
+<body class="text-gray-900">
+<div class="flex min-h-screen" x-data="userAdmin">
+  
+  <!-- Sidebar -->
+  <aside class="fixed inset-y-0 left-0 w-64 bg-white shadow-lg z-40 transform transition-transform duration-200 sm:translate-x-0" :class="{ '-translate-x-full': !sidebarOpen }">
+    <div class="flex flex-col h-full px-6 py-6">
+      <div class="flex items-center justify-between mb-8">
+        <h1 class="text-2xl font-bold text-indigo-600">Admin Panel</h1>
+        <button class="sm:hidden" @click="sidebarOpen = false">
+          <svg class="w-6 h-6 text-gray-600" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path d="M6 18L18 6M6 6l12 12" />
+          </svg>
+        </button>
+      </div>
+      <nav class="flex flex-col gap-4 text-slate-700 text-sm font-medium">
+        <a href="admin-dash.html" class="flex items-center gap-2 hover:text-indigo-600">
+          <i data-lucide="layout-dashboard" class="w-5 h-5 text-indigo-500"></i>
+          Dashboard
+        </a>
+
+        <a href="admin-user-management.html" class="flex items-center gap-2 hover:text-indigo-600">
+          <i data-lucide="users" class="w-5 h-5 text-indigo-500"></i>
+          User Management
+        </a>
+
+        <a href="admin-docs-log.html" class="flex items-center gap-2 hover:text-indigo-600">
+          <i data-lucide="file-text" class="w-5 h-5 text-indigo-500"></i>
+          Document Logs
+        </a>
+
+        <a href="admin-feedback.html" class="flex items-center gap-2 hover:text-indigo-600">
+          <i data-lucide="mail" class="w-5 h-5 text-indigo-500"></i>
+          Feedback
+        </a>
+
+        <a href="admin-analytics.html" class="flex items-center gap-2 hover:text-indigo-600">
+          <i data-lucide="bar-chart-2" class="w-5 h-5 text-indigo-500"></i>
+          Analytics
+        </a>
+
+        <a href="admin-system-settings.html" class="flex items-center gap-2 hover:text-indigo-600">
+          <i data-lucide="settings" class="w-5 h-5 text-indigo-500"></i>
+          System Settings
+        </a>
+
+        <a href="admin-ai-logs.html" class="flex items-center gap-2 hover:text-indigo-600">
+          <i data-lucide="brain" class="w-5 h-5 text-indigo-500"></i>
+          AI Logs
+        </a>
+
+        <a href="admin-templates.html" class="flex items-center gap-2 hover:text-indigo-600">
+          <i data-lucide="folder" class="w-5 h-5 text-indigo-500"></i>
+          Templates
+        </a>
+
+        <a href="admin-announcement.html" class="flex items-center gap-2 hover:text-indigo-600">
+          <i data-lucide="megaphone" class="w-5 h-5 text-indigo-500"></i>
+          Announcements
+        </a>
+
+        <a href="admin-audit-logs.html" class="flex items-center gap-2 hover:text-indigo-600">
+          <i data-lucide="shield-check" class="w-5 h-5 text-indigo-500"></i>
+          Audit Logs
+        </a>
+
+        <a href="#" class="mt-6 flex items-center gap-2 text-red-500 hover:text-red-600">
+          <i data-lucide="log-out" class="w-5 h-5"></i>
+          Logout
+        </a>
+      </nav>
+    </div>
+  </aside>
+
+  <!-- Main -->
+  <main class="flex-1 sm:ml-64 p-8">
+    <section class="bg-white rounded-xl shadow p-6">
+      <h2 class="text-3xl font-bold text-slate-800 mb-1">👥 User Management</h2>
+      <p class="text-slate-600 mb-6">View and manage all registered LegalLoom users.</p>
+
+      <!-- Search + Filter -->
+      <div class="flex flex-col sm:flex-row justify-between gap-4 mb-6">
+        <input type="text" x-model="search" placeholder="🔍 Search users..." class="w-full sm:w-1/3 border border-slate-300 rounded-lg px-4 py-2 text-sm" />
+        <div class="flex items-center gap-3 text-sm">
+          <label class="font-medium text-slate-700">Status:</label>
+          <select x-model="filter" class="border border-slate-300 rounded-lg px-3 py-2">
+            <option value="all">All</option>
+            <option value="active">Active</option>
+            <option value="banned">Banned</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- User Table -->
+      <div class="overflow-x-auto">
+        <table class="min-w-full text-sm border rounded-lg">
+          <thead class="bg-slate-100 text-slate-600 font-medium border-b">
+            <tr>
+              <th class="text-left px-4 py-3">Name</th>
+              <th class="text-left px-4 py-3">Email</th>
+              <th class="text-left px-4 py-3">Status</th>
+              <th class="text-left px-4 py-3">Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <template x-for="user in filteredUsers()" :key="user.email">
+              <tr class="border-b hover:bg-slate-50">
+                <td class="px-4 py-3" x-text="user.name"></td>
+                <td class="px-4 py-3 text-slate-600" x-text="user.email"></td>
+                <td class="px-4 py-3">
+                  <span :class="user.status === 'active' ? 'text-green-600' : 'text-red-500'" x-text="user.status.charAt(0).toUpperCase() + user.status.slice(1)"></span>
+                </td>
+                <td class="px-4 py-3 space-x-3">
+                  <button class="text-indigo-600 hover:underline">View</button>
+                  <button class="text-yellow-600 hover:underline" @click="toggleStatus(user)">Toggle</button>
+                  <button class="text-red-600 hover:underline" @click="deleteUser(user)">Delete</button>
+                </td>
+              </tr>
+            </template>
+          </tbody>
+        </table>
+      </div>
+    </section>
+  </main>
+</div>
+
+<!-- Script -->
+<script>
+  document.addEventListener('alpine:init', () => {
+    Alpine.data('userAdmin', () => ({
+      search: '',
+      filter: 'all',
+      users: [
+        { name: 'Alex Johnson', email: 'alex@loom.com', status: 'active' },
+        { name: 'Priya Kapoor', email: 'priya@loom.com', status: 'banned' },
+        { name: 'Ravi Desai', email: 'ravi@loom.com', status: 'active' },
+        { name: 'Sara Müller', email: 'sara@loom.com', status: 'active' }
+      ],
+
+      filteredUsers() {
+        return this.users.filter(user => {
+          const matchesSearch = user.name.toLowerCase().includes(this.search.toLowerCase()) || user.email.toLowerCase().includes(this.search.toLowerCase());
+          const matchesStatus = this.filter === 'all' || user.status === this.filter;
+          return matchesSearch && matchesStatus;
+        });
+      },
+
+      toggleStatus(user) {
+        user.status = user.status === 'active' ? 'banned' : 'active';
+      },
+
+      deleteUser(user) {
+        if (confirm(`Delete user: ${user.name}?`)) {
+          this.users = this.users.filter(u => u !== user);
+        }
+      }
+    }))
+  });
+</script>
+
+<script>
+  lucide.createIcons();
+</script>
+
+</body>
+</html>

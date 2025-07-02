@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en" x-data="{ sidebarOpen: false, selectedLang: 'en', docText: '', translatedText: '', fileName: '' }">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Multilingual Generator – LegalLoom</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/alpinejs" defer></script>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Outfit', sans-serif;
+      background-color: #f9fafb;
+    }
+  </style>
+</head>
+
+<body class="text-gray-900">
+<div class="flex min-h-screen">
+
+  <!-- Sidebar -->
+  <aside class="fixed z-40 inset-y-0 left-0 w-64 bg-white shadow-lg sm:translate-x-0 sm:relative transform transition-transform duration-200 ease-in-out" :class="{ '-translate-x-full': !sidebarOpen }">
+    <div class="flex flex-col h-full px-6 py-6">
+      <div class="flex items-center justify-between mb-8">
+        <h1 class="text-2xl font-bold text-indigo-600">LegalLoom</h1>
+        <button class="sm:hidden" @click="sidebarOpen = false">
+          <svg class="w-6 h-6 text-gray-600" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path d="M6 18L18 6M6 6l12 12" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </button>
+      </div>
+      <nav class="flex flex-col gap-4 text-slate-700 text-sm font-medium">
+        <a href="dashboard.html" class="flex items-center gap-2 hover:text-indigo-600">
+          <svg class="w-5 h-5 text-indigo-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0h6" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg> Dashboard
+        </a>
+        <a href="#" class="flex items-center gap-2 hover:text-indigo-600">
+          <svg class="w-5 h-5 text-indigo-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path d="M4 6h16M4 10h16M4 14h10" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg> My Documents
+        </a>
+        <a href="#" class="flex items-center gap-2 hover:text-indigo-600">
+          <svg class="w-5 h-5 text-indigo-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path d="M9 17v-2a2 2 0 012-2h2a2 2 0 012 2v2M12 3a9 9 0 110 18 9 9 0 010-18z" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg> Analytics
+        </a>
+        <a href="#" class="flex items-center gap-2 hover:text-indigo-600">
+          <svg class="w-5 h-5 text-indigo-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path d="M12 9v2m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg> Compliance Alerts
+        </a>
+        <a href="#" class="flex items-center gap-2 hover:text-indigo-600">
+          <svg class="w-5 h-5 text-indigo-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path d="M12 4v16m8-8H4" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg> Clause Builder
+        </a>
+        <a href="legal-mail-gen.html" class="flex items-center gap-2 hover:text-indigo-600">
+          <svg class="w-5 h-5 text-indigo-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path d="M12 15l9-5-9-5-9 5 9 5z"/><path d="M12 15v8"/><path d="M12 3v2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg> Legal Email Gen
+        </a>
+        <a href="clause-explainer.html" class="flex items-center gap-2 hover:text-indigo-600">
+          <svg class="w-5 h-5 text-indigo-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path d="M9 5h6m-6 4h6m-6 4h6M4 19h16" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg> Clause Explainer
+        </a>
+        <a href="#" class="mt-8 flex items-center gap-2 text-red-500 hover:text-red-600">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path d="M17 16l4-4m0 0l-4-4m4 4H7" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg> Logout
+        </a>
+      </nav>
+    </div>
+  </aside>
+
+  <!-- Main Content -->
+  <main class="flex-1 p-14" x-data>
+    <section class="bg-white rounded-xl shadow p-6">
+      <h2 class="text-3xl font-bold text-slate-800 mb-2">🌍 Multilingual Document Generator</h2>
+      <p class="text-slate-600 mb-6">Create and translate your legal documents across multiple languages while keeping the legal tone intact.</p>
+
+      <!-- Language Selector -->
+      <div class="mb-4">
+        <label class="block mb-2 font-medium text-sm text-slate-700">Choose Language</label>
+        <select x-model="selectedLang" class="w-full border border-slate-300 rounded-lg p-3">
+          <option value="en">English (US/UK)</option>
+          <option value="es">Spanish (EU/LATAM)</option>
+          <option value="de">German</option>
+          <option value="fr">French (FR/CA)</option>
+          <option value="hi">Hindi</option>
+          <option value="ja">Japanese</option>
+          <option value="pt">Portuguese (BR)</option>
+          <option value="it">Italian</option>
+          <option value="nl">Dutch</option>
+          <option value="ar">Arabic (UAE)</option>
+          <option value="ru">Russian</option>
+          <option value="tr">Turkish</option>
+        </select>
+      </div>
+
+      <!-- File Upload -->
+      <div class="mb-4">
+        <label class="block text-sm font-medium text-slate-700 mb-2">Upload Document (.txt)</label>
+        <input type="file" accept=".txt" @change="readFile($event)" class="block w-full text-sm text-gray-700 border border-slate-300 rounded-lg p-2 bg-white"/>
+        <p x-show="fileName" class="text-xs text-slate-500 mt-1">📎 Loaded: <span x-text="fileName"></span></p>
+      </div>
+
+      <!-- Document Input -->
+      <textarea x-model="docText" class="w-full p-4 border rounded-lg mb-4 h-40 resize-none" placeholder="Or type your document manually..."></textarea>
+
+      <!-- Generate Button -->
+      <button @click="translateDoc" class="bg-indigo-600 text-white px-6 py-2 rounded-lg hover:bg-indigo-700 transition font-semibold">🌐 Translate Document</button>
+    </section>
+
+    <!-- Translation Preview -->
+    <section x-show="translatedText" x-cloak class="bg-white rounded-xl shadow p-6 mt-10">
+      <div class="flex justify-between items-center mb-4">
+        <h3 class="text-xl font-semibold text-indigo-700">📄 Translated Document</h3>
+        <button @click="copyTranslation" class="text-sm text-indigo-600 hover:underline">📋 Copy</button>
+      </div>
+      <pre class="whitespace-pre-wrap text-sm bg-slate-50 text-slate-800 p-4 rounded border" x-text="translatedText"></pre>
+    </section>
+  </main>
+</div>
+
+<script>
+  document.addEventListener('alpine:init', () => {
+    Alpine.data('clauseBuilder', () => ({
+      selectedLang: 'en',
+      docText: '',
+      translatedText: '',
+      fileName: '',
+
+      translateDoc() {
+        if (!this.docText.trim()) {
+          alert("Please enter or upload a document.");
+          return;
+        }
+
+        this.translatedText = `[Translated to ${this.selectedLang.toUpperCase()}]\n\n${this.docText}\n\n(This is a simulated preview. Use API to integrate real translation.)`;
+      },
+
+      copyTranslation() {
+        navigator.clipboard.writeText(this.translatedText);
+        alert("📋 Translated document copied!");
+      },
+
+      readFile(event) {
+        const file = event.target.files[0];
+        if (!file) return;
+
+        this.fileName = file.name;
+
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          this.docText = e.target.result;
+        };
+        reader.readAsText(file);
+      }
+    }));
+  });
+</script>
+
+</body>
+</html>

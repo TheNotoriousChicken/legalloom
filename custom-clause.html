@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="en" x-data="{ sidebarOpen: false }">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Clause Builder – LegalLoom</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/alpinejs" defer></script>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Outfit', sans-serif;
+      background-color: #f9fafb;
+    }
+  </style>
+</head>
+<body class="text-gray-900">
+
+<div class="flex min-h-screen" x-data="clauseBuilder">
+  <!-- Sidebar -->
+  <aside class="fixed z-40 inset-y-0 left-0 w-64 bg-white shadow-lg sm:translate-x-0 sm:relative transform transition-transform duration-200 ease-in-out" :class="{ '-translate-x-full': !sidebarOpen }">
+    <div class="flex flex-col h-full px-6 py-6">
+      <div class="flex items-center justify-between mb-8">
+        <h1 class="text-2xl font-bold text-indigo-600">LegalLoom</h1>
+        <button class="sm:hidden" @click="sidebarOpen = false">
+          <svg class="w-6 h-6 text-gray-600" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path d="M6 18L18 6M6 6l12 12" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </button>
+      </div>
+      <nav class="flex flex-col gap-4 text-slate-700 text-sm font-medium">
+        <a href="dashboard.html" class="flex items-center gap-2 hover:text-indigo-600">
+          <svg class="w-5 h-5 text-indigo-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0h6" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg> Dashboard
+        </a>
+        <a href="#" class="flex items-center gap-2 hover:text-indigo-600">
+          <svg class="w-5 h-5 text-indigo-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path d="M4 6h16M4 10h16M4 14h10" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg> My Documents
+        </a>
+        <a href="#" class="flex items-center gap-2 hover:text-indigo-600">
+          <svg class="w-5 h-5 text-indigo-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path d="M9 17v-2a2 2 0 012-2h2a2 2 0 012 2v2M12 3a9 9 0 110 18 9 9 0 010-18z" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg> Analytics
+        </a>
+        <a href="#" class="flex items-center gap-2 hover:text-indigo-600">
+          <svg class="w-5 h-5 text-indigo-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path d="M12 9v2m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg> Compliance Alerts
+        </a>
+        <a href="#" class="flex items-center gap-2 hover:text-indigo-600">
+          <svg class="w-5 h-5 text-indigo-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path d="M12 4v16m8-8H4" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg> Clause Builder
+        </a>
+        <a href="legal-mail-gen.html" class="flex items-center gap-2 hover:text-indigo-600">
+          <svg class="w-5 h-5 text-indigo-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path d="M12 15l9-5-9-5-9 5 9 5z"/><path d="M12 15v8"/><path d="M12 3v2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg> Legal Email Gen
+        </a>
+        <a href="clause-explainer.html" class="flex items-center gap-2 hover:text-indigo-600">
+          <svg class="w-5 h-5 text-indigo-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path d="M9 5h6m-6 4h6m-6 4h6M4 19h16" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg> Clause Explainer
+        </a>
+        <a href="#" class="mt-8 flex items-center gap-2 text-red-500 hover:text-red-600">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path d="M17 16l4-4m0 0l-4-4m4 4H7" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg> Logout
+        </a>
+      </nav>
+    </div>
+  </aside>
+
+  <!-- Main Content -->
+  <main class="flex-1 p-14">
+    <section class="bg-white rounded-xl shadow p-6">
+      <h2 class="text-3xl font-bold text-slate-800 mb-2">🛠 Custom Clause Builder</h2>
+      <p class="text-slate-600 mb-6">Choose an agreement, select clauses or write your own, and generate a draft contract.</p>
+
+      <!-- Company Name -->
+      <div class="mb-6">
+        <label class="block font-medium text-sm text-slate-700 mb-1">Your Company Name</label>
+        <input type="text" x-model="companyName" placeholder="e.g. LegalLoom Pvt Ltd" class="w-full border border-slate-300 rounded-lg p-3" />
+      </div>
+
+      <!-- Agreement Type -->
+      <div class="mb-6">
+        <label class="block mb-2 font-medium text-sm text-slate-700">Agreement Type</label>
+        <select x-model="agreementType" class="w-full border border-slate-300 rounded-lg p-3">
+          <option value="">-- Select --</option>
+          <template x-for="type in Object.keys(clauseOptions)">
+            <option :value="type" x-text="type"></option>
+          </template>
+        </select>
+      </div>
+
+      <!-- Clause Toggles -->
+      <div class="mb-6" x-show="agreementType">
+        <h3 class="font-semibold text-slate-700 mb-2">Select Clauses</h3>
+        <template x-for="(enabled, clause) in clauseOptions[agreementType]" :key="clause">
+          <label class="flex items-center justify-between bg-slate-50 p-3 rounded-lg mb-2 relative group">
+            <span class="text-sm text-slate-700 cursor-help" :title="clauseExplanations[clause] || 'No explanation available.'">
+              <span x-text="clause"></span>
+            </span>
+            <input type="checkbox" x-model="clauseOptions[agreementType][clause]" />
+          </label>
+        </template>
+      </div>
+
+      <!-- Custom Clause -->
+      <div class="mb-6">
+        <label class="block mb-1 font-medium text-sm text-slate-700">Custom Clause</label>
+        <textarea x-model="customClause" class="w-full border border-slate-300 rounded-lg p-3 h-24 resize-none" placeholder="Enter custom clause..."></textarea>
+      </div>
+
+      <button @click="generatePreview" class="bg-indigo-600 text-white px-6 py-2 rounded-lg hover:bg-indigo-700 transition font-semibold">📄 Generate Document</button>
+    </section>
+
+    <!-- Preview -->
+    <section x-show="preview" x-cloak class="bg-white shadow rounded-xl p-6 mt-10">
+      <div class="flex justify-between items-center mb-4">
+        <h3 class="text-xl font-semibold text-indigo-700">📃 Document Preview</h3>
+        <button @click="copyPreview" class="text-sm text-indigo-600 hover:underline">📋 Copy</button>
+      </div>
+      <div class="space-y-6 bg-slate-50 border border-slate-200 p-6 rounded-lg text-sm font-mono leading-relaxed text-slate-800">
+        <h4 class="text-lg font-semibold text-indigo-700 mb-2">📄 <span x-text="agreementType"></span> for <span x-text="companyName || 'Your Company'"></span></h4>
+        <template x-for="(enabled, key) in clauseOptions[agreementType]" :key="key">
+          <div x-show="enabled" class="space-y-2">
+            <h5 class="font-bold text-slate-700">🔹 <span x-text="key"></span> Clause</h5>
+            <p>This clause governs the "<span x-text="key.toLowerCase()"></span>" aspect of the <span x-text="agreementType"></span> for <span x-text="companyName || 'your company'"></span>.</p>
+            <hr class="border-t border-slate-200 my-4">
+          </div>
+        </template>
+        <div x-show="customClause.trim() !== ''" class="space-y-2">
+          <h5 class="font-bold text-slate-700">📝 Custom Clause</h5>
+          <p x-text="customClause"></p>
+        </div>
+      </div>
+    </section>
+  </main>
+</div>
+
+<!-- Alpine Logic -->
+<script>
+  document.addEventListener('alpine:init', () => {
+    Alpine.data('clauseBuilder', () => ({
+      agreementType: '',
+      companyName: '',
+      customClause: '',
+      preview: '',
+
+      clauseExplanations: {
+        "Confidentiality": "Keeps sensitive information private between parties.",
+        "Exclusions": "Details what information is not covered as confidential.",
+        "Term": "Sets the duration of the agreement.",
+        "Governing Law": "Decides which country's/state's laws apply.",
+        "No License Granted": "States that no IP license is given.",
+        "Remedies": "Outlines legal recourse in case of breach.",
+        "Return of Materials": "Requires return of all materials upon termination.",
+        "Mutuality": "Ensures both parties have equal obligations.",
+        "Scope of Services": "Defines what work or service will be delivered.",
+        "Payment Terms": "Explains how and when payments will be made.",
+        "Termination": "Describes how the agreement can be ended.",
+        "IP Ownership": "Clarifies who owns intellectual property created.",
+        "SLA": "Service Level Agreement: quality & availability guarantees.",
+        "Liability": "Limits damages either party can claim.",
+        "Data Collection": "What data is collected and how it’s used.",
+        "Cookies": "Covers tracking and cookie usage.",
+        "User Rights": "Outlines data access, deletion, and consent rights.",
+        "Data Sharing": "If and how user data is shared externally.",
+        "Retention": "How long data is stored.",
+        "Security": "Measures taken to secure information.",
+        "Consent": "Obtaining lawful agreement from users.",
+        "Job Role": "Specifies the employee’s responsibilities.",
+        "Compensation": "Salary or wages agreed upon.",
+        "Probation Period": "Trial period before permanent employment.",
+        "Benefits": "Health insurance, bonuses, perks etc.",
+        "Non-Compete": "Prevents employee from working with competitors.",
+        "User Responsibilities": "Rules for users of your platform.",
+        "License Grant": "Gives limited use of service or product.",
+        "Limitation of Liability": "Restricts legal claims and liabilities.",
+        "Indemnification": "One party agrees to cover damages for the other.",
+        "Dispute Resolution": "How legal issues will be resolved.",
+        "Project Scope": "Details the project boundaries.",
+        "Payment Schedule": "Timeline for contractor payments.",
+        "Cancellation Policy": "Terms for canceling the contract.",
+        "Timeline": "Deadlines and milestones.",
+        "Independent Contractor": "Clarifies non-employee relationship.",
+        "Capital Contributions": "Investments made by partners.",
+        "Profit Sharing": "How revenue will be split.",
+        "Roles & Responsibilities": "What each partner will do.",
+        "Exit Strategy": "Terms to leave the partnership.",
+        "Consulting Scope": "Type of consulting provided.",
+        "Fees & Expenses": "Billing structure.",
+        "Deliverables": "Final outputs expected.",
+        "Non-Solicitation": "Restricts luring employees/clients.",
+        "Restrictions": "What the licensee cannot do.",
+        "Updates & Maintenance": "Software upgrade conditions.",
+        "Term & Termination": "When agreement ends.",
+        "Fees": "All costs involved.",
+        "Warranty Disclaimer": "Denies implied guarantees.",
+        "Liability Limitation": "Caps maximum legal responsibility."
+      },
+
+      clauseOptions: {
+        NDA: {
+          "Confidentiality": true,
+          "Exclusions": true,
+          "Term": true,
+          "Governing Law": true,
+          "No License Granted": false,
+          "Remedies": false,
+          "Return of Materials": false,
+          "Mutuality": false
+        },
+        "Service Agreement": {
+          "Scope of Services": true,
+          "Payment Terms": true,
+          "Termination": true,
+          "IP Ownership": false,
+          "Confidentiality": true,
+          "SLA": false,
+          "Liability": false
+        },
+        "Privacy Policy": {
+          "Data Collection": true,
+          "Cookies": false,
+          "User Rights": true,
+          "Data Sharing": false,
+          "Retention": false,
+          "Security": false,
+          "Consent": true
+        },
+        "Employment Agreement": {
+          "Job Role": true,
+          "Compensation": true,
+          "Probation Period": false,
+          "Benefits": false,
+          "Non-Compete": false,
+          "Termination": true,
+          "Confidentiality": true
+        },
+        "Terms of Service": {
+          "User Responsibilities": true,
+          "License Grant": true,
+          "Termination": true,
+          "Limitation of Liability": true,
+          "Indemnification": false,
+          "Dispute Resolution": false
+        },
+        "Freelance Contract": {
+          "Project Scope": true,
+          "Payment Schedule": true,
+          "IP Ownership": false,
+          "Cancellation Policy": false,
+          "Timeline": true,
+          "Independent Contractor": true
+        },
+        "Partnership Agreement": {
+          "Capital Contributions": true,
+          "Profit Sharing": true,
+          "Roles & Responsibilities": true,
+          "Exit Strategy": false,
+          "Non-Compete": false,
+          "Dispute Resolution": true
+        },
+        "Consulting Agreement": {
+          "Consulting Scope": true,
+          "Fees & Expenses": true,
+          "Deliverables": true,
+          "IP Ownership": false,
+          "Confidentiality": true,
+          "Non-Solicitation": false
+        },
+        "Software License Agreement": {
+          "License Grant": true,
+          "Restrictions": true,
+          "Updates & Maintenance": false,
+          "Term & Termination": true,
+          "Fees": true,
+          "Warranty Disclaimer": false,
+          "Liability Limitation": true
+        }
+      },
+
+      generatePreview() {
+        if (!this.agreementType) return alert("Select an agreement type first.");
+        let body = Object.entries(this.clauseOptions[this.agreementType])
+          .filter(([_, enabled]) => enabled)
+          .map(([key]) =>
+            `🔹 ${key} Clause\nThis clause governs the "${key.toLowerCase()}" aspect of the ${this.agreementType} for ${this.companyName || 'your company'}.`
+          )
+          .join('\n\n');
+
+        if (this.customClause.trim()) {
+          body += `\n\n📝 Custom Clause:\n${this.customClause.trim()}`;
+        }
+
+        this.preview = `📄 ${this.agreementType} Document for ${this.companyName || 'Your Company'}\n\n${body}`;
+      },
+
+      copyPreview() {
+        navigator.clipboard.writeText(this.preview);
+        alert("Copied to clipboard!");
+      }
+    }))
+  });
+</script>
+
+</body>
+</html>

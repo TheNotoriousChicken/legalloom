@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Legal Email Generator – LegalLoom</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/alpinejs" defer></script>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    body {
+      font-family: 'Outfit', sans-serif;
+      background-color: #f9fafb;
+    }
+  </style>
+</head>
+<body class="text-gray-900">
+
+<div x-data="{ sidebarOpen: false, selectedType: '', showEmail: false, emailText: '' }" class="flex min-h-screen">
+
+  <!-- Sidebar -->
+  <aside class="fixed z-40 inset-y-0 left-0 w-64 bg-white shadow-lg sm:translate-x-0 sm:relative transform transition-transform duration-200 ease-in-out" :class="{ '-translate-x-full': !sidebarOpen }">
+    <div class="flex flex-col h-full px-6 py-6">
+      <div class="flex items-center justify-between mb-8">
+        <h1 class="text-2xl font-bold text-indigo-600">LegalLoom</h1>
+        <button class="sm:hidden" @click="sidebarOpen = false">
+          <svg class="w-6 h-6 text-gray-600" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path d="M6 18L18 6M6 6l12 12" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </button>
+      </div>
+      <nav class="flex flex-col gap-4 text-slate-700 text-sm font-medium">
+        <a href="dashboard.html" class="flex items-center gap-2 hover:text-indigo-600">
+          <svg class="w-5 h-5 text-indigo-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0h6" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg> Dashboard
+        </a>
+        <a href="#" class="flex items-center gap-2 hover:text-indigo-600">
+          <svg class="w-5 h-5 text-indigo-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path d="M4 6h16M4 10h16M4 14h10" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg> My Documents
+        </a>
+        <a href="#" class="flex items-center gap-2 hover:text-indigo-600">
+          <svg class="w-5 h-5 text-indigo-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path d="M9 17v-2a2 2 0 012-2h2a2 2 0 012 2v2M12 3a9 9 0 110 18 9 9 0 010-18z" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg> Analytics
+        </a>
+        <a href="#" class="flex items-center gap-2 hover:text-indigo-600">
+          <svg class="w-5 h-5 text-indigo-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path d="M12 9v2m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg> Compliance Alerts
+        </a>
+        <a href="#" class="flex items-center gap-2 hover:text-indigo-600">
+          <svg class="w-5 h-5 text-indigo-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path d="M12 4v16m8-8H4" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg> Clause Builder
+        </a>
+        <a href="legal-mail-gen.html" class="flex items-center gap-2 hover:text-indigo-600">
+          <svg class="w-5 h-5 text-indigo-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path d="M12 15l9-5-9-5-9 5 9 5z"/><path d="M12 15v8"/><path d="M12 3v2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg> Legal Email Gen
+        </a>
+        <a href="clause-explainer.html" class="flex items-center gap-2 hover:text-indigo-600">
+          <svg class="w-5 h-5 text-indigo-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path d="M9 5h6m-6 4h6m-6 4h6M4 19h16" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg> Clause Explainer
+        </a>
+        <a href="#" class="mt-8 flex items-center gap-2 text-red-500 hover:text-red-600">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path d="M17 16l4-4m0 0l-4-4m4 4H7" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg> Logout
+        </a>
+      </nav>
+    </div>
+  </aside>
+
+  <!-- Main Content -->
+  <main class="flex-1 p-8">
+    <header class="p-6 bg-white shadow-sm sm:hidden flex items-center justify-between">
+      <button @click="sidebarOpen = true">
+        <svg class="w-6 h-6 text-gray-700" fill="none" stroke="currentColor" stroke-width="2"
+          viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h16" /></svg>
+      </button>
+      <h2 class="text-lg font-bold text-indigo-700">Email Generator</h2>
+    </header>
+
+    <main class="p-6 max-w-8xl mx-auto space-y-10">
+      <!-- Email Generator -->
+      <section class="bg-white rounded-xl shadow p-6" x-data="{
+          form: {
+            type: '',
+            customPurpose: '',
+            company: '',
+            toEmail: '',
+            name: '',
+            fromEmail: ''
+          },
+          generateEmail() {
+            let subject = this.form.type !== 'custom' ? this.form.type : this.form.customPurpose;
+            return `Subject: ${subject}\n\nDear ${this.form.company},\n\nI am writing to formally request the following: ${subject}.\n\nName: ${this.form.name}\nEmail: ${this.form.fromEmail}\n\nPlease acknowledge receipt of this request.\n\nBest regards,\n${this.form.name}`;
+          },
+          submit() {
+            this.$root.emailText = this.generateEmail();
+            this.$root.showEmail = true;
+          }
+        }">
+
+        <h2 class="text-3xl font-bold text-slate-800 mb-2">✉️ Legal Email Generator</h2>
+        <p class="text-slate-600 mb-6">Generate legally-compliant emails in seconds — from data deletion to refund requests.</p>
+
+        <form @submit.prevent="submit" class="space-y-6">
+          <div>
+            <label class="block text-sm font-medium text-slate-700 mb-1">Select Email Type</label>
+            <select x-model="form.type" x-ref="emailType" class="w-full border border-slate-300 rounded-lg p-2 focus:outline-indigo-500">
+              <option value="">-- Choose --</option>
+              <option value="Data Deletion Request">🗑 Data Deletion Request</option>
+              <option value="Refund Request">💸 Refund Request</option>
+              <option value="Privacy Policy Clarification">🔒 Privacy Policy Clarification</option>
+              <option value="Data Portability Request">📤 Data Portability Request</option>
+              <option value="Consent Withdrawal">📩 Consent Withdrawal</option>
+              <option value="Access My Personal Data">📁 Access My Personal Data</option>
+              <option value="custom">✍️ Custom Email Type</option>
+            </select>
+          </div>
+
+          <div x-show="form.type === 'custom'" class="transition-all duration-300">
+            <label class="block text-sm font-medium text-slate-700 mb-1">Describe Custom Email Purpose</label>
+            <input type="text" x-model="form.customPurpose" placeholder="e.g. Request for contract review clarification" class="w-full border border-slate-300 rounded-lg p-2" />
+          </div>
+
+          <div>
+            <label class="block text-sm font-medium text-slate-700 mb-1">Recipient Company Name</label>
+            <input type="text" x-model="form.company" placeholder="e.g. Acme Inc." class="w-full border border-slate-300 rounded-lg p-2" />
+          </div>
+
+          <div>
+            <label class="block text-sm font-medium text-slate-700 mb-1">Recipient Email</label>
+            <input type="email" x-model="form.toEmail" placeholder="e.g. privacy@acme.com" class="w-full border border-slate-300 rounded-lg p-2" />
+          </div>
+
+          <div>
+            <label class="block text-sm font-medium text-slate-700 mb-1">Your Full Name</label>
+            <input type="text" x-model="form.name" placeholder="e.g. John Doe" class="w-full border border-slate-300 rounded-lg p-2" />
+          </div>
+
+          <div>
+            <label class="block text-sm font-medium text-slate-700 mb-1">Your Email</label>
+            <input type="email" x-model="form.fromEmail" placeholder="e.g. john@example.com" class="w-full border border-slate-300 rounded-lg p-2" />
+          </div>
+
+          <button type="submit" class="w-full bg-indigo-600 text-white py-3 rounded-lg hover:bg-indigo-700 transition font-semibold">
+            ✍️ Generate Email
+          </button>
+        </form>
+      </section>
+
+      <!-- Preview Section -->
+      <section x-show="showEmail" x-cloak class="bg-white rounded-xl shadow p-6">
+        <div class="flex justify-between items-center mb-3">
+          <h3 class="text-xl font-semibold text-indigo-700">📄 Generated Email</h3>
+          <button @click="navigator.clipboard.writeText(emailText)" class="text-sm text-indigo-600 hover:underline">📋 Copy</button>
+        </div>
+        <pre class="whitespace-pre-wrap bg-slate-50 p-4 rounded-lg border border-slate-200 text-slate-800 text-sm" x-text="emailText"></pre>
+      </section>
+    </main>
+  </div>
+</div>
+
+</body>
+</html>
