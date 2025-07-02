@@ -1,145 +1,136 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" x-data="{ sidebarOpen: false, tone: 'simple' }">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Clause Explainer – LegalLoom</title>
+  <title>Clause Explainer – ContraktAI</title>
   <script src="https://cdn.tailwindcss.com"></script>
-  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&display=swap" rel="stylesheet" />
   <script src="https://unpkg.com/alpinejs" defer></script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&display=swap" rel="stylesheet" />
   <style>
+    @font-face {
+      font-family: 'Radeil3D';
+      src: url('fonts/Radeil3D.otf') format('opentype');
+    }
+
     body {
       font-family: 'Outfit', sans-serif;
-      background-color: #f9fafb;
+      background-color: #1c1a28;
+    }
+
+    .bg-dark { background-color: #161616; }
+    .bg-panel { background-color: #1f1f1f; }
+    .text-light { color: #e2e2e2; }
+    .text-muted { color: #a0a0b0; }
+    .border-light { border-color: #514b62; }
+    .icon { width: 18px; height: 18px; stroke-width: 1.8; }
+    .text-mint { color: #4ADE80; }
+    .border-mint { border-color: #4ADE80; }
+
+    input:focus, textarea:focus, select:focus, button:focus {
+      outline: none;
+      box-shadow: 0 0 0 2px #4ADE80;
+      border-color: #4ADE80;
+    }
+
+    input:hover, textarea:hover, select:hover, button:hover {
+      border-color: #4ADE80;
+    }
+
+    a:hover {
+      color: #4ADE80;
     }
   </style>
 </head>
-<body class="text-gray-900">
 
-<div x-data="{ sidebarOpen: false, tone: 'simple' }" class="flex min-h-screen">
+<body class="text-light bg-dark">
+<div class="flex min-h-screen">
 
   <!-- Sidebar -->
-  <aside class="fixed z-40 inset-y-0 left-0 w-64 bg-white shadow-lg sm:translate-x-0 sm:relative transform transition-transform duration-200 ease-in-out" :class="{ '-translate-x-full': !sidebarOpen }">
-    <div class="flex flex-col h-full px-6 py-6">
-      <div class="flex items-center justify-between mb-8">
-        <h1 class="text-2xl font-bold text-indigo-600">LegalLoom</h1>
-        <button class="sm:hidden" @click="sidebarOpen = false">
-          <svg class="w-6 h-6 text-gray-600" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-            <path d="M6 18L18 6M6 6l12 12" stroke-linecap="round" stroke-linejoin="round"/>
-          </svg>
-        </button>
+  <aside class="fixed z-40 inset-y-0 left-0 w-64 bg-panel shadow-lg sm:translate-x-0 sm:relative transform transition-transform duration-200 ease-in-out" :class="{ '-translate-x-full': !sidebarOpen }">
+      <div class="flex flex-col h-full px-6 py-6">
+        <div class="flex items-center justify-between mb-8">
+          <img src="images/logo.png" alt="ContraktAI Logo" class="h-7 w-auto" />
+          <button class="sm:hidden" @click="sidebarOpen = false">
+            <svg class="w-6 h-6 text-light" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+              <path d="M6 18L18 6M6 6l12 12" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </button>
       </div>
-      <nav class="flex flex-col gap-4 text-slate-700 text-sm font-medium">
-        <a href="dashboard.html" class="flex items-center gap-2 hover:text-indigo-600">
-          <svg class="w-5 h-5 text-indigo-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-            <path d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0h6" stroke-linecap="round" stroke-linejoin="round"/>
-          </svg> Dashboard
-        </a>
-        <a href="#" class="flex items-center gap-2 hover:text-indigo-600">
-          <svg class="w-5 h-5 text-indigo-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-            <path d="M4 6h16M4 10h16M4 14h10" stroke-linecap="round" stroke-linejoin="round"/>
-          </svg> My Documents
-        </a>
-        <a href="#" class="flex items-center gap-2 hover:text-indigo-600">
-          <svg class="w-5 h-5 text-indigo-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-            <path d="M9 17v-2a2 2 0 012-2h2a2 2 0 012 2v2M12 3a9 9 0 110 18 9 9 0 010-18z" stroke-linecap="round" stroke-linejoin="round"/>
-          </svg> Analytics
-        </a>
-        <a href="#" class="flex items-center gap-2 hover:text-indigo-600">
-          <svg class="w-5 h-5 text-indigo-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-            <path d="M12 9v2m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" stroke-linecap="round" stroke-linejoin="round"/>
-          </svg> Compliance Alerts
-        </a>
-        <a href="#" class="flex items-center gap-2 hover:text-indigo-600">
-          <svg class="w-5 h-5 text-indigo-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-            <path d="M12 4v16m8-8H4" stroke-linecap="round" stroke-linejoin="round"/>
-          </svg> Clause Builder
-        </a>
-        <a href="legal-mail-gen.html" class="flex items-center gap-2 hover:text-indigo-600">
-          <svg class="w-5 h-5 text-indigo-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-            <path d="M12 15l9-5-9-5-9 5 9 5z"/><path d="M12 15v8"/><path d="M12 3v2" stroke-linecap="round" stroke-linejoin="round"/>
-          </svg> Legal Email Gen
-        </a>
-        <a href="clause-explainer.html" class="flex items-center gap-2 hover:text-indigo-600">
-          <svg class="w-5 h-5 text-indigo-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-            <path d="M9 5h6m-6 4h6m-6 4h6M4 19h16" stroke-linecap="round" stroke-linejoin="round"/>
-          </svg> Clause Explainer
-        </a>
-        <a href="#" class="mt-8 flex items-center gap-2 text-red-500 hover:text-red-600">
-          <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-            <path d="M17 16l4-4m0 0l-4-4m4 4H7" stroke-linecap="round" stroke-linejoin="round"/>
-          </svg> Logout
-        </a>
+      <nav class="flex flex-col gap-4 text-sm font-medium text-light">
+        <a href="dashboard.html" class="flex items-center gap-2 hover:text-mint"><i data-lucide="layout-dashboard" class="icon"></i>Dashboard</a>
+        <a href="#" class="flex items-center gap-2 hover:text-mint"><i data-lucide="file" class="icon"></i>My Documents</a>
+        <a href="#" class="flex items-center gap-2 hover:text-mint"><i data-lucide="bar-chart-3" class="icon"></i>Analytics</a>
+        <a href="#" class="flex items-center gap-2 hover:text-mint"><i data-lucide="shield-alert" class="icon"></i>Compliance Alerts</a>
+        <a href="#" class="flex items-center gap-2 hover:text-mint"><i data-lucide="wrench" class="icon"></i>Clause Builder</a>
+        <a href="legal-mail-gen.html" class="flex items-center gap-2 hover:text-mint"><i data-lucide="mail" class="icon"></i>Legal Email Gen</a>
+        <a href="clause-explainer.html" class="flex items-center gap-2 text-mint font-semibold"><i data-lucide="file-text" class="icon"></i>Clause Explainer</a>
+        <a href="#" class="mt-8 flex items-center gap-2 text-red-400 hover:text-red-500"><i data-lucide="log-out" class="icon"></i>Logout</a>
       </nav>
     </div>
   </aside>
 
-  <!-- Main Content -->
+  <!-- Main -->
   <main class="flex-1 p-14 space-y-10">
-    <!-- Title -->
-    <section class="bg-white rounded-xl shadow p-6">
-      <h2 class="text-3xl font-bold text-slate-800 mb-2">📑 Clause Explainer</h2>
-      <p class="text-slate-600 mb-6">Enter any legal clause below and get a plain-language explanation, rewrite suggestions, and more.</p>
+    <!-- Clause Explainer -->
+    <section class="bg-panel rounded-xl shadow p-6">
+      <div class="flex items-center gap-2 mb-2">
+        <i data-lucide="file-text" class="icon text-mint"></i>
+        <h2 class="text-3xl font-bold">Clause Explainer</h2>
+      </div>
+      <p class="text-muted mb-6">Enter any legal clause below and get a plain-language explanation, rewrite suggestions, and more.</p>
 
-      <!-- Tone Selector -->
+      <!-- Tone -->
       <div class="mb-4">
-        <label class="block text-sm font-medium text-slate-700 mb-2">Select Tone</label>
+        <label class="block text-sm font-medium text-muted mb-2">Select Tone</label>
         <div class="flex flex-wrap gap-4">
-          <label><input type="radio" name="tone" value="simple" x-model="tone" class="mr-1">👶 Simple</label>
-          <label><input type="radio" name="tone" value="professional" x-model="tone" class="mr-1">🧠 Professional</label>
-          <label><input type="radio" name="tone" value="academic" x-model="tone" class="mr-1">🎓 Academic</label>
-          <label><input type="radio" name="tone" value="friendly" x-model="tone" class="mr-1">😄 Friendly</label>
+          <label class="text-light"><input type="radio" name="tone" value="simple" x-model="tone" class="mr-1">👶 Simple</label>
+          <label class="text-light"><input type="radio" name="tone" value="professional" x-model="tone" class="mr-1">🧠 Professional</label>
+          <label class="text-light"><input type="radio" name="tone" value="academic" x-model="tone" class="mr-1">🎓 Academic</label>
+          <label class="text-light"><input type="radio" name="tone" value="friendly" x-model="tone" class="mr-1">😄 Friendly</label>
         </div>
       </div>
 
       <!-- Input -->
-      <textarea id="clauseInput" class="w-full p-4 border border-slate-300 rounded-lg mb-4 h-36 resize-none focus:outline-none focus:ring-2 focus:ring-indigo-500" placeholder="Paste your legal clause here..."></textarea>
-      <button onclick="explainClause()" class="w-full bg-indigo-600 text-white font-semibold py-3 rounded-lg hover:bg-indigo-700 transition">🧠 Explain Clause</button>
+      <textarea id="clauseInput" class="w-full p-4 border border-light rounded-lg mb-4 h-36 resize-none bg-dark text-light" placeholder="Paste your legal clause here..."></textarea>
+      <button onclick="explainClause()" class="w-full bg-[#4ADE80] text-black font-semibold py-3 rounded-lg hover:bg-green-400 transition">🧠 Explain Clause</button>
     </section>
 
     <!-- Output -->
     <section id="outputSection" class="hidden space-y-6">
-      <!-- Explanation -->
-      <div class="bg-white shadow rounded-xl p-6 border-l-4 border-indigo-500">
+      <div class="bg-panel rounded-xl p-6 border-l-4 border-indigo-500">
         <div class="flex justify-between mb-2">
-          <h3 class="font-semibold text-indigo-700">📖 Explanation</h3>
-          <button onclick="copyText('explanationText')" class="text-xs text-indigo-500 hover:underline">Copy</button>
+          <h3 class="font-semibold text-indigo-400">📖 Explanation</h3>
+          <button onclick="copyText('explanationText')" class="text-xs text-indigo-400 hover:underline">Copy</button>
         </div>
-        <p id="explanationText" class="text-sm text-slate-700">Loading...</p>
+        <p id="explanationText" class="text-sm text-light">Loading...</p>
       </div>
-
-      <!-- Use Case -->
-      <div class="bg-white shadow rounded-xl p-6 border-l-4 border-blue-500">
+      <div class="bg-panel rounded-xl p-6 border-l-4 border-blue-500">
         <div class="flex justify-between mb-2">
-          <h3 class="font-semibold text-blue-700">💡 Use Case</h3>
-          <button onclick="copyText('useCaseText')" class="text-xs text-blue-500 hover:underline">Copy</button>
+          <h3 class="font-semibold text-blue-400">💡 Use Case</h3>
+          <button onclick="copyText('useCaseText')" class="text-xs text-blue-400 hover:underline">Copy</button>
         </div>
-        <p id="useCaseText" class="text-sm text-slate-700"></p>
+        <p id="useCaseText" class="text-sm text-light"></p>
       </div>
-
-      <!-- Rewrite -->
-      <div class="bg-white shadow rounded-xl p-6 border-l-4 border-green-500">
+      <div class="bg-panel rounded-xl p-6 border-l-4 border-green-500">
         <div class="flex justify-between mb-2">
-          <h3 class="font-semibold text-green-700">✏️ Suggested Rewrite</h3>
-          <button onclick="copyText('rewriteText')" class="text-xs text-green-500 hover:underline">Copy</button>
+          <h3 class="font-semibold text-green-400">✏️ Suggested Rewrite</h3>
+          <button onclick="copyText('rewriteText')" class="text-xs text-green-400 hover:underline">Copy</button>
         </div>
-        <p id="rewriteText" class="text-sm text-slate-700"></p>
+        <p id="rewriteText" class="text-sm text-light"></p>
       </div>
-
-      <!-- Tags -->
-      <div class="bg-white shadow rounded-xl p-6 border-l-4 border-yellow-500">
+      <div class="bg-panel rounded-xl p-6 border-l-4 border-yellow-500">
         <div class="flex justify-between mb-2">
-          <h3 class="font-semibold text-yellow-700">🏷️ Detected Tags</h3>
-          <button onclick="copyText('tagsText')" class="text-xs text-yellow-500 hover:underline">Copy</button>
+          <h3 class="font-semibold text-yellow-400">🏷️ Detected Tags</h3>
+          <button onclick="copyText('tagsText')" class="text-xs text-yellow-400 hover:underline">Copy</button>
         </div>
-        <p id="tagsText" class="text-sm text-slate-700"></p>
+        <p id="tagsText" class="text-sm text-light"></p>
       </div>
-
-      <!-- Risk -->
-      <div class="bg-white shadow rounded-xl p-6 border-l-4 border-red-500">
+      <div class="bg-panel rounded-xl p-6 border-l-4 border-red-500">
         <div class="flex justify-between mb-2">
-          <h3 class="font-semibold text-red-700">🔐 Legal Risk</h3>
-          <button onclick="copyText('riskLevel')" class="text-xs text-red-500 hover:underline">Copy</button>
+          <h3 class="font-semibold text-red-400">🔐 Legal Risk</h3>
+          <button onclick="copyText('riskLevel')" class="text-xs text-red-400 hover:underline">Copy</button>
         </div>
         <p id="riskLevel" class="inline-block px-3 py-1 rounded-full text-xs font-semibold bg-yellow-100 text-yellow-700">Analyzing...</p>
       </div>
@@ -148,6 +139,8 @@
 </div>
 
 <script>
+  lucide.createIcons();
+
   function copyText(id) {
     const text = document.getElementById(id).innerText;
     navigator.clipboard.writeText(text);
@@ -190,6 +183,5 @@
     risk.className = `inline-block px-3 py-1 rounded-full text-xs font-semibold ${bg}`;
   }
 </script>
-
 </body>
 </html>

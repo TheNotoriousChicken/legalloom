@@ -1,196 +1,175 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" x-data="{ sidebarOpen: false }">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>LegalLoom – Dashboard</title>
+  <title>Dashboard – ContraktAI</title>
   <script src="https://cdn.tailwindcss.com"></script>
-  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&display=swap" rel="stylesheet" />
   <script src="https://unpkg.com/alpinejs" defer></script>
+  <script src="https://unpkg.com/lucide@latest" defer></script>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&display=swap" rel="stylesheet" />
   <style>
     body {
       font-family: 'Outfit', sans-serif;
-      background-color: #f9fafb;
+      background-color: #1c1a28;
     }
+
+    .bg-dark { background-color: #161616; }
+    .bg-panel { background-color: #1f1f1f; }
+    .text-light { color: #e2e2e2; }
+    .text-muted { color: #a0a0b0; }
+    .icon { width: 18px; height: 18px; stroke-width: 1.8; }
+    .text-mint { color: #4ADE80; }
+
+    input:focus, textarea:focus, select:focus, button:focus {
+      outline: none;
+      box-shadow: 0 0 0 2px #4ADE80;
+      border-color: #4ADE80;
+    }
+
+    input:hover, textarea:hover, select:hover, button:hover {
+      border-color: #4ADE80;
+    }
+
+    a:hover {
+      color: #4ADE80;
+    }
+
+    [x-cloak] { display: none !important; }
   </style>
 </head>
-<body class="text-gray-900">
+<body class="text-light bg-dark">
 
-<div x-data="{ sidebarOpen: false }" class="flex min-h-screen">
+<div class="flex min-h-screen">
 
   <!-- Sidebar -->
-  <aside class="fixed z-40 inset-y-0 left-0 w-64 bg-white shadow-lg sm:translate-x-0 sm:relative transform transition-transform duration-200 ease-in-out" :class="{ '-translate-x-full': !sidebarOpen }">
+  <aside class="fixed z-40 inset-y-0 left-0 w-64 bg-panel shadow-lg sm:translate-x-0 sm:relative transform transition-transform duration-200 ease-in-out" :class="{ '-translate-x-full': !sidebarOpen }">
     <div class="flex flex-col h-full px-6 py-6">
       <div class="flex items-center justify-between mb-8">
-        <h1 class="text-2xl font-bold text-indigo-600">LegalLoom</h1>
+        <img src="images/logo.png" alt="ContraktAI Logo" class="h-7 w-auto" />
         <button class="sm:hidden" @click="sidebarOpen = false">
-          <svg class="w-6 h-6 text-gray-600" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+          <svg class="w-6 h-6 text-light" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
             <path d="M6 18L18 6M6 6l12 12" stroke-linecap="round" stroke-linejoin="round"/>
           </svg>
         </button>
       </div>
-      <nav class="flex flex-col gap-4 text-slate-700 text-sm font-medium">
-        <a href="#" class="flex items-center gap-2 hover:text-indigo-600">
-          <svg class="w-5 h-5 text-indigo-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-            <path d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0h6" stroke-linecap="round" stroke-linejoin="round"/>
-          </svg> Dashboard
-        </a>
-        <a href="#" class="flex items-center gap-2 hover:text-indigo-600">
-          <svg class="w-5 h-5 text-indigo-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-            <path d="M4 6h16M4 10h16M4 14h10" stroke-linecap="round" stroke-linejoin="round"/>
-          </svg> My Documents
-        </a>
-        <a href="#" class="flex items-center gap-2 hover:text-indigo-600">
-          <svg class="w-5 h-5 text-indigo-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-            <path d="M9 17v-2a2 2 0 012-2h2a2 2 0 012 2v2M12 3a9 9 0 110 18 9 9 0 010-18z" stroke-linecap="round" stroke-linejoin="round"/>
-          </svg> Analytics
-        </a>
-        <a href="#" class="flex items-center gap-2 hover:text-indigo-600">
-          <svg class="w-5 h-5 text-indigo-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-            <path d="M12 9v2m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" stroke-linecap="round" stroke-linejoin="round"/>
-          </svg> Compliance Alerts
-        </a>
-        <a href="custom-clause.html" class="flex items-center gap-2 hover:text-indigo-600">
-          <svg class="w-5 h-5 text-indigo-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-            <path d="M12 4v16m8-8H4" stroke-linecap="round" stroke-linejoin="round"/>
-          </svg> Clause Builder
-        </a>
-        <a href="legal-mail-gen.html" class="flex items-center gap-2 hover:text-indigo-600">
-          <svg class="w-5 h-5 text-indigo-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-            <path d="M12 15l9-5-9-5-9 5 9 5z"/><path d="M12 15v8"/><path d="M12 3v2" stroke-linecap="round" stroke-linejoin="round"/>
-          </svg> Legal Email Gen
-        </a>
-        <a href="clause-explainer.html" class="flex items-center gap-2 hover:text-indigo-600">
-          <svg class="w-5 h-5 text-indigo-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-            <path d="M9 5h6m-6 4h6m-6 4h6M4 19h16" stroke-linecap="round" stroke-linejoin="round"/>
-          </svg> Clause Explainer
-        </a>
-        <a href="#" class="mt-8 flex items-center gap-2 text-red-500 hover:text-red-600">
-          <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-            <path d="M17 16l4-4m0 0l-4-4m4 4H7" stroke-linecap="round" stroke-linejoin="round"/>
-          </svg> Logout
-        </a>
+      <nav class="flex flex-col gap-4 text-sm font-medium text-light">
+        <a href="dashboard.html" class="flex items-center gap-2 text-mint font-semibold"><i data-lucide="layout-dashboard" class="icon"></i>Dashboard</a>
+        <a href="#" class="flex items-center gap-2 hover:text-mint"><i data-lucide="file" class="icon"></i>My Documents</a>
+        <a href="#" class="flex items-center gap-2 hover:text-mint"><i data-lucide="bar-chart-3" class="icon"></i>Analytics</a>
+        <a href="#" class="flex items-center gap-2 hover:text-mint"><i data-lucide="shield-alert" class="icon"></i>Compliance Alerts</a>
+        <a href="custom-clause.html" class="flex items-center gap-2 hover:text-mint"><i data-lucide="wrench" class="icon"></i>Clause Builder</a>
+        <a href="legal-mail-gen.html" class="flex items-center gap-2 hover:text-mint"><i data-lucide="mail" class="icon"></i>Legal Email Gen</a>
+        <a href="clause-explainer.html" class="flex items-center gap-2 hover:text-mint"><i data-lucide="file-text" class="icon"></i>Clause Explainer</a>
+        <a href="#" class="mt-8 flex items-center gap-2 text-red-400 hover:text-red-500"><i data-lucide="log-out" class="icon"></i>Logout</a>
       </nav>
     </div>
   </aside>
 
-  <!-- Content -->
-  <div class="flex-1 p-8">
-    <!-- Mobile Header -->
-    <header class="sm:hidden flex items-center justify-between px-6 py-4 bg-white shadow">
-      <button @click="sidebarOpen = true">
-        <svg class="w-6 h-6 text-gray-700" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-          <path d="M4 6h16M4 12h16M4 18h16" stroke-linecap="round" stroke-linejoin="round"/>
-        </svg>
-      </button>
-      <h2 class="text-lg font-bold text-indigo-700">Dashboard</h2>
-    </header>
+  <!-- Main Content -->
+  <main class="flex-1 p-14 space-y-10">
+    <!-- Header -->
+    <section class="bg-panel rounded-xl p-6">
+      <h2 class="text-3xl font-bold mb-2">📊 Welcome back, Alex 👋</h2>
+      <p class="text-muted">Here’s what’s happening in your legal workspace.</p>
+    </section>
 
-    <!-- Main Content -->
-    <main class="p-6 space-y-6">
-      <!-- Welcome Card -->
-      <section class="bg-white shadow rounded-xl p-6 flex flex-col sm:flex-row justify-between gap-4">
-        <div>
-          <h2 class="text-3xl font-bold text-slate-800">Welcome back, Alex 👋</h2>
-          <p class="text-slate-600">Here’s what’s happening in your legal workspace.</p>
-        </div>
-      </section>
-
-      <!-- Alerts + Plan -->
-      <section class="grid md:grid-cols-3 gap-6">
-	  <!-- Recent Activity Feed -->
-	  <div class="bg-white rounded-xl shadow p-6 col-span-2">
-	    <h3 class="text-xl font-semibold text-indigo-700 mb-3">📌 Recent Activity</h3>
-	    <ul class="space-y-3 text-slate-700 text-sm">
-	      <li>📝 Edited "Terms of Service" – 2 hrs ago</li>
-	      <li>📄 Generated "Refund Policy" – yesterday</li>
-	      <li>📤 Exported all documents – 2 days ago</li>
-	      <li>🔁 Updated Privacy Policy for GDPR – 3 days ago</li>
-	    </ul>
-	  </div>
-        <div class="bg-white shadow rounded-xl p-6">
-          <h3 class="text-xl font-semibold text-indigo-700 mb-3">📦 Plan Status</h3>
-          <p class="text-slate-700 text-sm">Free Plan – 1 of 1 documents used</p>
-          <button class="mt-4 w-full bg-indigo-600 text-white py-2 rounded-lg hover:bg-indigo-700">Upgrade to Pro</button>
-        </div>
-      </section>
-
-      <!-- Stats -->
-      <section class="bg-white shadow rounded-xl p-6">
-        <h3 class="text-xl font-semibold text-indigo-700 mb-4">📊 Document Health Overview</h3>
-        <div class="grid sm:grid-cols-3 gap-6 text-center">
-          <div class="bg-indigo-50 rounded-lg p-4">
-            <div class="text-2xl font-bold text-green-600">2</div>
-            <p class="text-sm text-slate-600">Compliant</p>
-          </div>
-          <div class="bg-indigo-50 rounded-lg p-4">
-            <div class="text-2xl font-bold text-yellow-500">1</div>
-            <p class="text-sm text-slate-600">Needs Update</p>
-          </div>
-          <div class="bg-indigo-50 rounded-lg p-4">
-            <div class="text-2xl font-bold text-gray-600">1</div>
-            <p class="text-sm text-slate-600">Drafts</p>
-          </div>
-        </div>
-      </section>
-
-      <!-- AI Suggestions -->
-      <section class="bg-white shadow rounded-xl p-6">
-        <h3 class="text-xl font-semibold text-indigo-700 mb-3">🧠 AI Suggestions</h3>
-        <ul class="space-y-2 text-slate-700 text-sm">
-          <li>💡 Add a cookie policy for your eCommerce site.</li>
-          <li>🧾 Consider creating a co-founder agreement if raising funds.</li>
-          <li>🔒 CCPA email templates are now available to use.</li>
+    <!-- Activity + Plan -->
+    <div class="grid md:grid-cols-3 gap-6">
+      <div class="bg-panel col-span-2 rounded-xl p-6">
+        <h3 class="text-xl font-semibold text-mint mb-3">📌 Recent Activity</h3>
+        <ul class="space-y-3 text-light text-sm">
+          <li>📝 Edited "Terms of Service" – 2 hrs ago</li>
+          <li>📄 Generated "Refund Policy" – yesterday</li>
+          <li>📤 Exported all documents – 2 days ago</li>
+          <li>🔁 Updated Privacy Policy for GDPR – 3 days ago</li>
         </ul>
-      </section>
+      </div>
+      <div class="bg-panel rounded-xl p-6">
+        <h3 class="text-xl font-semibold text-mint mb-3">📦 Plan Status</h3>
+        <p class="text-light text-sm">Free Plan – 1 of 1 documents used</p>
+        <button class="mt-4 w-full bg-[#4ADE80] text-black py-2 rounded-lg hover:bg-green-400 font-semibold">Upgrade to Pro</button>
+      </div>
+    </div>
 
-      <!-- Docs Table -->
-      <section class="bg-white shadow rounded-xl p-6">
-        <h3 class="text-xl font-semibold text-indigo-700 mb-4">📁 Your Documents</h3>
-        <div class="overflow-x-auto">
-          <table class="min-w-full text-sm text-left">
-            <thead>
-              <tr class="text-slate-500 border-b">
-                <th class="px-4 py-2">Name</th>
-                <th class="px-4 py-2">Created</th>
-                <th class="px-4 py-2">Status</th>
-                <th class="px-4 py-2">Actions</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr class="border-b hover:bg-slate-50">
-                <td class="px-4 py-2">Privacy Policy</td>
-                <td class="px-4 py-2">Jun 22, 2025</td>
-                <td class="px-4 py-2 text-green-600 font-medium">✅ Compliant</td>
-                <td class="px-4 py-2 space-x-2">
-                  <button class="text-indigo-600 hover:underline">Edit</button>
-                  <button class="text-indigo-600 hover:underline">Download</button>
-                </td>
-              </tr>
-              <tr class="border-b hover:bg-slate-50">
-                <td class="px-4 py-2">Terms of Service</td>
-                <td class="px-4 py-2">Jun 10, 2025</td>
-                <td class="px-4 py-2 text-yellow-600 font-medium">⚠️ Needs Update</td>
-                <td class="px-4 py-2 space-x-2">
-                  <button class="text-indigo-600 hover:underline">View</button>
-                </td>
-              </tr>
-              <tr class="hover:bg-slate-50">
-                <td class="px-4 py-2">Refund Policy</td>
-                <td class="px-4 py-2">–</td>
-                <td class="px-4 py-2 text-gray-600 font-medium">🕒 Draft</td>
-                <td class="px-4 py-2 space-x-2">
-                  <button class="text-indigo-600 hover:underline">Continue</button>
-                </td>
-              </tr>
-            </tbody>
-          </table>
+    <!-- Document Stats -->
+    <section class="bg-panel rounded-xl p-6">
+      <h3 class="text-xl font-semibold text-mint mb-4">📁 Document Health Overview</h3>
+      <div class="grid sm:grid-cols-3 gap-6 text-center">
+        <div class="bg-green-900/20 rounded-lg p-4">
+          <div class="text-2xl font-bold text-green-400">2</div>
+          <p class="text-sm text-muted">Compliant</p>
         </div>
-      </section>
+        <div class="bg-yellow-900/20 rounded-lg p-4">
+          <div class="text-2xl font-bold text-yellow-400">1</div>
+          <p class="text-sm text-muted">Needs Update</p>
+        </div>
+        <div class="bg-slate-700 rounded-lg p-4">
+          <div class="text-2xl font-bold text-slate-200">1</div>
+          <p class="text-sm text-muted">Drafts</p>
+        </div>
+      </div>
+    </section>
 
-    </main>
-  </div>
+    <!-- AI Suggestions -->
+    <section class="bg-panel rounded-xl p-6">
+      <h3 class="text-xl font-semibold text-mint mb-3">🧠 AI Suggestions</h3>
+      <ul class="space-y-2 text-light text-sm">
+        <li>💡 Add a cookie policy for your eCommerce site.</li>
+        <li>🧾 Consider creating a co-founder agreement if raising funds.</li>
+        <li>🔒 CCPA email templates are now available to use.</li>
+      </ul>
+    </section>
+
+    <!-- Document Table -->
+    <section class="bg-panel rounded-xl p-6">
+      <h3 class="text-xl font-semibold text-mint mb-4">📄 Your Documents</h3>
+      <div class="overflow-x-auto">
+        <table class="min-w-full text-sm text-left text-light">
+          <thead>
+            <tr class="text-muted border-b border-slate-600">
+              <th class="px-4 py-2">Name</th>
+              <th class="px-4 py-2">Created</th>
+              <th class="px-4 py-2">Status</th>
+              <th class="px-4 py-2">Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr class="border-b border-slate-700 hover:bg-slate-800">
+              <td class="px-4 py-2">Privacy Policy</td>
+              <td class="px-4 py-2">Jun 22, 2025</td>
+              <td class="px-4 py-2 text-green-400 font-medium">✅ Compliant</td>
+              <td class="px-4 py-2 space-x-2">
+                <button class="text-mint hover:underline">Edit</button>
+                <button class="text-mint hover:underline">Download</button>
+              </td>
+            </tr>
+            <tr class="border-b border-slate-700 hover:bg-slate-800">
+              <td class="px-4 py-2">Terms of Service</td>
+              <td class="px-4 py-2">Jun 10, 2025</td>
+              <td class="px-4 py-2 text-yellow-400 font-medium">⚠️ Needs Update</td>
+              <td class="px-4 py-2 space-x-2">
+                <button class="text-mint hover:underline">View</button>
+              </td>
+            </tr>
+            <tr class="hover:bg-slate-800">
+              <td class="px-4 py-2">Refund Policy</td>
+              <td class="px-4 py-2">–</td>
+              <td class="px-4 py-2 text-muted font-medium">🕒 Draft</td>
+              <td class="px-4 py-2 space-x-2">
+                <button class="text-mint hover:underline">Continue</button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+  </main>
 </div>
+
+<script>
+  lucide.createIcons();
+</script>
 
 </body>
 </html>
