@@ -2,150 +2,178 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>LegalLoom – Your AI Legal Assistant</title>
   <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/alpinejs" defer></script>
+  <script src="https://unpkg.com/lucide@latest"></script>
   <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet" />
   <style>
-    @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700&display=swap');
+    @font-face {
+      font-family: 'Radeil3D';
+      src: url('fonts/Radeil3D.otf') format('opentype');
+    }
 
     body {
       font-family: 'Outfit', sans-serif;
       background-color: #1c1a28;
-      color: #e2e2e2;
-    }
-
-    h1, h2, h3 {
-      font-weight: 600;
-      letter-spacing: -0.01em;
-    }
-
-    a, button {
-      font-weight: 600;
-    }
-
-    .gradient-heading {
-      background: linear-gradient(to right, #4ADE80, #22c55e);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
     }
 
     .bg-dark { background-color: #161616; }
-    .text-muted { color: #a0a0b0; }
-    .hover-mint:hover { color: #4ADE80; }
     .btn-mint {
       background-color: #4ADE80;
       color: #0f172a;
     }
-    .btn-mint:hover {
-      background-color: #22c55e;
-    }
+    .bg-panel { background-color: #1f1f1f; }
+    .text-light { color: #e2e2e2; }
+    .text-muted { color: #a0a0b0; }
+    .border-light { border-color: #514b62; }
+    .icon { width: 18px; height: 18px; stroke-width: 1.8; }
+    .text-mint { color: #4ADE80; }
+    .border-mint { border-color: #4ADE80; }
+
     input:focus, textarea:focus, select:focus, button:focus {
       outline: none;
       box-shadow: 0 0 0 2px #4ADE80;
       border-color: #4ADE80;
     }
+
+    input:hover, textarea:hover, select:hover, button:hover {
+      border-color: #4ADE80;
+    }
+
+    a:hover {
+      color: #4ADE80;
+    }
+
+    .gradient-heading {
+      @apply text-transparent bg-clip-text bg-gradient-to-r from-[#4ADE80] to-[#3B82F6];
+    }
   </style>
 </head>
-
-<body>
+<body class="text-light bg-dark">
 
   <!-- Navbar -->
   <header class="w-full px-6 sm:px-10 py-6 flex items-center justify-between bg-dark shadow-sm fixed top-0 z-50">
     <div class="text-2xl font-bold text-[#4ADE80]">LegalLoom</div>
     <div class="space-x-4 hidden sm:block">
-      <a href="login.html" class="text-muted hover:text-[#4ADE80] transition">Sign In</a>
-      <a href="signup.html" class="btn-mint px-4 py-2 rounded-lg transition">Sign Up</a>
+      <a href="login.html" class="text-muted hover:text-[#4ADE80] transition font-semibold">Sign In</a>
+      <a href="signup.html" class="bg-[#4ADE80] hover:bg-[#3BCC70] text-black font-semibold px-4 py-2 rounded-lg transition">Sign Up</a>
     </div>
   </header>
 
+  <!-- Spacer for navbar -->
   <div class="h-20"></div>
 
   <!-- Hero -->
-  <section class="relative overflow-hidden py-24 px-6 sm:px-10 md:px-16 bg-dark">
+  <section class="relative overflow-hidden py-24 px-6 sm:px-10 md:px-16 bg-gradient-to-br from-dark to-[#1c1a28]">
     <div class="absolute -top-32 -left-32 w-96 h-96 bg-[#4ADE80] rounded-full blur-3xl opacity-10"></div>
-    <div class="absolute bottom-0 right-0 w-72 h-72 bg-[#4ADE80] rounded-full blur-2xl opacity-10 animate-pulse"></div>
+    <div class="absolute bottom-0 right-0 w-72 h-72 bg-[#3B82F6] rounded-full blur-2xl opacity-10 animate-pulse"></div>
 
     <div class="max-w-7xl mx-auto text-center relative z-10">
-      <h1 class="text-5xl sm:text-6xl font-bold leading-tight tracking-tight text-white mb-6 fade-in-up opacity-0 translate-y-6 transition-all duration-700">
-        Legal documents. <span class="text-[#4ADE80]">Done Right.</span>
+      <h1 class="text-5xl sm:text-6xl font-bold leading-tight tracking-tight text-light mb-6 fade-in-up opacity-0 translate-y-6 transition-all duration-700">
+        Legal documents. <span class="text-mint">Done Right.</span>
       </h1>
       <p class="text-lg text-muted max-w-2xl mx-auto mb-8 fade-in-up opacity-0 translate-y-6 transition-all duration-700 delay-200">
         Generate AI-powered Privacy Policies, Terms & Contracts tailored to your business and local laws. Fast, compliant, and crystal clear.
       </p>
       <div class="flex justify-center gap-4 fade-in-up opacity-0 translate-y-6 transition-all duration-700 delay-300">
-        <a href="#" class="btn-mint font-medium px-6 py-3 rounded-lg transition transform hover:scale-105">Get Started Free</a>
-        <a href="#features" class="border border-[#4ADE80] text-[#4ADE80] px-6 py-3 rounded-lg hover:bg-[#1f1f1f] transition transform hover:scale-105">See Features</a>
+        <a href="#" class="bg-white text-black font-medium px-6 py-3 rounded-lg transition transform hover:scale-105 flex items-center gap-2 hover:bg-gray-100">
+          <i data-lucide="zap" class="icon"></i> Get Started Free
+        </a>
+        <a href="#features" class="border border-mint text-mint px-6 py-3 rounded-lg hover:bg-[#1f1f1f] transition transform hover:scale-105">See Features</a>
       </div>
     </div>
   </section>
 
-  <!-- Sections -->
-  <section class="py-20 px-6 bg-dark text-white">
+  <!-- How It Works -->
+  <section class="py-20 px-6 bg-dark">
     <div class="max-w-4xl mx-auto text-center mb-12">
       <h2 class="text-4xl font-bold gradient-heading mb-4" data-aos="fade-up">How It Works</h2>
       <p class="text-muted" data-aos="fade-up" data-aos-delay="100">Three simple steps to generate your legal documents with full confidence.</p>
     </div>
     <div class="grid grid-cols-1 md:grid-cols-3 gap-10 max-w-6xl mx-auto">
       <div class="text-center" data-aos="fade-up" data-aos-delay="100">
-        <div class="text-5xl mb-4 text-[#4ADE80] font-bold">1</div>
+        <div class="text-5xl mb-4 text-mint font-bold">1</div>
         <h3 class="text-lg font-semibold mb-2">Choose Document & Region</h3>
-        <p class="text-muted text-sm">Pick the legal document you need and your compliance region (GDPR, CCPA, etc.).</p>
+        <p class="text-muted text-sm">Pick the legal document you need and your operating country or compliance region (GDPR, CCPA, etc.).</p>
       </div>
       <div class="text-center" data-aos="fade-up" data-aos-delay="200">
-        <div class="text-5xl mb-4 text-[#4ADE80] font-bold">2</div>
+        <div class="text-5xl mb-4 text-mint font-bold">2</div>
         <h3 class="text-lg font-semibold mb-2">Enter Your Business Info</h3>
         <p class="text-muted text-sm">Answer a few smart prompts about your company. No legal lingo required.</p>
       </div>
       <div class="text-center" data-aos="fade-up" data-aos-delay="300">
-        <div class="text-5xl mb-4 text-[#4ADE80] font-bold">3</div>
+        <div class="text-5xl mb-4 text-mint font-bold">3</div>
         <h3 class="text-lg font-semibold mb-2">Download Your Docs</h3>
-        <p class="text-muted text-sm">Get a fully formatted document ready for download and use.</p>
+        <p class="text-muted text-sm">Get a fully formatted document ready for download and immediate use.</p>
       </div>
     </div>
   </section>
 
   <!-- Features Section -->
-  <section id="features" class="py-20 px-6 bg-[#1a1a24] text-white">
+  <section id="features" class="py-20 px-6 bg-dark">
     <div class="max-w-6xl mx-auto text-center mb-14">
       <h2 class="text-4xl font-bold gradient-heading mb-4" data-aos="fade-up">Powerful Features That Work for You</h2>
-      <p class="text-muted max-w-xl mx-auto" data-aos="fade-up" data-aos-delay="100">Everything your business needs to stay protected — without hiring a lawyer.</p>
+      <p class="text-muted max-w-xl mx-auto" data-aos="fade-up" data-aos-delay="100">Everything your business needs to stay legally protected and globally compliant — without hiring a lawyer.</p>
     </div>
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10 max-w-6xl mx-auto">
-      <!-- Repeat same structure with text-[#4ADE80] for headings -->
-      <!-- ... Content stays unchanged ... -->
+      <div class="bg-panel rounded-xl p-6 border border-light hover:border-mint transition" data-aos="fade-up" data-aos-delay="100">
+        <h3 class="text-lg font-semibold mb-2 text-mint flex items-center gap-2"><i data-lucide="file-text" class="icon"></i> Document Generator</h3>
+        <p class="text-muted text-sm">Create GDPR/CCPA/DPDP-compliant Privacy Policies, Terms of Service, and Refund Policies customized to your region.</p>
+      </div>
+      <div class="bg-panel rounded-xl p-6 border border-light hover:border-mint transition" data-aos="fade-up" data-aos-delay="200">
+        <h3 class="text-lg font-semibold mb-2 text-mint flex items-center gap-2"><i data-lucide="brain" class="icon"></i> Clause Explanation</h3>
+        <p class="text-muted text-sm">Every clause comes with a plain-language explanation so you understand what you're publishing.</p>
+      </div>
+      <div class="bg-panel rounded-xl p-6 border border-light hover:border-mint transition" data-aos="fade-up" data-aos-delay="300">
+        <h3 class="text-lg font-semibold mb-2 text-mint flex items-center gap-2"><i data-lucide="briefcase" class="icon"></i> Ready-to-Use Contracts</h3>
+        <p class="text-muted text-sm">Access templates for NDAs, freelance agreements, employment letters, and co-founder contracts — fully editable.</p>
+      </div>
+      <div class="bg-panel rounded-xl p-6 border border-light hover:border-mint transition" data-aos="fade-up" data-aos-delay="400">
+        <h3 class="text-lg font-semibold mb-2 text-mint flex items-center gap-2"><i data-lucide="mail" class="icon"></i> Legal Email Generator</h3>
+        <p class="text-muted text-sm">Generate data deletion, privacy request, or refund compliance emails instantly — AI-powered and audit-safe.</p>
+      </div>
+      <div class="bg-panel rounded-xl p-6 border border-light hover:border-mint transition" data-aos="fade-up" data-aos-delay="500">
+        <h3 class="text-lg font-semibold mb-2 text-mint flex items-center gap-2"><i data-lucide="globe" class="icon"></i> Multilingual Support</h3>
+        <p class="text-muted text-sm">Generate documents in multiple languages for international business needs — auto-translated & localized.</p>
+      </div>
+      <div class="bg-panel rounded-xl p-6 border border-light hover:border-mint transition" data-aos="fade-up" data-aos-delay="600">
+        <h3 class="text-lg font-semibold mb-2 text-mint flex items-center gap-2"><i data-lucide="wrench" class="icon"></i> Custom Clause Builder</h3>
+        <p class="text-muted text-sm">Easily insert or remove clauses to tailor legal docs to your brand voice and industry-specific needs.</p>
+      </div>
     </div>
   </section>
-
-    <!-- Pricing -->
-  <section class="py-20 px-6 bg-[#1e1e2a] text-white">
+  
+  <!-- Pricing -->
+  <section class="py-20 px-6 bg-panel">
     <div class="text-center mb-14">
-      <h2 class="text-4xl font-bold mb-4" data-aos="fade-up">Simple, Transparent Pricing</h2>
+      <h2 class="text-4xl font-bold text-light mb-4" data-aos="fade-up">Simple, Transparent Pricing</h2>
       <p class="text-muted" data-aos="fade-up" data-aos-delay="100">Start free, upgrade when you're ready to scale. No hidden fees.</p>
     </div>
     <div class="max-w-4xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
-      <div class="bg-[#2a2a3c] rounded-xl p-8 border border-[#333] shadow-sm" data-aos="fade-up">
-        <h3 class="text-lg font-semibold mb-2 text-[#4ADE80]">Free</h3>
-        <p class="text-3xl font-bold mb-4 text-white">$0</p>
+      <div class="bg-dark rounded-xl p-8 border border-light" data-aos="fade-up">
+        <h3 class="text-lg font-semibold mb-2">Free</h3>
+        <p class="text-3xl font-bold mb-4">$0</p>
         <ul class="text-sm text-muted space-y-2">
           <li>✅ 1 legal document</li>
           <li>✅ Basic customization</li>
           <li>❌ No auto-updates</li>
         </ul>
       </div>
-      <div class="bg-[#4ADE80] text-[#0f172a] rounded-xl p-8 shadow-lg transform scale-105" data-aos="fade-up" data-aos-delay="100">
+      <div class="bg-[#4ADE80] text-black rounded-xl p-8 shadow-lg transform scale-105" data-aos="fade-up" data-aos-delay="100">
         <h3 class="text-lg font-semibold mb-2">Pro</h3>
         <p class="text-3xl font-bold mb-4">$19/mo</p>
         <ul class="text-sm space-y-2">
-          <li>✅ Unlimited documents</li>
-          <li>✅ Auto-updates</li>
-          <li>✅ AI email & clause support</li>
+          <li class="flex items-center gap-2"><i data-lucide="check" class="icon"></i> Unlimited documents</li>
+          <li class="flex items-center gap-2"><i data-lucide="check" class="icon"></i> Auto-updates</li>
+          <li class="flex items-center gap-2"><i data-lucide="check" class="icon"></i> AI email & clause support</li>
         </ul>
       </div>
-      <div class="bg-[#2a2a3c] rounded-xl p-8 border border-[#333] shadow-sm" data-aos="fade-up" data-aos-delay="200">
-        <h3 class="text-lg font-semibold mb-2 text-[#4ADE80]">Business</h3>
-        <p class="text-3xl font-bold mb-4 text-white">$49/mo</p>
+      <div class="bg-dark rounded-xl p-8 border border-light" data-aos="fade-up" data-aos-delay="200">
+        <h3 class="text-lg font-semibold mb-2">Business</h3>
+        <p class="text-3xl font-bold mb-4">$49/mo</p>
         <ul class="text-sm text-muted space-y-2">
           <li>✅ Everything in Pro</li>
           <li>✅ Multi-team access</li>
@@ -155,42 +183,68 @@
     </div>
   </section>
 
+  <!-- Who It's For -->
+  <section class="py-20 px-6 bg-dark">
+    <div class="text-center mb-14">
+      <h2 class="text-4xl font-bold text-light mb-4" data-aos="fade-up">Who Is It For?</h2>
+      <p class="text-muted" data-aos="fade-up" data-aos-delay="100">LegalLoom is made for modern teams who want compliance without complexity.</p>
+    </div>
+    <div class="max-w-5xl mx-auto grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6 text-center">
+      <div class="p-6 bg-panel rounded-xl border border-light" data-aos="fade-up">
+        <h3 class="text-lg font-semibold text-mint mb-1 flex items-center justify-center gap-1"><i data-lucide="user" class="icon"></i> SaaS Founders</h3>
+        <p class="text-sm text-muted">Launch faster with instant policy & contract templates.</p>
+      </div>
+      <div class="p-6 bg-panel rounded-xl border border-light" data-aos="fade-up" data-aos-delay="100">
+        <h3 class="text-lg font-semibold text-mint mb-1 flex items-center justify-center gap-1"><i data-lucide="shopping-bag" class="icon"></i> eCommerce Brands</h3>
+        <p class="text-sm text-muted">Get store-ready refund and data use policies.</p>
+      </div>
+      <div class="p-6 bg-panel rounded-xl border border-light" data-aos="fade-up" data-aos-delay="200">
+        <h3 class="text-lg font-semibold text-mint mb-1 flex items-center justify-center gap-1"><i data-lucide="users" class="icon"></i> Agencies</h3>
+        <p class="text-sm text-muted">Manage clients with white-label, multi-site tools.</p>
+      </div>
+      <div class="p-6 bg-panel rounded-xl border border-light" data-aos="fade-up" data-aos-delay="300">
+        <h3 class="text-lg font-semibold text-mint mb-1 flex items-center justify-center gap-1"><i data-lucide="globe" class="icon"></i> Global Teams</h3>
+        <p class="text-sm text-muted">Be region-compliant across continents.</p>
+      </div>
+    </div>
+  </section>
+
   <!-- FAQ -->
-  <section class="py-20 px-6 bg-[#161616] text-white">
+  <section class="py-20 px-6 bg-panel">
     <div class="max-w-4xl mx-auto">
-      <h2 class="text-4xl font-bold text-center mb-12" data-aos="fade-up">Frequently Asked Questions</h2>
-      <div class="space-y-6 text-sm">
-        <div data-aos="fade-up">
-          <h3 class="font-semibold text-lg text-[#4ADE80]">📌 Is this legal advice?</h3>
-          <p class="text-muted">No. LegalLoom provides AI-generated legal templates. You should consult a licensed attorney for specific legal advice.</p>
+      <h2 class="text-4xl font-bold text-center text-light mb-12" data-aos="fade-up">Frequently Asked Questions</h2>
+      <div class="space-y-6">
+        <div data-aos="fade-up" class="bg-dark p-6 rounded-xl border border-light">
+          <h3 class="font-semibold text-lg text-mint flex items-center gap-2"><i data-lucide="help-circle" class="icon"></i> Is this legal advice?</h3>
+          <p class="text-muted text-sm mt-2">No. LegalLoom provides AI-generated legal templates. You should consult a licensed attorney for specific legal advice.</p>
         </div>
-        <div data-aos="fade-up" data-aos-delay="100">
-          <h3 class="font-semibold text-lg text-[#4ADE80]">🌍 What countries are supported?</h3>
-          <p class="text-muted">We support major frameworks like GDPR (EU), CCPA (US), DPDP (India) — and are constantly expanding coverage.</p>
+        <div data-aos="fade-up" data-aos-delay="100" class="bg-dark p-6 rounded-xl border border-light">
+          <h3 class="font-semibold text-lg text-mint flex items-center gap-2"><i data-lucide="map" class="icon"></i> What countries are supported?</h3>
+          <p class="text-muted text-sm mt-2">We support major frameworks like GDPR (EU), CCPA (US), DPDP (India) — and are constantly expanding coverage.</p>
         </div>
-        <div data-aos="fade-up" data-aos-delay="200">
-          <h3 class="font-semibold text-lg text-[#4ADE80]">🛠 Can I edit the documents?</h3>
-          <p class="text-muted">Yes! You can fully edit, export, and embed your documents after generation.</p>
+        <div data-aos="fade-up" data-aos-delay="200" class="bg-dark p-6 rounded-xl border border-light">
+          <h3 class="font-semibold text-lg text-mint flex items-center gap-2"><i data-lucide="edit" class="icon"></i> Can I edit the documents?</h3>
+          <p class="text-muted text-sm mt-2">Yes! You can fully edit, export, and embed your documents after generation.</p>
         </div>
-        <div data-aos="fade-up" data-aos-delay="300">
-          <h3 class="font-semibold text-lg text-[#4ADE80]">🔁 What happens when laws change?</h3>
-          <p class="text-muted">If you're on a paid plan, your documents will auto-update based on legal changes and alert you to any required action.</p>
+        <div data-aos="fade-up" data-aos-delay="300" class="bg-dark p-6 rounded-xl border border-light">
+          <h3 class="font-semibold text-lg text-mint flex items-center gap-2"><i data-lucide="refresh-cw" class="icon"></i> What happens when laws change?</h3>
+          <p class="text-muted text-sm mt-2">If you're on a paid plan, your documents will auto-update based on legal changes and alert you to any required action.</p>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- CTA -->
-  <section class="py-24 bg-[#4ADE80] text-black text-center">
+  <!-- CTA Section -->
+  <section class="py-24 bg-[#4ADE80] text-center">
     <div class="max-w-3xl mx-auto">
-      <h2 class="text-3xl md:text-4xl font-bold mb-4">Join thousands of modern businesses using LegalLoom</h2>
-      <p class="mb-6 text-[#065f46]">Get your legal docs handled — smarter, faster, and 10x cheaper than a lawyer.</p>
+      <h2 class="text-3xl md:text-4xl font-bold mb-4 text-black">Join thousands of modern businesses using LegalLoom</h2>
+      <p class="mb-6 text-gray-800">Get your legal docs handled — smarter, faster, and 10x cheaper than a lawyer.</p>
       <a href="#" class="inline-block bg-black text-white font-semibold py-3 px-6 rounded-lg hover:bg-gray-800 transition transform hover:scale-105">Generate My First Policy</a>
     </div>
   </section>
 
   <!-- Footer -->
-  <footer class="text-center py-6 bg-[#1a1a24] border-t border-[#333] text-muted text-sm">
+  <footer class="text-center py-6 bg-dark border-t border-light text-muted text-sm">
     © 2025 LegalLoom. Documents generated are templates and do not constitute legal advice.
   </footer>
 
@@ -198,6 +252,7 @@
   <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
   <script>
     AOS.init();
+    lucide.createIcons();
     window.addEventListener('DOMContentLoaded', () => {
       const fadeEls = document.querySelectorAll('.fade-in-up');
       fadeEls.forEach((el, i) => {
@@ -210,4 +265,3 @@
   </script>
 </body>
 </html>
-
