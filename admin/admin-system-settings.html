@@ -10,168 +10,295 @@
   <style>
     body {
       font-family: 'Outfit', sans-serif;
-      background-color: #f9fafb;
+      background-color: #1c1a28;
+    }
+
+    .bg-dark { background-color: #161616; }
+    .bg-panel { background-color: #1f1f1f; }
+    .text-light { color: #e2e2e2; }
+    .text-muted { color: #a0a0b0; }
+    .text-mint { color: #4ADE80; }
+    .border-light { border-color: #514b62; }
+
+    /* Restored default input sizes with Clause Explainer styling */
+    input, select, textarea {
+      background-color: #1f1f1f;
+      color: #e2e2e2;
+      border: 1px solid #514b62;
+      border-radius: 0.5rem;
+      padding: 0.75rem 1rem;
+      width: 100%;
+      font-size: 1rem;
+      transition: all 0.2s ease;
+    }
+
+    /* Larger input fields */
+    .input-field {
+      padding: 0.875rem 1rem;
+      min-height: 3rem;
+    }
+
+    input:hover, select:hover, textarea:hover {
+      border-color: #4ADE80;
+    }
+
+    input:focus, select:focus, textarea:focus {
+      outline: none;
+      border-color: #4ADE80;
+      box-shadow: 0 0 0 2px rgba(74, 222, 128, 0.3);
+    }
+
+    .checkbox-accent {
+      accent-color: #4ADE80;
+      width: 1.25rem;
+      height: 1.25rem;
+    }
+
+    .btn-primary {
+      background-color: #4ADE80;
+      color: #161616;
+      padding: 0.875rem 1.5rem;
+      font-size: 1rem;
+      font-weight: 600;
+    }
+
+    .btn-primary:hover {
+      background-color: #3bc973;
+    }
+
+    .section-card {
+      background-color: #1f1f1f;
+      border-radius: 0.75rem;
+      padding: 1.5rem;
+    }
+
+    /* Input container with icon */
+    .input-container {
+      position: relative;
+      margin-bottom: 1.25rem;
+    }
+
+    .input-icon {
+      position: absolute;
+      left: 1rem;
+      top: 50%;
+      transform: translateY(-50%);
+      color: #a0a0b0;
+    }
+
+    .input-with-icon {
+      padding-left: 2.75rem;
+    }
+
+    /* Checkbox container */
+    .checkbox-container {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      padding: 1rem;
+      background-color: #1f1f1f;
+      border-radius: 0.5rem;
+      margin-bottom: 1rem;
     }
   </style>
 </head>
-<body class="text-gray-900">
+<body class="text-light bg-dark">
 
 <div class="flex min-h-screen">
-  <!-- Sidebar -->
-  <aside class="w-64 bg-white shadow-lg hidden sm:block">
+<!-- Sidebar -->
+  <aside class="w-64 bg-panel shadow-lg hidden sm:block">
     <div class="px-6 py-6">
-      <h1 class="text-2xl font-bold text-indigo-600 mb-8">Admin Panel</h1>
-      <nav class="flex flex-col gap-4 text-slate-700 text-sm font-medium">
-        <a href="admin-dash.html" class="flex items-center gap-2 hover:text-indigo-600">
-          <i data-lucide="layout-dashboard" class="w-5 h-5 text-indigo-500"></i>
+      <div class="flex items-center gap-2 mb-8">
+        <i data-lucide="shield" class="w-6 h-6 text-mint"></i>
+        <h1 class="text-2xl font-bold text-mint">Admin Panel</h1>
+      </div>
+      <nav class="flex flex-col gap-4 text-sm font-medium text-light">
+        <a href="admin-dash.html" class="flex items-center gap-2 hover:text-mint">
+          <i data-lucide="layout-dashboard" class="w-5 h-5"></i>
           Dashboard
         </a>
 
-        <a href="admin-user-management.html" class="flex items-center gap-2 hover:text-indigo-600">
-          <i data-lucide="users" class="w-5 h-5 text-indigo-500"></i>
+        <a href="admin-user-management.html" class="flex items-center gap-2 hover:text-mint">
+          <i data-lucide="users" class="w-5 h-5"></i>
           User Management
         </a>
 
-        <a href="admin-docs-log.html" class="flex items-center gap-2 hover:text-indigo-600">
-          <i data-lucide="file-text" class="w-5 h-5 text-indigo-500"></i>
+        <a href="admin-docs-log.html" class="flex items-center gap-2 hover:text-mint">
+          <i data-lucide="file-text" class="w-5 h-5"></i>
           Document Logs
         </a>
 
-        <a href="admin-feedback.html" class="flex items-center gap-2 hover:text-indigo-600">
-          <i data-lucide="mail" class="w-5 h-5 text-indigo-500"></i>
+        <a href="admin-feedback.html" class="flex items-center gap-2 hover:text-mint">
+          <i data-lucide="mail" class="w-5 h-5"></i>
           Feedback
         </a>
 
-        <a href="admin-analytics.html" class="flex items-center gap-2 hover:text-indigo-600">
-          <i data-lucide="bar-chart-2" class="w-5 h-5 text-indigo-500"></i>
+        <a href="admin-analytics.html" class="flex items-center gap-2 hover:text-mint">
+          <i data-lucide="bar-chart-2" class="w-5 h-5"></i>
           Analytics
         </a>
 
-        <a href="admin-system-settings.html" class="flex items-center gap-2 hover:text-indigo-600">
-          <i data-lucide="settings" class="w-5 h-5 text-indigo-500"></i>
+        <a href="admin-system-settings.html" class="flex items-center gap-2 text-mint font-semibold">
+          <i data-lucide="settings" class="w-5 h-5 text-mint"></i>
           System Settings
         </a>
 
-        <a href="admin-ai-logs.html" class="flex items-center gap-2 hover:text-indigo-600">
-          <i data-lucide="brain" class="w-5 h-5 text-indigo-500"></i>
+        <a href="admin-ai-logs.html" class="flex items-center gap-2 hover:text-mint">
+          <i data-lucide="brain" class="w-5 h-5"></i>
           AI Logs
         </a>
 
-        <a href="admin-templates.html" class="flex items-center gap-2 hover:text-indigo-600">
-          <i data-lucide="folder" class="w-5 h-5 text-indigo-500"></i>
+        <a href="admin-templates.html" class="flex items-center gap-2 hover:text-mint">
+          <i data-lucide="folder" class="w-5 h-5"></i>
           Templates
         </a>
 
-        <a href="admin-announcement.html" class="flex items-center gap-2 hover:text-indigo-600">
-          <i data-lucide="megaphone" class="w-5 h-5 text-indigo-500"></i>
+        <a href="admin-announcement.html" class="flex items-center gap-2 hover:text-mint">
+          <i data-lucide="megaphone" class="w-5 h-5"></i>
           Announcements
         </a>
 
-        <a href="admin-audit-logs.html" class="flex items-center gap-2 hover:text-indigo-600">
-          <i data-lucide="shield-check" class="w-5 h-5 text-indigo-500"></i>
+        <a href="admin-audit-logs.html" class="flex items-center gap-2 hover:text-mint">
+          <i data-lucide="shield-check" class="w-5 h-5"></i>
           Audit Logs
         </a>
 
-        <a href="#" class="mt-6 flex items-center gap-2 text-red-500 hover:text-red-600">
-          <i data-lucide="log-out" class="w-5 h-5"></i>
-          Logout
-        </a>
+        <div class="mt-6 pt-4 border-t border-light">
+          <a href="#" class="flex items-center gap-2 text-red-400 hover:text-red-500">
+            <i data-lucide="log-out" class="w-5 h-5"></i>
+            Logout
+          </a>
+        </div>
       </nav>
     </div>
   </aside>
 
   <!-- Main -->
-  <main class="flex-1 p-10 space-y-10">
-    <h2 class="text-3xl font-bold text-slate-800">⚙️ System Settings</h2>
+  <main class="flex-1 p-14 space-y-8">
+    <div class="flex items-center gap-3">
+      <i data-lucide="settings" class="w-8 h-8 text-mint"></i>
+      <h2 class="text-3xl font-bold text-mint">System Settings</h2>
+    </div>
 
     <!-- General Settings -->
-    <section class="bg-white shadow rounded-xl p-6 space-y-4">
-      <h3 class="text-xl font-semibold text-slate-700 mb-4">🧾 General Settings</h3>
-
-      <div>
-        <label class="block text-sm font-medium text-slate-700 mb-1">Platform Name</label>
-        <input type="text" placeholder="ContraktAI" class="w-full border rounded-lg p-3 border-slate-300" />
+    <section class="section-card space-y-6">
+      <div class="flex items-center gap-3">
+        <i data-lucide="file-text" class="w-6 h-6 text-mint"></i>
+        <h3 class="text-xl font-semibold text-mint">General Settings</h3>
       </div>
 
-      <div>
-        <label class="block text-sm font-medium text-slate-700 mb-1">Admin Email</label>
-        <input type="email" placeholder="admin@ContraktAI.com" class="w-full border rounded-lg p-3 border-slate-300" />
-      </div>
+      <div class="space-y-4">
+        <div class="input-container">
+          <label class="block text-sm font-medium mb-2 flex items-center gap-1">
+            <i data-lucide="tag" class="w-4 h-4"></i>
+            Platform Name
+          </label>
+          <div class="relative">
+            <i data-lucide="edit-2" class="input-icon w-4 h-4"></i>
+            <input type="text" placeholder="ContraktAI" class="input-field input-with-icon" />
+          </div>
+        </div>
 
-      <div class="flex items-center gap-2">
-        <input type="checkbox" id="maintenance" class="accent-indigo-600" />
-        <label for="maintenance" class="text-sm text-slate-700">Enable Maintenance Mode</label>
-      </div>
-    </section>
+        <div class="input-container">
+          <label class="block text-sm font-medium mb-2 flex items-center gap-1">
+            <i data-lucide="mail" class="w-4 h-4"></i>
+            Admin Email
+          </label>
+          <div class="relative">
+            <i data-lucide="at-sign" class="input-icon w-4 h-4"></i>
+            <input type="email" placeholder="admin@ContraktAI.com" class="input-field input-with-icon" />
+          </div>
+        </div>
 
-    <!-- Branding -->
-    <section class="bg-white shadow rounded-xl p-6 space-y-4">
-      <h3 class="text-xl font-semibold text-slate-700 mb-4">🎨 Branding</h3>
-
-      <div>
-        <label class="block text-sm font-medium text-slate-700 mb-1">Upload Logo</label>
-        <input type="file" class="block w-full text-sm text-slate-600 border border-slate-300 rounded-lg cursor-pointer" />
-      </div>
-
-      <div class="flex items-center gap-2">
-        <input type="checkbox" id="darkmode" class="accent-indigo-600" />
-        <label for="darkmode" class="text-sm text-slate-700">Enable Dark Mode (Coming Soon)</label>
-      </div>
-
-      <div>
-        <label class="block text-sm font-medium text-slate-700 mb-1">Footer Note</label>
-        <input type="text" placeholder="© 2025 ContraktAI Inc." class="w-full border rounded-lg p-3 border-slate-300" />
+        <div class="checkbox-container">
+          <input type="checkbox" id="maintenance" class="checkbox-accent" />
+          <label for="maintenance" class="flex items-center gap-2">
+            <i data-lucide="alert-triangle" class="w-4 h-4 text-yellow-400"></i>
+            Enable Maintenance Mode
+          </label>
+        </div>
       </div>
     </section>
 
     <!-- Security Settings -->
-    <section class="bg-white shadow rounded-xl p-6 space-y-4">
-      <h3 class="text-xl font-semibold text-slate-700 mb-4">🔐 Security Settings</h3>
-
-      <div>
-        <label class="block text-sm font-medium text-slate-700 mb-1">Password Reset Token Expiry (mins)</label>
-        <input type="number" value="15" class="w-full border rounded-lg p-3 border-slate-300" />
+    <section class="section-card space-y-6">
+      <div class="flex items-center gap-3">
+        <i data-lucide="lock" class="w-6 h-6 text-mint"></i>
+        <h3 class="text-xl font-semibold text-mint">Security Settings</h3>
       </div>
 
-      <div>
-        <label class="block text-sm font-medium text-slate-700 mb-1">Session Timeout (mins)</label>
-        <input type="number" value="30" class="w-full border rounded-lg p-3 border-slate-300" />
-      </div>
+      <div class="space-y-4">
+        <div class="input-container">
+          <label class="block text-sm font-medium mb-2 flex items-center gap-1">
+            <i data-lucide="clock" class="w-4 h-4"></i>
+            Password Reset Token Expiry (minutes)
+          </label>
+          <input type="number" value="15" class="input-field" />
+        </div>
 
-      <div class="flex items-center gap-2">
-        <input type="checkbox" id="2fa" class="accent-indigo-600" />
-        <label for="2fa" class="text-sm text-slate-700">Enable Two-Factor Authentication</label>
+        <div class="input-container">
+          <label class="block text-sm font-medium mb-2 flex items-center gap-1">
+            <i data-lucide="hourglass" class="w-4 h-4"></i>
+            Session Timeout (minutes)
+          </label>
+          <input type="number" value="30" class="input-field" />
+        </div>
+
+        <div class="checkbox-container">
+          <input type="checkbox" id="2fa" class="checkbox-accent" />
+          <label for="2fa" class="flex items-center gap-2">
+            <i data-lucide="shield" class="w-4 h-4 text-blue-400"></i>
+            Enable Two-Factor Authentication
+          </label>
+        </div>
       </div>
     </section>
 
     <!-- User Controls -->
-    <section class="bg-white shadow rounded-xl p-6 space-y-4">
-      <h3 class="text-xl font-semibold text-slate-700 mb-4">👥 User Controls</h3>
-
-      <div class="flex items-center gap-2">
-        <input type="checkbox" id="signups" class="accent-indigo-600" />
-        <label for="signups" class="text-sm text-slate-700">Allow New User Signups</label>
+    <section class="section-card space-y-6">
+      <div class="flex items-center gap-3">
+        <i data-lucide="users" class="w-6 h-6 text-mint"></i>
+        <h3 class="text-xl font-semibold text-mint">User Controls</h3>
       </div>
 
-      <div>
-        <label class="block text-sm font-medium text-slate-700 mb-1">Default Role</label>
-        <select class="w-full border border-slate-300 rounded-lg p-3">
-          <option>User</option>
-          <option>Admin</option>
-          <option>Pro</option>
-        </select>
-      </div>
+      <div class="space-y-4">
+        <div class="checkbox-container">
+          <input type="checkbox" id="signups" class="checkbox-accent" checked />
+          <label for="signups" class="flex items-center gap-2">
+            <i data-lucide="user-plus" class="w-4 h-4 text-green-400"></i>
+            Allow New User Signups
+          </label>
+        </div>
 
-      <div>
-        <label class="block text-sm font-medium text-slate-700 mb-1">Max Docs (Free Users)</label>
-        <input type="number" value="3" class="w-full border rounded-lg p-3 border-slate-300" />
+        <div class="input-container">
+          <label class="block text-sm font-medium mb-2 flex items-center gap-1">
+            <i data-lucide="award" class="w-4 h-4"></i>
+            Default Role
+          </label>
+          <select class="input-field">
+            <option>User</option>
+            <option>Admin</option>
+            <option>Pro</option>
+          </select>
+        </div>
+
+        <div class="input-container">
+          <label class="block text-sm font-medium mb-2 flex items-center gap-1">
+            <i data-lucide="file-lock" class="w-4 h-4"></i>
+            Max Documents (Free Users)
+          </label>
+          <input type="number" value="3" class="input-field" />
+        </div>
       </div>
     </section>
 
-    <!-- Save -->
-    <div class="text-right">
-      <button class="bg-indigo-600 text-white px-6 py-3 rounded-lg hover:bg-indigo-700 transition font-semibold">
-        💾 Save Changes
+    <!-- Save Button -->
+    <div class="flex justify-end gap-4">
+      <button class="px-6 py-3 rounded-lg font-semibold hover:bg-panel transition">
+        <i data-lucide="rotate-ccw" class="w-5 h-5 inline mr-2"></i> Reset
+      </button>
+      <button class="btn-primary rounded-lg font-semibold">
+        <i data-lucide="save" class="w-5 h-5 inline mr-2"></i> Save Changes
       </button>
     </div>
   </main>
