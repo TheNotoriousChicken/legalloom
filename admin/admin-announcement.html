@@ -11,96 +11,68 @@
   <style>
     body {
       font-family: 'Outfit', sans-serif;
-      background-color: #f9fafb;
+      background-color: #1c1a28;
     }
-    [x-cloak] { display: none !important; }
+    .bg-dark { background-color: #161616; }
+    .bg-panel { background-color: #1f1f1f; }
+    .text-light { color: #e2e2e2; }
+    .text-muted { color: #a0a0b0; }
+    .text-mint { color: #4ADE80; }
+    .border-light { border-color: #514b62; }
+    input:focus, textarea:focus, select:focus, button:focus {
+      outline: none;
+      box-shadow: 0 0 0 2px #4ADE80;
+      border-color: #4ADE80;
+    }
   </style>
 </head>
-<body class="text-gray-900">
-
+<body class="text-light bg-dark">
 <div class="flex min-h-screen">
   <!-- Sidebar -->
-  <aside class="w-64 bg-white shadow-lg hidden sm:block">
+  <aside class="w-64 bg-panel shadow-lg hidden sm:block">
     <div class="px-6 py-6">
-      <h1 class="text-2xl font-bold text-indigo-600 mb-8">Admin Panel</h1>
-      <nav class="flex flex-col gap-4 text-slate-700 text-sm font-medium">
-        <a href="admin-dash.html" class="flex items-center gap-2 hover:text-indigo-600">
-          <i data-lucide="layout-dashboard" class="w-5 h-5 text-indigo-500"></i>
-          Dashboard
-        </a>
-
-        <a href="admin-user-management.html" class="flex items-center gap-2 hover:text-indigo-600">
-          <i data-lucide="users" class="w-5 h-5 text-indigo-500"></i>
-          User Management
-        </a>
-
-        <a href="admin-docs-log.html" class="flex items-center gap-2 hover:text-indigo-600">
-          <i data-lucide="file-text" class="w-5 h-5 text-indigo-500"></i>
-          Document Logs
-        </a>
-
-        <a href="admin-feedback.html" class="flex items-center gap-2 hover:text-indigo-600">
-          <i data-lucide="mail" class="w-5 h-5 text-indigo-500"></i>
-          Feedback
-        </a>
-
-        <a href="admin-analytics.html" class="flex items-center gap-2 hover:text-indigo-600">
-          <i data-lucide="bar-chart-2" class="w-5 h-5 text-indigo-500"></i>
-          Analytics
-        </a>
-
-        <a href="admin-system-settings.html" class="flex items-center gap-2 hover:text-indigo-600">
-          <i data-lucide="settings" class="w-5 h-5 text-indigo-500"></i>
-          System Settings
-        </a>
-
-        <a href="admin-ai-logs.html" class="flex items-center gap-2 hover:text-indigo-600">
-          <i data-lucide="brain" class="w-5 h-5 text-indigo-500"></i>
-          AI Logs
-        </a>
-
-        <a href="admin-templates.html" class="flex items-center gap-2 hover:text-indigo-600">
-          <i data-lucide="folder" class="w-5 h-5 text-indigo-500"></i>
-          Templates
-        </a>
-
-        <a href="admin-announcement.html" class="flex items-center gap-2 hover:text-indigo-600">
-          <i data-lucide="megaphone" class="w-5 h-5 text-indigo-500"></i>
-          Announcements
-        </a>
-
-        <a href="admin-audit-logs.html" class="flex items-center gap-2 hover:text-indigo-600">
-          <i data-lucide="shield-check" class="w-5 h-5 text-indigo-500"></i>
-          Audit Logs
-        </a>
-
-        <a href="#" class="mt-6 flex items-center gap-2 text-red-500 hover:text-red-600">
-          <i data-lucide="log-out" class="w-5 h-5"></i>
-          Logout
-        </a>
+      <h1 class="text-2xl font-bold text-mint mb-8">Admin Panel</h1>
+      <nav class="flex flex-col gap-4 text-sm font-medium text-light">
+        <a href="admin-dash.html" class="flex items-center gap-2 hover:text-mint"><i data-lucide="layout-dashboard" class="w-5 h-5 text-mint"></i> Dashboard</a>
+        <a href="admin-user-management.html" class="flex items-center gap-2 hover:text-mint"><i data-lucide="users" class="w-5 h-5 text-mint"></i> User Management</a>
+        <a href="admin-docs-log.html" class="flex items-center gap-2 hover:text-mint"><i data-lucide="file-text" class="w-5 h-5 text-mint"></i> Document Logs</a>
+        <a href="admin-feedback.html" class="flex items-center gap-2 hover:text-mint"><i data-lucide="mail" class="w-5 h-5 text-mint"></i> Feedback</a>
+        <a href="admin-analytics.html" class="flex items-center gap-2 hover:text-mint"><i data-lucide="bar-chart-2" class="w-5 h-5 text-mint"></i> Analytics</a>
+        <a href="admin-system-settings.html" class="flex items-center gap-2 hover:text-mint"><i data-lucide="settings" class="w-5 h-5 text-mint"></i> System Settings</a>
+        <a href="admin-ai-logs.html" class="flex items-center gap-2 hover:text-mint"><i data-lucide="brain" class="w-5 h-5 text-mint"></i> AI Logs</a>
+        <a href="admin-templates.html" class="flex items-center gap-2 hover:text-mint"><i data-lucide="folder" class="w-5 h-5 text-mint"></i> Templates</a>
+        <a href="admin-announcement.html" class="flex items-center gap-2 text-mint font-semibold"><i data-lucide="megaphone" class="w-5 h-5 text-mint"></i> Announcements</a>
+        <a href="admin-audit-logs.html" class="flex items-center gap-2 hover:text-mint"><i data-lucide="shield-check" class="w-5 h-5 text-mint"></i> Audit Logs</a>
+        <a href="#" class="mt-6 flex items-center gap-2 text-red-400 hover:text-red-500"><i data-lucide="log-out" class="w-5 h-5"></i> Logout</a>
       </nav>
     </div>
   </aside>
 
   <!-- Main Content -->
-  <main class="flex-1 p-10 space-y-10" x-data>
-    <h2 class="text-3xl font-bold text-slate-800">📣 Announcements</h2>
+  <main class="flex-1 p-14 space-y-10">
+    <div class="flex items-center gap-3 mb-2">
+      <i data-lucide="megaphone" class="w-7 h-7 text-mint"></i>
+      <h2 class="text-3xl font-bold text-mint">Announcements</h2>
+    </div>
 
     <!-- Add Announcement -->
-    <section class="bg-white shadow rounded-xl p-6">
-      <h3 class="text-xl font-semibold text-indigo-700 mb-4">➕ Create New Announcement</h3>
+    <section class="bg-panel border border-light rounded-xl p-6">
+      <div class="flex items-center gap-2 mb-4">
+        <i data-lucide="plus-circle" class="w-5 h-5 text-mint"></i>
+        <h3 class="text-xl font-semibold text-mint">Create New Announcement</h3>
+      </div>
       <div class="space-y-4">
-        <input x-model="newAnnouncement.title" type="text" placeholder="Title..." class="w-full border border-slate-300 rounded p-3 text-sm" />
-        <textarea x-model="newAnnouncement.content" placeholder="Write announcement content..." rows="5" class="w-full border border-slate-300 rounded p-3 text-sm resize-none"></textarea>
+        <input x-model="newAnnouncement.title" type="text" placeholder="Title..." class="w-full border border-light rounded p-3 bg-dark text-light text-sm" />
+        <textarea x-model="newAnnouncement.content" placeholder="Write announcement content..." rows="5" class="w-full border border-light rounded p-3 bg-dark text-light text-sm resize-none"></textarea>
 
         <div class="flex flex-col sm:flex-row gap-4">
-          <select x-model="newAnnouncement.category" class="w-full sm:w-1/2 border border-slate-300 rounded p-2 text-sm">
+          <select x-model="newAnnouncement.category" class="w-full sm:w-1/2 border border-light rounded p-2 bg-dark text-light text-sm">
             <option value="">Select Category</option>
-            <option>📢 General</option>
-            <option>🆕 Feature</option>
-            <option>🔧 Maintenance</option>
+            <option>General</option>
+            <option>Feature</option>
+            <option>Maintenance</option>
           </select>
-          <select x-model="newAnnouncement.audience" class="w-full sm:w-1/2 border border-slate-300 rounded p-2 text-sm">
+          <select x-model="newAnnouncement.audience" class="w-full sm:w-1/2 border border-light rounded p-2 bg-dark text-light text-sm">
             <option value="">Target Audience</option>
             <option>All Users</option>
             <option>Free Users</option>
@@ -108,8 +80,8 @@
           </select>
         </div>
 
-        <button @click="announcements.unshift({ ...newAnnouncement, date: new Date().toLocaleDateString() }); newAnnouncement = { title: '', content: '', category: '', audience: '' }" class="bg-indigo-600 text-white px-6 py-2 rounded hover:bg-indigo-700 font-semibold text-sm">
-          📤 Publish
+        <button @click="announcements.unshift({ ...newAnnouncement, date: new Date().toLocaleDateString() }); newAnnouncement = { title: '', content: '', category: '', audience: '' }" class="bg-mint text-black px-6 py-2 rounded bg-green-400 font-semibold text-sm flex items-center gap-2">
+          <i data-lucide='send' class="w-4 h-4"></i> Publish
         </button>
       </div>
     </section>
@@ -117,16 +89,28 @@
     <!-- Announcement List -->
     <section class="space-y-6">
       <template x-for="(note, index) in announcements" :key="index">
-        <div class="bg-white shadow rounded-xl p-6 space-y-2">
+        <div class="bg-panel border border-light rounded-xl p-6 space-y-2">
           <div class="flex justify-between items-center">
-            <h3 class="text-lg font-bold text-slate-800" x-text="note.title"></h3>
-            <span class="text-xs text-slate-400" x-text="note.date"></span>
+            <h3 class="text-lg font-bold text-light" x-text="note.title"></h3>
+            <span class="text-xs text-muted" x-text="note.date"></span>
           </div>
           <div class="flex flex-wrap gap-2 text-xs font-medium text-white">
-            <span class="bg-indigo-500 px-2 py-1 rounded" x-text="note.category"></span>
-            <span class="bg-slate-500 px-2 py-1 rounded" x-text="note.audience"></span>
+            <template x-if="note.category === 'General'">
+              <span class="bg-mint/20 text-mint px-2 py-1 rounded" x-text="note.category"></span>
+            </template>
+            <template x-if="note.category === 'Feature'">
+              <span class="bg-blue-500/20 text-blue-400 px-2 py-1 rounded" x-text="note.category"></span>
+            </template>
+            <template x-if="note.category === 'Maintenance'">
+              <span class="bg-yellow-500/20 text-yellow-400 px-2 py-1 rounded" x-text="note.category"></span>
+            </template>
+            <template x-if=\"note.category !== 'General' && note.category !== 'Feature' && note.category !== 'Maintenance'\">
+              <span class=\"bg-muted/20 text-muted px-2 py-1 rounded\" x-text=\"note.category\"></span>
+            </template>
+
+            <span class="bg-gray-500/20 text-gray-300 px-2 py-1 rounded" x-text="note.audience"></span>
           </div>
-          <p class="text-slate-700 text-sm whitespace-pre-line" x-text="note.content"></p>
+          <p class="text-light text-sm whitespace-pre-line" x-text="note.content"></p>
         </div>
       </template>
     </section>
@@ -136,6 +120,6 @@
 <script>
   lucide.createIcons();
 </script>
-
 </body>
 </html>
+

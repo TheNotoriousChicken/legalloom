@@ -66,7 +66,7 @@
   <aside class="fixed z-40 inset-y-0 left-0 w-64 bg-panel shadow-lg sm:translate-x-0 sm:relative transform transition-transform duration-200 ease-in-out" :class="{ '-translate-x-full': !sidebarOpen }">
     <div class="flex flex-col h-full px-6 py-6">
       <div class="flex items-center justify-between mb-8">
-        <h1 class="text-2xl font-bold text-mint">LegalLoom</h1>
+        <h1 class="text-2xl font-bold text-mint">ContraktAI</h1>
         <button class="sm:hidden" @click="sidebarOpen = false">
           <i data-lucide="x" class="icon text-light"></i>
         </button>
@@ -88,8 +88,8 @@
   <main class="flex-1 p-14">
     <section class="bg-panel rounded-xl shadow p-6">
       <div class="flex items-center gap-2 mb-2">
-        <i data-lucide="wrench" class="icon text-mint"></i>
-        <h2 class="text-3xl font-bold">Custom Clause Builder</h2>
+        <i data-lucide="wrench" class="w-7 h-7 text-mint"></i> <!-- Changed from icon class to specific size -->
+         <h2 class="text-3xl font-bold">Custom Clause Builder</h2>
       </div>
       <p class="text-muted mb-6">Select clauses below to generate ready-to-use legal text for your documents.</p>
 
