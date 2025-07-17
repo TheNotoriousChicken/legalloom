@@ -49,14 +49,14 @@
 
   <!-- Sidebar -->
   <aside class="fixed z-40 inset-y-0 left-0 w-64 bg-panel shadow-lg sm:translate-x-0 sm:relative transform transition-transform duration-200 ease-in-out" :class="{ '-translate-x-full': !sidebarOpen }">
-      <div class="flex flex-col h-full px-6 py-6">
-        <div class="flex items-center justify-between mb-8">
-          <img src="images/logo.png" alt="ContraktAI Logo" class="h-7 w-auto" />
-          <button class="sm:hidden" @click="sidebarOpen = false">
-            <svg class="w-6 h-6 text-light" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-              <path d="M6 18L18 6M6 6l12 12" stroke-linecap="round" stroke-linejoin="round"/>
-            </svg>
-          </button>
+    <div class="flex flex-col h-full px-6 py-6">
+      <div class="flex items-center justify-between mb-8">
+        <img src="images/logo.png" alt="ContraktAI Logo" class="h-7 w-auto" />
+        <button class="sm:hidden" @click="sidebarOpen = false">
+          <svg class="w-6 h-6 text-light" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path d="M6 18L18 6M6 6l12 12" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </button>
       </div>
       <nav class="flex flex-col gap-4 text-sm font-medium text-light">
         <a href="dashboard.html" class="flex items-center gap-2 hover:text-mint"><i data-lucide="layout-dashboard" class="icon"></i>Dashboard</a>
@@ -146,8 +146,9 @@
     navigator.clipboard.writeText(text);
   }
 
-  function explainClause() {
+  async function explainClause() {
     const input = document.getElementById('clauseInput').value;
+    const tone = document.querySelector('input[name="tone"]:checked').value;
     const output = document.getElementById('outputSection');
     const explanation = document.getElementById('explanationText');
     const useCase = document.getElementById('useCaseText');
@@ -158,29 +159,56 @@
     if (!input.trim()) return alert("Please enter a clause.");
     output.classList.remove('hidden');
 
-    explanation.innerText = "This clause states that the user agrees to comply with all applicable laws when using the service.";
-    useCase.innerText = "If a user posts illegal content, the company has the right to remove access or terminate their account.";
-    rewrite.innerText = "You agree to follow all laws while using our platform.";
+    explanation.innerText = "Loading...";
+    useCase.innerText = rewrite.innerText = tags.innerText = "";
+    risk.innerText = "Analyzing...";
+    risk.className = "inline-block px-3 py-1 rounded-full text-xs font-semibold bg-yellow-100 text-yellow-700";
 
-    const tagsFound = [];
-    if (input.toLowerCase().includes("data")) tagsFound.push("📁 Privacy");
-    if (input.toLowerCase().includes("refund")) tagsFound.push("💸 Refunds");
-    if (input.toLowerCase().includes("terminate")) tagsFound.push("⚠️ Termination");
-    if (input.toLowerCase().includes("agree") || input.toLowerCase().includes("liable")) tagsFound.push("🤝 Agreement");
-    if (input.toLowerCase().includes("user") || input.toLowerCase().includes("account")) tagsFound.push("🧾 Terms of Service");
-    tags.innerText = tagsFound.length ? tagsFound.join(", ") : "– Not Detected –";
+    try {
+      const response = await fetch("https://api.together.xyz/v1/chat/completions", {
+        method: "POST",
+        headers: {
+          "Authorization": "Bearer tgp_v1_wRf1bIQjSxwgngfjzB9sgBN1S8iuY8LyRP2R2_awM9I",
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          model: "meta-llama/Llama-3.3-70B-Instruct-Turbo-Free",
+          messages: [{
+            role: "user",
+            content: `You are a legal assistant AI. Respond strictly in this JSON format:
+{
+  "explanation": "...",
+  "suggested_rewrite": "...",
+  "use_case": "...",
+  "tags": ["..."],
+  "legal_risk": "Low | Medium | High"
+}
+Use a ${tone} tone.
 
-    let level = "🟢 Low Risk";
-    let bg = "bg-green-100 text-green-700";
-    if (input.toLowerCase().includes("indemnify") || input.toLowerCase().includes("arbitration") || input.toLowerCase().includes("liability")) {
-      level = "🔴 High Risk";
-      bg = "bg-red-100 text-red-700";
-    } else if (input.toLowerCase().includes("terminate") || input.toLowerCase().includes("fees")) {
-      level = "🟡 Medium Risk";
-      bg = "bg-yellow-100 text-yellow-700";
+Clause: """${input}"""`
+          }],
+          temperature: 0.7
+        })
+      });
+
+      const data = await response.json();
+      const output = JSON.parse(data.choices[0].message.content);
+
+      explanation.innerText = output.explanation || "N/A";
+      rewrite.innerText = output.suggested_rewrite || "N/A";
+      useCase.innerText = output.use_case || "N/A";
+      tags.innerText = output.tags?.join(", ") || "– Not Detected –";
+
+      let riskClass = "bg-green-100 text-green-700";
+      if (/high/i.test(output.legal_risk)) riskClass = "bg-red-100 text-red-700";
+      else if (/medium/i.test(output.legal_risk)) riskClass = "bg-yellow-100 text-yellow-700";
+
+      risk.innerText = output.legal_risk || "Unknown";
+      risk.className = `inline-block px-3 py-1 rounded-full text-xs font-semibold ${riskClass}`;
+    } catch (err) {
+      console.error(err);
+      explanation.innerText = "Something went wrong.";
     }
-    risk.innerText = level;
-    risk.className = `inline-block px-3 py-1 rounded-full text-xs font-semibold ${bg}`;
   }
 </script>
 </body>
