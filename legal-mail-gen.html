@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" x-data="{ sidebarOpen: false, selectedType: '', showEmail: false, emailText: '' }">
+<html lang="en" x-data="{ sidebarOpen: false }">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -9,169 +9,249 @@
   <script src="https://unpkg.com/lucide@latest"></script>
   <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&display=swap" rel="stylesheet" />
   <style>
-    @font-face {
-      font-family: 'Radeil3D';
-      src: url('fonts/Radeil3D.otf') format('opentype');
-    }
-
-    body {
-      font-family: 'Outfit', sans-serif;
-      background-color: #1c1a28;
-    }
-
-    .bg-dark { background-color: #161616; }
-    .bg-panel { background-color: #1f1f1f; }
-    .text-light { color: #e2e2e2; }
-    .text-muted { color: #a0a0b0; }
-    .border-light { border-color: #514b62; }
+    body { font-family: 'Outfit', sans-serif; background-color: #0f172a; }
+    .bg-dark { background-color: #0f172a; }
+    .bg-panel { background-color: #1e293b; }
+    .text-light { color: #f1f5f9; }
+    .text-muted { color: #94a3b8; }
+    .border-dark { border-color: #334155; }
     .icon { width: 18px; height: 18px; stroke-width: 1.8; }
-    .text-mint { color: #4ADE80; }
-    .border-mint { border-color: #4ADE80; }
-
-    input:focus, textarea:focus, select:focus, button:focus {
-      outline: none;
-      box-shadow: 0 0 0 2px #4ADE80;
-      border-color: #4ADE80;
-    }
-
-    input:hover, textarea:hover, select:hover, button:hover {
-      border-color: #4ADE80;
-    }
-
-    a:hover {
-      color: #4ADE80;
-    }
-
+    .text-brand { color: #facc15; }
+    .border-brand { border-color: #facc15; }
+    input:focus, textarea:focus, select:focus, button:focus { outline: none; box-shadow: 0 0 0 2px #facc15; border-color: #facc15; }
+    input:hover, textarea:hover, select:hover, button:hover { border-color: #facc15; }
+    a:hover { color: #facc15; }
     [x-cloak] { display: none !important; }
+
+    /* FIX for Browser Autofill Background Color */
+    input:-webkit-autofill,
+    input:-webkit-autofill:hover, 
+    input:-webkit-autofill:focus, 
+    input:-webkit-autofill:active {
+        -webkit-text-fill-color: #f1f5f9 !important; /* Force light text color */
+        box-shadow: 0 0 0px 1000px #0f172a inset !important; /* "Paint" over the background */
+        transition: background-color 5000s ease-in-out 0s;
+    }
   </style>
 </head>
 
 <body class="text-light bg-dark">
 <div class="flex min-h-screen">
 
-  <!-- Sidebar -->
-  <aside class="fixed z-40 inset-y-0 left-0 w-64 bg-panel shadow-lg sm:translate-x-0 sm:relative transform transition-transform duration-200 ease-in-out" :class="{ '-translate-x-full': !sidebarOpen }">
-    <div class="flex flex-col h-full px-6 py-6">
-      <div class="flex items-center justify-between mb-8">
-        <img src="images/logo.png" alt="ContraktAI Logo" class="h-7 w-auto" />
+  <aside x-cloak class="fixed z-40 inset-y-0 left-0 w-64 bg-panel shadow-lg sm:relative sm:translate-x-0 transform transition-transform duration-300 ease-in-out" :class="sidebarOpen ? 'translate-x-0' : '-translate-x-full'">
+    <div class="flex flex-col h-full">
+      <div class="flex items-center justify-between h-20 px-6 shrink-0 border-b border-slate-700">
+        <a href="dashboard.html" class="text-2xl font-bold text-brand">ContraktAI</a>
         <button class="sm:hidden" @click="sidebarOpen = false">
-          <svg class="w-6 h-6 text-light" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-            <path d="M6 18L18 6M6 6l12 12" stroke-linecap="round" stroke-linejoin="round"/>
-          </svg>
+          <i data-lucide="x" class="w-6 h-6 text-light"></i>
         </button>
       </div>
-      <nav class="flex flex-col gap-4 text-sm font-medium text-light">
-        <a href="dashboard.html" class="flex items-center gap-2 hover:text-mint"><i data-lucide="layout-dashboard" class="icon"></i>Dashboard</a>
-        <a href="#" class="flex items-center gap-2 hover:text-mint"><i data-lucide="file" class="icon"></i>My Documents</a>
-        <a href="#" class="flex items-center gap-2 hover:text-mint"><i data-lucide="bar-chart-3" class="icon"></i>Analytics</a>
-        <a href="#" class="flex items-center gap-2 hover:text-mint"><i data-lucide="shield-alert" class="icon"></i>Compliance Alerts</a>
-        <a href="#" class="flex items-center gap-2 hover:text-mint"><i data-lucide="wrench" class="icon"></i>Clause Builder</a>
-        <a href="legal-mail-gen.html" class="flex items-center gap-2 text-mint font-semibold"><i data-lucide="mail" class="icon"></i>Legal Email Gen</a>
-        <a href="clause-explainer.html" class="flex items-center gap-2 hover:text-mint"><i data-lucide="file-text" class="icon"></i>Clause Explainer</a>
-        <a href="#" class="mt-8 flex items-center gap-2 text-red-400 hover:text-red-500"><i data-lucide="log-out" class="icon"></i>Logout</a>
+      <nav class="flex-1 px-6 py-6 flex flex-col justify-between">
+          <div class="flex flex-col gap-4 text-sm font-medium text-light">
+            <a href="dashboard.html" class="flex items-center gap-3 p-2 rounded-lg hover:bg-slate-700"><i data-lucide="layout-dashboard" class="icon"></i>Dashboard</a>
+            <a href="#" class="flex items-center gap-3 p-2 rounded-lg hover:bg-slate-700"><i data-lucide="file" class="icon"></i>My Documents</a>
+            <a href="#" class="flex items-center gap-3 p-2 rounded-lg hover:bg-slate-700"><i data-lucide="bar-chart-3" class="icon"></i>Analytics</a>
+            <a href="#" class="flex items-center gap-3 p-2 rounded-lg hover:bg-slate-700"><i data-lucide="shield-alert" class="icon"></i>Compliance Alerts</a>
+            <a href="custom-clause.html" class="flex items-center gap-3 p-2 rounded-lg hover:bg-slate-700"><i data-lucide="wrench" class="icon"></i>Clause Builder</a>
+            <a href="legal-mail-gen.html" class="flex items-center gap-3 p-2 rounded-lg bg-slate-700 text-brand font-semibold"><i data-lucide="mail" class="icon"></i>Legal Email Gen</a>
+            <a href="clause-explainer.html" class="flex items-center gap-3 p-2 rounded-lg hover:bg-slate-700"><i data-lucide="file-text" class="icon"></i>Clause Explainer</a>
+        </div>
+        <div>
+            <a href="#" class="flex items-center gap-3 p-2 rounded-lg text-red-400 hover:bg-red-900/50 hover:text-red-300"><i data-lucide="log-out" class="icon"></i>Logout</a>
+        </div>
       </nav>
     </div>
   </aside>
 
-  <!-- Main Content -->
-  <main class="flex-1 p-14">
-    <header class="p-6 bg-panel shadow-sm sm:hidden flex items-center justify-between mb-6">
-      <button @click="sidebarOpen = true">
-        <i data-lucide="menu" class="icon text-light"></i>
-      </button>
-      <h2 class="text-lg font-bold text-mint">Email Generator</h2>
-    </header>
+  <main class="flex-1 p-4 sm:p-8 space-y-6 sm:space-y-8" x-data="emailGenerator">
+    <div class="flex items-center gap-4">
+        <button class="sm:hidden text-light" @click.stop="sidebarOpen = true"><i data-lucide="menu" class="w-7 h-7"></i></button>
+        <div class="flex items-center gap-3">
+            <i data-lucide="mail" class="w-8 h-8 text-brand"></i>
+            <div>
+                <h2 class="text-2xl sm:text-3xl font-bold">Legal Email Generator</h2>
+                <p class="text-sm sm:text-base text-muted">Generate legally-compliant emails in seconds.</p>
+            </div>
+        </div>
+    </div>
+      
+    <section class="bg-panel rounded-xl shadow p-6">
+      <form @submit.prevent="generateEmail" class="space-y-6">
+        <div>
+          <label for="emailType" class="block text-sm font-medium text-muted mb-2">Select Email Type</label>
+          <select id="emailType" x-model="form.type" class="w-full border border-dark rounded-lg p-3 bg-dark text-light">
+            <option value="">-- Choose an email type --</option>
+            <option value="Data Deletion Request">Data Deletion Request</option>
+            <option value="Refund Request">Refund Request</option>
+            <option value="Privacy Policy Clarification">Privacy Policy Clarification</option>
+            <option value="Data Portability Request">Data Portability Request</option>
+            <option value="Consent Withdrawal">Consent Withdrawal</option>
+            <option value="Access My Personal Data">Access My Personal Data</option>
+            <option value="custom">Custom Email Type</option>
+          </select>
+        </div>
 
-    <div class="space-y-10">
-      <!-- Email Generator -->
-      <section class="bg-panel rounded-xl shadow p-6" x-data="{
-          form: {
+        <div x-show="form.type === 'custom'" x-transition>
+          <label for="customPurpose" class="block text-sm font-medium text-muted mb-2">Describe Custom Email Purpose</label>
+          <input id="customPurpose" type="text" x-model="form.customPurpose" placeholder="e.g. Request for contract review clarification" class="w-full border border-dark rounded-lg p-3 bg-dark text-light" />
+        </div>
+
+        <div class="grid sm:grid-cols-2 gap-6">
+            <div>
+                <label for="companyName" class="block text-sm font-medium text-muted mb-2">Recipient Company Name</label>
+                <input id="companyName" type="text" x-model="form.company" placeholder="e.g. Acme Inc." class="w-full border border-dark rounded-lg p-3 bg-dark text-light" />
+            </div>
+            <div>
+                <label for="recipientEmail" class="block text-sm font-medium text-muted mb-2">Recipient Email</label>
+                <input id="recipientEmail" type="email" x-model="form.toEmail" placeholder="e.g. privacy@acme.com" class="w-full border border-dark rounded-lg p-3 bg-dark text-light" />
+            </div>
+            <div>
+                <label for="yourName" class="block text-sm font-medium text-muted mb-2">Your Full Name</label>
+                <input id="yourName" type="text" x-model="form.name" placeholder="e.g. John Doe" class="w-full border border-dark rounded-lg p-3 bg-dark text-light" />
+            </div>
+            <div>
+                <label for="yourEmail" class="block text-sm font-medium text-muted mb-2">Your Email</label>
+                <input id="yourEmail" type="email" x-model="form.fromEmail" placeholder="e.g. john@example.com" class="w-full border border-dark rounded-lg p-3 bg-dark text-light" />
+            </div>
+        </div>
+        
+        <div>
+          <label for="details" class="block text-sm font-medium text-muted mb-2">Additional Details (Optional)</label>
+          <textarea id="details" x-model="form.details" rows="3" class="w-full border border-dark rounded-lg p-3 bg-dark text-light" placeholder="e.g. My order number is #12345. I am requesting a refund as the item was defective."></textarea>
+        </div>
+
+        <button type="submit" :disabled="loading" class="w-full bg-amber-400 text-slate-900 font-semibold py-3 rounded-lg hover:bg-amber-500 transition flex items-center justify-center gap-2 disabled:opacity-70 disabled:cursor-not-allowed">
+            <template x-if="loading">
+                <svg class="animate-spin -ml-1 mr-3 h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>
+            </template>
+            <i x-show="!loading" data-lucide="sparkles" class="icon"></i> 
+            <span x-text="loading ? 'Generating...' : 'Generate Email'"></span>
+        </button>
+      </form>
+    </section>
+
+    <section x-show="showEmail" x-cloak class="bg-panel rounded-xl shadow">
+      <div class="flex justify-between items-center p-4 border-b border-slate-700">
+        <h3 class="text-lg font-semibold text-brand flex items-center gap-2">
+          <i data-lucide="file-text" class="w-6 h-6"></i> Generated Email Preview
+        </h3>
+        <button @click="copyEmailBody" x-data="{ copied: false }" @click="copied = true; setTimeout(() => copied = false, 2000)" class="text-sm text-muted hover:text-brand flex items-center gap-1.5">
+            <i x-show="!copied" data-lucide="copy" class="w-4 h-4"></i>
+            <i x-show="copied" data-lucide="check" class="w-4 h-4 text-green-400"></i>
+            <span x-text="copied ? 'Copied!' : 'Copy Body'"></span>
+        </button>
+      </div>
+      <div class="p-6 space-y-4">
+          <div class="flex items-center border-b border-slate-700 pb-2">
+              <span class="text-sm text-muted w-20 shrink-0">To:</span>
+              <span class="text-sm text-light" x-text="emailOutput.to"></span>
+          </div>
+          <div class="flex items-center border-b border-slate-700 pb-2">
+              <span class="text-sm text-muted w-20 shrink-0">From:</span>
+              <span class="text-sm text-light" x-text="emailOutput.from"></span>
+          </div>
+          <div class="flex items-center border-b border-slate-700 pb-2">
+              <span class="text-sm text-muted w-20 shrink-0">Subject:</span>
+              <span class="text-sm font-semibold text-light" x-text="emailOutput.subject"></span>
+          </div>
+          <div class="pt-2">
+              <pre class="whitespace-pre-wrap text-light text-sm font-sans" x-text="emailOutput.body"></pre>
+          </div>
+      </div>
+    </section>
+  </main>
+</div>
+
+<script>
+  document.addEventListener('alpine:init', () => {
+    Alpine.data('emailGenerator', () => ({
+        form: {
             type: '',
             customPurpose: '',
             company: '',
             toEmail: '',
             name: '',
-            fromEmail: ''
-          },
-          generateEmail() {
-            let subject = this.form.type !== 'custom' ? this.form.type : this.form.customPurpose;
-            return `Subject: ${subject}\n\nDear ${this.form.company},\n\nI am writing to formally request the following: ${subject}.\n\nName: ${this.form.name}\nEmail: ${this.form.fromEmail}\n\nPlease acknowledge receipt of this request.\n\nBest regards,\n${this.form.name}`;
-          },
-          submit() {
-            this.$root.emailText = this.generateEmail();
-            this.$root.showEmail = true;
-          }
-        }">
+            fromEmail: '',
+            details: ''
+        },
+        loading: false,
+        showEmail: false,
+        emailOutput: { to: '', from: '', subject: '', body: '' },
 
-        <div class="flex items-center gap-2 mb-2">
-          <i data-lucide="mail" class="icon w-8 h-8 text-mint"></i>
-          <h2 class="text-3xl font-bold">Legal Email Generator</h2>
-        </div>
-        <p class="text-muted mb-6">Generate legally-compliant emails in seconds — from data deletion to refund requests.</p>
+        async generateEmail() {
+            const purpose = this.form.type === 'custom' ? this.form.customPurpose : this.form.type;
+            if (!purpose) {
+                alert('Please select an email type or provide a custom purpose.');
+                return;
+            }
 
-        <form @submit.prevent="submit" class="space-y-6">
-          <div>
-            <label class="block text-sm font-medium text-muted mb-2">Select Email Type</label>
-            <select x-model="form.type" x-ref="emailType" class="w-full border border-light rounded-lg p-3 bg-dark text-light focus:border-mint">
-              <option value="">-- Choose --</option>
-              <option value="Data Deletion Request">🗑 Data Deletion Request</option>
-              <option value="Refund Request">💸 Refund Request</option>
-              <option value="Privacy Policy Clarification">🔒 Privacy Policy Clarification</option>
-              <option value="Data Portability Request">📤 Data Portability Request</option>
-              <option value="Consent Withdrawal">📩 Consent Withdrawal</option>
-              <option value="Access My Personal Data">📁 Access My Personal Data</option>
-              <option value="custom">✍️ Custom Email Type</option>
-            </select>
-          </div>
+            this.loading = true;
+            this.showEmail = true;
+            this.emailOutput = { 
+                to: this.form.toEmail, 
+                from: this.form.fromEmail, 
+                subject: 'Generating...', 
+                body: 'Generating with AI...' 
+            };
 
-          <div x-show="form.type === 'custom'" class="transition-all duration-300">
-            <label class="block text-sm font-medium text-muted mb-2">Describe Custom Email Purpose</label>
-            <input type="text" x-model="form.customPurpose" placeholder="e.g. Request for contract review clarification" class="w-full border border-light rounded-lg p-3 bg-dark text-light focus:border-mint" />
-          </div>
+            const prompt = `You are an expert legal and professional communications assistant. Your task is to draft a complete email and return it as a JSON object.
 
-          <div>
-            <label class="block text-sm font-medium text-muted mb-2">Recipient Company Name</label>
-            <input type="text" x-model="form.company" placeholder="e.g. Acme Inc." class="w-full border border-light rounded-lg p-3 bg-dark text-light focus:border-mint" />
-          </div>
+**Email Details:**
+- **Purpose of Email:** "${purpose}"
+- **Recipient Company:** "${this.form.company || '[Recipient Company Name]'}"
+- **Recipient Email:** "${this.form.toEmail}"
+- **Sender's Name:** "${this.form.name || '[Your Name]'}"
+- **Sender's Email:** "${this.form.fromEmail}"
+- **Additional Details Provided by Sender:** "${this.form.details || 'None'}"
 
-          <div>
-            <label class="block text-sm font-medium text-muted mb-2">Recipient Email</label>
-            <input type="email" x-model="form.toEmail" placeholder="e.g. privacy@acme.com" class="w-full border border-light rounded-lg p-3 bg-dark text-light focus:border-mint" />
-          </div>
+**Instructions:**
+1.  Draft a complete, professional email based on all the details provided.
+2.  The tone should be formal and clear.
+3.  Incorporate the "Additional Details" naturally into the email body to make it specific.
+4.  Your entire response must be ONLY a single, valid JSON object with the following structure:
+    {
+      "to": "recipient@example.com",
+      "from": "sender@example.com",
+      "subject": "A Clear and Concise Subject Line",
+      "body": "The full, formatted text of the email body. Use \\n for new lines."
+    }`;
 
-          <div>
-            <label class="block text-sm font-medium text-muted mb-2">Your Full Name</label>
-            <input type="text" x-model="form.name" placeholder="e.g. John Doe" class="w-full border border-light rounded-lg p-3 bg-dark text-light focus:border-mint" />
-          </div>
+            try {
+                const response = await fetch("https://api.together.xyz/v1/chat/completions", {
+                    method: "POST",
+                    headers: {
+                        "Authorization": "Bearer tgp_v1_wRf1bIQjSxwgngfjzB9sgBN1S8iuY8LyRP2R2_awM9I",
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({
+                        model: "meta-llama/Llama-3.3-70B-Instruct-Turbo-Free",
+                        messages: [{ role: "user", content: prompt }],
+                        temperature: 0.6,
+                        response_format: { "type": "json_object" }
+                    })
+                });
 
-          <div>
-            <label class="block text-sm font-medium text-muted mb-2">Your Email</label>
-            <input type="email" x-model="form.fromEmail" placeholder="e.g. john@example.com" class="w-full border border-light rounded-lg p-3 bg-dark text-light focus:border-mint" />
-          </div>
+                if (!response.ok) throw new Error(`API Error: ${response.statusText}`);
+                
+                const data = await response.json();
+                const result = JSON.parse(data.choices[0].message.content);
+                this.emailOutput = result;
 
-          <button type="submit" class="w-full bg-[#4ADE80] text-black font-semibold py-3 rounded-lg hover:bg-green-400 transition">
-            ✍️ Generate Email
-          </button>
-        </form>
-      </section>
+            } catch(error) {
+                console.error("Failed to generate email:", error);
+                this.emailOutput.subject = "Error";
+                this.emailOutput.body = "Sorry, an error occurred while generating the email. Please try again.";
+            } finally {
+                this.loading = false;
+            }
+        },
 
-      <!-- Preview Section -->
-      <section x-show="showEmail" x-cloak class="bg-panel rounded-xl shadow p-6 border-l-4 border-mint">
-        <div class="flex justify-between items-center mb-3">
-          <h3 class="text-xl font-semibold text-mint flex items-center gap-2">
-            <i data-lucide="file-text" class="icon"></i> Generated Email
-          </h3>
-          <button @click="navigator.clipboard.writeText(emailText)" class="text-sm text-mint hover:underline flex items-center gap-1">
-            <i data-lucide="copy" class="icon"></i> Copy
-          </button>
-        </div>
-        <pre class="whitespace-pre-wrap bg-dark p-4 rounded-lg border border-light text-light text-sm" x-text="emailText"></pre>
-      </section>
-    </div>
-  </main>
-</div>
+        copyEmailBody() {
+            navigator.clipboard.writeText(this.emailOutput.body);
+        }
+    }));
+  });
 
-<script>
   lucide.createIcons();
 </script>
 </body>
