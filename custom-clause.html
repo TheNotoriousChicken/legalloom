@@ -8,50 +8,28 @@
   <script src="https://unpkg.com/alpinejs" defer></script>
   <script src="https://unpkg.com/lucide@latest"></script>
   <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com/3.4.1?plugins=typography"></script>
   <style>
-    body {
-      font-family: 'Outfit', sans-serif;
-      background-color: #0f172a; /* Slate-900 */
-    }
-
+    body { font-family: 'Outfit', sans-serif; background-color: #0f172a; }
     .bg-dark { background-color: #0f172a; }
-    .bg-panel { background-color: #1e293b; } /* Slate-800 */
-    .text-light { color: #f1f5f9; } /* Slate-100 */
-    .text-muted { color: #94a3b8; } /* Slate-400 */
-    .border-dark { border-color: #334155; } /* Slate-700 */
+    .bg-panel { background-color: #1e293b; }
+    .text-light { color: #f1f5f9; }
+    .text-muted { color: #94a3b8; }
+    .border-dark { border-color: #334155; }
     .icon { width: 18px; height: 18px; stroke-width: 1.8; }
-    .text-brand { color: #facc15; } /* Amber-400 */
+    .text-brand { color: #facc15; }
     .border-brand { border-color: #facc15; }
-
-    input:focus, textarea:focus, select:focus, button:focus {
-      outline: none;
-      box-shadow: 0 0 0 2px #facc15; /* Gold focus ring */
-      border-color: #facc15;
-    }
-
-    input:hover, textarea:hover, select:hover, button:hover {
-      border-color: #facc15;
-    }
-
-    a:hover {
-      color: #facc15; /* Gold hover color */
-    }
-
+    input:focus, textarea:focus, select:focus, button:focus { outline: none; box-shadow: 0 0 0 2px #facc15; border-color: #facc15; }
+    input:hover, textarea:hover, select:hover, button:hover { border-color: #facc15; }
+    a:hover { color: #facc15; }
     [x-cloak] { display: none !important; }
-    
-    .clause-card {
-      transition: all 0.2s ease;
-    }
-    .clause-text {
-      white-space: pre-wrap;
-    }
+    .clause-card { transition: all 0.2s ease; }
+    .clause-text { white-space: pre-wrap; }
   </style>
 </head>
 <body class="text-light bg-dark">
 
 <div class="flex min-h-screen" x-data="clauseBuilder">
-  <div x-show="sidebarOpen" x-transition:enter="transition-opacity ease-linear duration-300" x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100" x-transition:leave="transition-opacity ease-linear duration-300" x-transition:leave-start="opacity-100" x-transition:leave-end="opacity-0" class="fixed inset-0 bg-black/50 z-30 sm:hidden" @click="sidebarOpen = false" x-cloak></div>
-
   <aside x-cloak class="fixed z-40 inset-y-0 left-0 w-64 bg-panel shadow-lg sm:relative sm:translate-x-0 transform transition-transform duration-300 ease-in-out" :class="sidebarOpen ? 'translate-x-0' : '-translate-x-full'">
     <div class="flex flex-col h-full">
       <div class="flex items-center justify-between h-20 px-6 shrink-0 border-b border-slate-700">
@@ -79,9 +57,7 @@
 
   <main class="flex-1 p-4 sm:p-8 space-y-6 sm:space-y-8">
     <div class="flex items-center gap-4">
-        <button class="sm:hidden text-light" @click.stop="sidebarOpen = true">
-            <i data-lucide="menu" class="w-7 h-7"></i>
-        </button>
+        <button class="sm:hidden text-light" @click.stop="sidebarOpen = true"><i data-lucide="menu" class="w-7 h-7"></i></button>
         <div class="flex items-center gap-3">
             <i data-lucide="wrench" class="w-8 h-8 text-brand"></i>
             <div>
@@ -95,7 +71,7 @@
       <div class="space-y-6">
         <div>
           <label class="block font-medium text-sm text-muted mb-1">Your Company Name</label>
-          <input type="text" x-model="companyName" placeholder="e.g. ContraktAI Pvt Ltd" class="w-full border border-dark rounded-lg p-3 bg-dark text-light" />
+          <input type="text" x-model="companyName" placeholder="e.g. ContraktAI Pvt. Ltd." class="w-full border border-dark rounded-lg p-3 bg-dark text-light" />
         </div>
 
         <div>
@@ -111,13 +87,13 @@
         <div x-show="agreementType" x-transition>
           <h3 class="font-semibold text-light mb-2">Select Clauses</h3>
           <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
-            <template x-for="(enabled, clause) in clauseOptions[agreementType]" :key="clause">
+            <template x-for="(clause, index) in clauses" :key="index">
               <label class="clause-card flex items-center justify-between bg-dark p-4 rounded-lg border border-dark hover:border-brand transition cursor-pointer">
                 <div class="flex items-center gap-3">
-                  <input type="checkbox" x-model="clauseOptions[agreementType][clause]" class="rounded h-4 w-4 text-amber-400 bg-slate-700 border-slate-600 focus:ring-amber-400" />
-                  <span class="text-sm text-light" x-text="clause"></span>
+                  <input type="checkbox" x-model="clause.enabled" class="rounded h-4 w-4 text-amber-400 bg-slate-700 border-slate-600 focus:ring-amber-400" />
+                  <span class="text-sm text-light" x-text="clause.name"></span>
                 </div>
-                <i data-lucide="info" class="icon text-muted" :title="clauseExplanations[clause] || 'No explanation available.'"></i>
+                <i data-lucide="info" class="icon text-muted" :title="clauseExplanations[clause.name] || 'No explanation available.'"></i>
               </label>
             </template>
           </div>
@@ -128,7 +104,7 @@
           <textarea x-model="customClause" class="w-full border border-dark rounded-lg p-3 h-32 resize-none bg-dark text-light" placeholder="e.g., 'The service will be integrated with third-party API XYZ, and the user agrees to their terms.'"></textarea>
         </div>
 
-        <button @click="generateDocument" :disabled="loading" class="w-full bg-amber-400 text-slate-900 font-semibold py-3 rounded-lg hover:bg-amber-500 transition flex items-center justify-center gap-2 disabled:bg-amber-600 disabled:cursor-not-allowed">
+        <button @click="generateDocument" :disabled="loading" class="w-full bg-amber-400 text-slate-900 font-semibold py-3 rounded-lg hover:bg-amber-500 transition flex items-center justify-center gap-2 disabled:opacity-70 disabled:cursor-not-allowed">
           <template x-if="loading">
             <svg class="animate-spin -ml-1 mr-3 h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
                 <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
@@ -150,13 +126,16 @@
           <button @click="downloadDocument" class="text-sm text-muted hover:text-brand flex items-center gap-1.5">
             <i data-lucide="download" class="w-4 h-4"></i> Download
           </button>
-          <button @click="copyDocument" class="text-sm text-muted hover:text-brand flex items-center gap-1.5">
-            <i data-lucide="copy" class="w-4 h-4"></i> Copy
+          <button @click="copyDocument" x-data="{ copied: false }" @click="copied = true; setTimeout(() => copied = false, 2000)" class="text-sm text-muted hover:text-brand flex items-center gap-1.5">
+            <i x-show="!copied" data-lucide="copy" class="w-4 h-4"></i>
+            <i x-show="copied" data-lucide="check" class="w-4 h-4 text-green-400"></i>
+            <span x-text="copied ? 'Copied!' : 'Copy'"></span>
           </button>
         </div>
       </div>
       
-      <div class="bg-dark rounded-lg p-6 border border-dark clause-text text-sm leading-relaxed" x-html="documentOutput"></div>
+      <div id="documentOutputContainer" class="prose prose-sm max-w-none prose-invert prose-p:text-slate-300 prose-headings:text-light prose-strong:text-light bg-dark rounded-lg p-6 border border-dark clause-text">
+          </div>
     </section>
   </main>
 </div>
@@ -169,10 +148,38 @@
       customClause: '',
       documentOutput: '',
       loading: false,
-
+      clauses: [],
+      
       agreementTypes: [ "NDA", "Service Agreement", "Privacy Policy", "Employment Agreement", "Terms of Service", "Freelance Contract", "Partnership Agreement", "Consulting Agreement", "Software License Agreement" ],
-      clauseOptions: { "NDA": { "Confidentiality": true, "Exclusions": false, "Term": true, "Governing Law": true, "No License Granted": false, "Remedies": false, "Return of Materials": false, "Mutuality": false }, "Service Agreement": { "Scope of Services": true, "Payment Terms": true, "Termination": true, "IP Ownership": false, "Confidentiality": true, "SLA": false, "Liability": false }, "Privacy Policy": { "Data Collection": true, "Cookies": false, "User Rights": true, "Data Sharing": false, "Retention": false, "Security": false, "Consent": true }, "Employment Agreement": { "Job Role": true, "Compensation": true, "Probation Period": false, "Benefits": false, "Non-Compete": false, "Termination": true, "Confidentiality": true }, "Terms of Service": { "User Responsibilities": true, "License Grant": true, "Termination": true, "Limitation of Liability": true, "Indemnification": false, "Dispute Resolution": false }, "Freelance Contract": { "Project Scope": true, "Payment Schedule": true, "IP Ownership": false, "Cancellation Policy": false, "Timeline": true, "Independent Contractor": true }, "Partnership Agreement": { "Capital Contributions": true, "Profit Sharing": true, "Roles & Responsibilities": true, "Exit Strategy": false, "Non-Compete": false, "Dispute Resolution": true }, "Consulting Agreement": { "Consulting Scope": true, "Fees & Expenses": true, "Deliverables": true, "IP Ownership": false, "Confidentiality": true, "Non-Solicitation": false }, "Software License Agreement": { "License Grant": true, "Restrictions": true, "Updates & Maintenance": false, "Term & Termination": true, "Fees": true, "Warranty Disclaimer": false, "Liability Limitation": true } },
-      clauseExplanations: { "Confidentiality": "Keeps sensitive information private.", "Exclusions": "Details what is not confidential.", "Term": "Sets the agreement duration.", "Governing Law": "Decides which laws apply.", "No License Granted": "States no IP license is given.", "Remedies": "Legal recourse for breaches.", "Return of Materials": "Requires return of materials on termination.", "Mutuality": "Ensures equal obligations.", "Scope of Services": "Defines the work to be delivered.", "Payment Terms": "How and when payments are made.", "Termination": "How the agreement can end.", "IP Ownership": "Clarifies who owns created IP.", "SLA": "Service Level Agreement guarantees.", "Liability": "Limits damages one can claim.", "Data Collection": "What data is collected and why.", "Cookies": "Covers tracking and cookie usage.", "User Rights": "Data access, deletion, and consent.", "Data Sharing": "How data is shared externally.", "Retention": "How long data is stored.", "Security": "Measures to secure information.", "Consent": "Obtaining lawful user agreement.", "Job Role": "Employee's responsibilities.", "Compensation": "Salary and wages.", "Probation Period": "Trial period for new hires.", "Benefits": "Health insurance, perks, etc.", "Non-Compete": "Restricts working with competitors.", "User Responsibilities": "Rules for using the platform.", "License Grant": "Limited use of service/product.", "Limitation of Liability": "Restricts legal claims.", "Indemnification": "Covering damages for the other party.", "Dispute Resolution": "How legal issues will be resolved.", "Project Scope": "Defines project boundaries.", "Payment Schedule": "Timeline for payments.", "Cancellation Policy": "Terms for ending the contract.", "Timeline": "Deadlines and milestones.", "Independent Contractor": "Clarifies non-employee status.", "Capital Contributions": "Partner investments.", "Profit Sharing": "How revenue is split.", "Roles & Responsibilities": "What each partner does.", "Exit Strategy": "Terms for leaving the partnership.", "Consulting Scope": "Type of consulting provided.", "Fees & Expenses": "Billing structure.", "Deliverables": "Expected final outputs.", "Non-Solicitation": "Restricts luring employees/clients.", "Restrictions": "What the licensee cannot do.", "Updates & Maintenance": "Software upgrade conditions.", "Term & Termination": "When the agreement ends.", "Fees": "All costs involved.", "Warranty Disclaimer": "Denies implied guarantees.", "Liability Limitation": "Caps legal responsibility." },
+      
+      partyMappings: {
+        "NDA": { client: "Disclosing Party", counterparty: "Receiving Party" },
+        "Service Agreement": { client: "Client", counterparty: "Service Provider" },
+        "Privacy Policy": { client: "Company", counterparty: "User" },
+        "Employment Agreement": { client: "Company", counterparty: "Employee" },
+        "Terms of Service": { client: "Company", counterparty: "User" },
+        "Freelance Contract": { client: "Client", counterparty: "Freelancer" },
+        "Partnership Agreement": { client: "Partner A", counterparty: "Partner B" },
+        "Consulting Agreement": { client: "Client", counterparty: "Consultant" },
+        "Software License Agreement": { client: "Licensor", counterparty: "Licensee" }
+      },
+      
+      clauseOptions: { "NDA": { "Confidentiality": true, "Exclusions": false, "Term": true, "Governing Law": true }, "Service Agreement": { "Scope of Services": true, "Payment Terms": true, "Termination": true, "Confidentiality": true }, "Privacy Policy": { "Data Collection": true, "User Rights": true, "Consent": true }, "Employment Agreement": { "Job Role": true, "Compensation": true, "Termination": true, "Confidentiality": true }, "Terms of Service": { "User Responsibilities": true, "License Grant": true, "Termination": true, "Limitation of Liability": true }, "Freelance Contract": { "Project Scope": true, "Payment Schedule": true, "Timeline": true, "Independent Contractor": true }, "Partnership Agreement": { "Capital Contributions": true, "Profit Sharing": true, "Roles & Responsibilities": true, "Dispute Resolution": true }, "Consulting Agreement": { "Consulting Scope": true, "Fees & Expenses": true, "Deliverables": true, "Confidentiality": true }, "Software License Agreement": { "License Grant": true, "Restrictions": true, "Term & Termination": true, "Liability Limitation": true } },
+      clauseExplanations: { "Confidentiality": "Keeps sensitive information private.", "Exclusions": "Details what is not confidential.", "Term": "Sets the agreement duration.", "Governing Law": "Decides which laws apply.", "Scope of Services": "Defines the work to be delivered.", "Payment Terms": "How and when payments are made.", "Termination": "How the agreement can end.", "IP Ownership": "Clarifies who owns created IP.", "Data Collection": "What data is collected and why.", "User Rights": "Data access, deletion, and consent.", "Consent": "Obtaining lawful user agreement.", "Job Role": "Employee's responsibilities.", "Compensation": "Salary and wages.", "User Responsibilities": "Rules for using the platform.", "License Grant": "Limited use of service/product.", "Limitation of Liability": "Restricts legal claims.", "Project Scope": "Defines project boundaries.", "Payment Schedule": "Timeline for payments.", "Independent Contractor": "Clarifies non-employee status.", "Capital Contributions": "Partner investments.", "Profit Sharing": "How revenue is split.", "Roles & Responsibilities": "What each partner does.", "Dispute Resolution": "How legal issues will be resolved.", "Consulting Scope": "Type of consulting provided.", "Fees & Expenses": "Billing structure.", "Deliverables": "Expected final outputs.", "Restrictions": "What the licensee cannot do.", "Term & Termination": "When the agreement ends." },
+
+      init() {
+          this.$watch('agreementType', (newType) => {
+              this.documentOutput = '';
+              if (!newType) {
+                  this.clauses = [];
+                  return;
+              }
+              this.clauses = Object.keys(this.clauseOptions[newType]).map(name => ({
+                  name: name,
+                  enabled: this.clauseOptions[newType][name]
+              }));
+          });
+      },
 
       async generateDocument() {
         if (!this.agreementType) {
@@ -181,28 +188,33 @@
         }
 
         this.loading = true;
-        this.documentOutput = '<p class="text-muted">Generating your document with AI... This may take a moment.</p>';
+        this.documentOutput = true; 
+        const outputContainer = document.getElementById('documentOutputContainer');
+        outputContainer.innerHTML = '<p class="text-muted animate-pulse">Generating your document with AI... This may take a moment.</p>';
         
-        const selectedClauses = Object.entries(this.clauseOptions[this.agreementType])
-            .filter(([_, enabled]) => enabled)
-            .map(([clause]) => clause);
+        const selectedClauses = this.clauses.filter(c => c.enabled).map(c => c.name);
+        const parties = this.partyMappings[this.agreementType] || { client: "Party A", counterparty: "Party B" };
+        const clientName = this.companyName || `[${parties.client}'s Name]`;
+        const counterpartyPlaceholder = `[${parties.counterparty}'s Name]`;
+        const currentDate = '20 July 2025';
 
-        const prompt = `You are an expert legal assistant AI specializing in contract drafting. Your task is to generate a complete legal document based on the user's requirements.
+        const prompt = `You are an expert legal assistant AI. Your task is to generate a complete legal document from start to finish based on the user's requirements.
 
-Please generate a complete '${this.agreementType}'.
-
-Use the following details:
-- **Company Name:** "${this.companyName || '[Your Company Name]'}"
-- **Required Standard Clauses:** ${JSON.stringify(selectedClauses)}
+**DOCUMENT DETAILS:**
+- **Document Type:** "${this.agreementType}"
+- **Party 1 Name ("${parties.client}"):** "${clientName}"
+- **Party 2 Name ("${parties.counterparty}"):** "${counterpartyPlaceholder}"
+- **Effective Date:** "${currentDate}"
+- **Required Clauses:** ${JSON.stringify(selectedClauses)}
 ${this.customClause.trim() ? `- **Custom Clause to Include:** "${this.customClause.trim()}"` : ''}
 
-Instructions:
-1. Draft the full text for each of the required standard clauses.
-2. If a custom clause is provided, integrate it seamlessly into the document as its own numbered section.
-3. Use professional legal language and formatting, including numbered sections for each clause (e.g., 1. CONFIDENTIALITY, 2. TERM, etc.).
-4. The entire output should be a single, coherent document.
-5. Replace placeholders like '[Your Company Name]' with the provided company name.
-6. Do not include any introductory text, closing remarks, or markdown formatting like \`\`\` in your response. Only output the raw text of the legal document.`;
+**INSTRUCTIONS:**
+1.  **Generate the entire document.** This includes a main title, an introductory paragraph, all the required clauses, and a signature block at the end.
+2.  **Introduction:** Start with an introduction like: "This ${this.agreementType} ('Agreement') is made and entered into on ${currentDate} ('Effective Date') by and between ${clientName} ('${parties.client}') and ${counterpartyPlaceholder} ('${parties.counterparty}')."
+3.  **Clause Formatting:** For each clause, the title MUST be on its own line, followed by a colon. The full text of the clause MUST start on the next line. (e.g., "1. CONFIDENTIALITY:\nThe text of the clause starts here..."). Ensure clauses are numbered sequentially.
+4.  **Custom Clause:** If a custom clause is provided, integrate it seamlessly as the last numbered section.
+5.  **Signature Block:** Conclude the document with a standard signature block for both parties. Do not include signature blocks for Privacy Policies or Terms of Service.
+6.  **Output:** Your entire response should be the raw text of the final document, with no extra explanations or markdown.`;
 
         try {
             const response = await fetch("https://api.together.xyz/v1/chat/completions", {
@@ -213,10 +225,7 @@ Instructions:
                 },
                 body: JSON.stringify({
                     model: "meta-llama/Llama-3.3-70B-Instruct-Turbo-Free",
-                    messages: [{
-                        role: "user",
-                        content: prompt
-                    }],
+                    messages: [{ role: "user", content: prompt }],
                     temperature: 0.5
                 })
             });
@@ -224,30 +233,27 @@ Instructions:
             if (!response.ok) throw new Error(`API error: ${response.statusText}`);
 
             const data = await response.json();
-            this.documentOutput = data.choices[0].message.content;
+            const fullDocumentText = data.choices[0].message.content;
+            
+            outputContainer.innerHTML = fullDocumentText.replace(/\n/g, '<br />');
 
         } catch(error) {
             console.error("Failed to generate document:", error);
-            this.documentOutput = `<p class="text-red-400">Sorry, an error occurred while generating the document. Please try again.</p>`;
+            outputContainer.innerHTML = `<p class="text-red-400">Sorry, an error occurred while generating the document. Please check the console and try again.</p>`;
         } finally {
             this.loading = false;
         }
       },
 
       copyDocument() {
-        const temp = document.createElement('div');
-        temp.innerHTML = this.documentOutput;
-        const text = temp.innerText || '';
-        
-        navigator.clipboard.writeText(text)
-          .then(() => alert("Document copied to clipboard!"))
-          .catch(() => alert("Failed to copy document"));
+        const outputContainer = document.getElementById('documentOutputContainer');
+        const text = outputContainer.innerText || '';
+        navigator.clipboard.writeText(text);
       },
 
       downloadDocument() {
-        const temp = document.createElement('div');
-        temp.innerHTML = this.documentOutput;
-        const text = temp.innerText || '';
+        const outputContainer = document.getElementById('documentOutputContainer');
+        const text = outputContainer.innerText || '';
         
         const blob = new Blob([text], { type: 'text/plain' });
         const url = URL.createObjectURL(blob);
