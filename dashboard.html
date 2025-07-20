@@ -6,33 +6,33 @@
   <title>Dashboard – ContraktAI</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://unpkg.com/alpinejs" defer></script>
-  <script src="https://unpkg.com/lucide@latest" defer></script>
+  <script src="https://unpkg.com/lucide@latest"></script>
   <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&display=swap" rel="stylesheet" />
   <style>
     body {
       font-family: 'Outfit', sans-serif;
-      background-color: #1c1a28;
+      background-color: #0f172a; /* Slate-900 */
     }
 
-    .bg-dark { background-color: #161616; }
-    .bg-panel { background-color: #1f1f1f; }
-    .text-light { color: #e2e2e2; }
-    .text-muted { color: #a0a0b0; }
+    .bg-dark { background-color: #0f172a; }
+    .bg-panel { background-color: #1e293b; } /* Slate-800 */
+    .text-light { color: #f1f5f9; } /* Slate-100 */
+    .text-muted { color: #94a3b8; } /* Slate-400 */
     .icon { width: 18px; height: 18px; stroke-width: 1.8; }
-    .text-mint { color: #4ADE80; }
+    .text-brand { color: #facc15; } /* Amber-400 */
 
     input:focus, textarea:focus, select:focus, button:focus {
       outline: none;
-      box-shadow: 0 0 0 2px #4ADE80;
-      border-color: #4ADE80;
+      box-shadow: 0 0 0 2px #facc15; /* Gold focus ring */
+      border-color: #facc15;
     }
 
     input:hover, textarea:hover, select:hover, button:hover {
-      border-color: #4ADE80;
+      border-color: #facc15;
     }
 
     a:hover {
-      color: #4ADE80;
+      color: #facc15; /* Gold hover color */
     }
 
     [x-cloak] { display: none !important; }
@@ -42,122 +42,143 @@
 
 <div class="flex min-h-screen">
 
-  <!-- Sidebar -->
-  <aside class="fixed z-40 inset-y-0 left-0 w-64 bg-panel shadow-lg sm:translate-x-0 sm:relative transform transition-transform duration-200 ease-in-out" :class="{ '-translate-x-full': !sidebarOpen }">
-    <div class="flex flex-col h-full px-6 py-6">
-      <div class="flex items-center justify-between mb-8">
-        <img src="images/logo.png" alt="ContraktAI Logo" class="h-7 w-auto" />
+  <div x-show="sidebarOpen" x-transition:enter="transition-opacity ease-linear duration-300" x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100" x-transition:leave="transition-opacity ease-linear duration-300" x-transition:leave-start="opacity-100" x-transition:leave-end="opacity-0" class="fixed inset-0 bg-black/50 z-30 sm:hidden" @click="sidebarOpen = false" x-cloak></div>
+
+  <aside x-cloak class="fixed z-40 inset-y-0 left-0 w-64 bg-panel shadow-lg sm:relative sm:translate-x-0 transform transition-transform duration-300 ease-in-out" :class="sidebarOpen ? 'translate-x-0' : '-translate-x-full'">
+    <div class="flex flex-col h-full">
+      <div class="flex items-center justify-between h-20 px-6 shrink-0 border-b border-slate-700">
+        <a href="dashboard.html" class="text-2xl font-bold text-brand">ContraktAI</a>
         <button class="sm:hidden" @click="sidebarOpen = false">
-          <svg class="w-6 h-6 text-light" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-            <path d="M6 18L18 6M6 6l12 12" stroke-linecap="round" stroke-linejoin="round"/>
-          </svg>
+          <i data-lucide="x" class="w-6 h-6 text-light"></i>
         </button>
       </div>
-      <nav class="flex flex-col gap-4 text-sm font-medium text-light">
-        <a href="dashboard.html" class="flex items-center gap-2 text-mint font-semibold"><i data-lucide="layout-dashboard" class="icon"></i>Dashboard</a>
-        <a href="#" class="flex items-center gap-2 hover:text-mint"><i data-lucide="file" class="icon"></i>My Documents</a>
-        <a href="#" class="flex items-center gap-2 hover:text-mint"><i data-lucide="bar-chart-3" class="icon"></i>Analytics</a>
-        <a href="#" class="flex items-center gap-2 hover:text-mint"><i data-lucide="shield-alert" class="icon"></i>Compliance Alerts</a>
-        <a href="custom-clause.html" class="flex items-center gap-2 hover:text-mint"><i data-lucide="wrench" class="icon"></i>Clause Builder</a>
-        <a href="legal-mail-gen.html" class="flex items-center gap-2 hover:text-mint"><i data-lucide="mail" class="icon"></i>Legal Email Gen</a>
-        <a href="clause-explainer.html" class="flex items-center gap-2 hover:text-mint"><i data-lucide="file-text" class="icon"></i>Clause Explainer</a>
-        <a href="#" class="mt-8 flex items-center gap-2 text-red-400 hover:text-red-500"><i data-lucide="log-out" class="icon"></i>Logout</a>
+      <nav class="flex-1 px-6 py-6 flex flex-col justify-between">
+          <div class="flex flex-col gap-4 text-sm font-medium text-light">
+            <a href="dashboard.html" class="flex items-center gap-3 p-2 rounded-lg bg-slate-700 text-brand font-semibold"><i data-lucide="layout-dashboard" class="icon"></i>Dashboard</a>
+            <a href="#" class="flex items-center gap-3 p-2 rounded-lg hover:bg-slate-700"><i data-lucide="file" class="icon"></i>My Documents</a>
+            <a href="#" class="flex items-center gap-3 p-2 rounded-lg hover:bg-slate-700"><i data-lucide="bar-chart-3" class="icon"></i>Analytics</a>
+            <a href="#" class="flex items-center gap-3 p-2 rounded-lg hover:bg-slate-700"><i data-lucide="shield-alert" class="icon"></i>Compliance Alerts</a>
+            <a href="custom-clause.html" class="flex items-center gap-3 p-2 rounded-lg hover:bg-slate-700"><i data-lucide="wrench" class="icon"></i>Clause Builder</a>
+            <a href="legal-mail-gen.html" class="flex items-center gap-3 p-2 rounded-lg hover:bg-slate-700"><i data-lucide="mail" class="icon"></i>Legal Email Gen</a>
+            <a href="clause-explainer.html" class="flex items-center gap-3 p-2 rounded-lg hover:bg-slate-700"><i data-lucide="file-text" class="icon"></i>Clause Explainer</a>
+        </div>
+        <div>
+            <a href="#" class="flex items-center gap-3 p-2 rounded-lg text-red-400 hover:bg-red-900/50 hover:text-red-300"><i data-lucide="log-out" class="icon"></i>Logout</a>
+        </div>
       </nav>
     </div>
   </aside>
 
-  <!-- Main Content -->
-  <main class="flex-1 p-14 space-y-10">
-    <!-- Header -->
-    <section class="bg-panel rounded-xl p-6">
-      <h2 class="text-3xl font-bold mb-2">📊 Welcome back, Alex 👋</h2>
-      <p class="text-muted">Here’s what’s happening in your legal workspace.</p>
+  <main class="flex-1 p-4 sm:p-8 space-y-6 sm:space-y-8">
+    <section class="flex items-center justify-between">
+      <div class="flex items-center gap-4">
+        <button class="sm:hidden text-light" @click.stop="sidebarOpen = true">
+            <i data-lucide="menu" class="w-7 h-7"></i>
+        </button>
+        <div>
+            <h2 class="text-2xl sm:text-3xl font-bold flex items-center gap-2">Welcome back, Alex <i data-lucide="hand" class="w-7 h-7 text-amber-400"></i></h2>
+            <p class="text-sm sm:text-base text-muted">Here’s what’s happening in your legal workspace.</p>
+        </div>
+      </div>
     </section>
 
-    <!-- Activity + Plan -->
-    <div class="grid md:grid-cols-3 gap-6">
-      <div class="bg-panel col-span-2 rounded-xl p-6">
-        <h3 class="text-xl font-semibold text-mint mb-3">📌 Recent Activity</h3>
+    <div class="grid lg:grid-cols-3 gap-6 sm:gap-8">
+      <div class="bg-panel lg:col-span-2 rounded-xl p-6">
+        <h3 class="text-lg sm:text-xl font-semibold text-brand mb-4 flex items-center gap-3"><i data-lucide="activity" class="w-5 h-5"></i> Recent Activity</h3>
         <ul class="space-y-3 text-light text-sm">
-          <li>📝 Edited "Terms of Service" – 2 hrs ago</li>
-          <li>📄 Generated "Refund Policy" – yesterday</li>
-          <li>📤 Exported all documents – 2 days ago</li>
-          <li>🔁 Updated Privacy Policy for GDPR – 3 days ago</li>
+          <li class="flex items-center gap-2 text-muted"><i data-lucide="edit-3" class="w-4 h-4 text-slate-500"></i> Edited "Terms of Service" – 2 hrs ago</li>
+          <li class="flex items-center gap-2 text-muted"><i data-lucide="file-plus-2" class="w-4 h-4 text-slate-500"></i> Generated "Refund Policy" – yesterday</li>
+          <li class="flex items-center gap-2 text-muted"><i data-lucide="download" class="w-4 h-4 text-slate-500"></i> Exported all documents – 2 days ago</li>
+          <li class="flex items-center gap-2 text-muted"><i data-lucide="refresh-cw" class="w-4 h-4 text-slate-500"></i> Updated Privacy Policy for GDPR – 3 days ago</li>
         </ul>
       </div>
-      <div class="bg-panel rounded-xl p-6">
-        <h3 class="text-xl font-semibold text-mint mb-3">📦 Plan Status</h3>
-        <p class="text-light text-sm">Free Plan – 1 of 1 documents used</p>
-        <button class="mt-4 w-full bg-[#4ADE80] text-black py-2 rounded-lg hover:bg-green-400 font-semibold">Upgrade to Pro</button>
+      <div class="bg-panel rounded-xl p-6 flex flex-col">
+        <h3 class="text-lg sm:text-xl font-semibold text-brand mb-3 flex items-center gap-3"><i data-lucide="package" class="w-5 h-5"></i> Plan Status</h3>
+        <div class="flex-1">
+            <p class="text-light text-sm mb-2">Free Plan – 1 of 1 documents used</p>
+            <div class="w-full bg-slate-600 rounded-full h-2.5">
+                <div class="bg-amber-400 h-2.5 rounded-full" style="width: 100%"></div>
+            </div>
+        </div>
+        <button class="mt-4 w-full bg-amber-400 text-slate-900 py-2 rounded-lg hover:bg-amber-500 font-semibold transition-colors">Upgrade to Pro</button>
       </div>
     </div>
 
-    <!-- Document Stats -->
     <section class="bg-panel rounded-xl p-6">
-      <h3 class="text-xl font-semibold text-mint mb-4">📁 Document Health Overview</h3>
-      <div class="grid sm:grid-cols-3 gap-6 text-center">
-        <div class="bg-green-900/20 rounded-lg p-4">
-          <div class="text-2xl font-bold text-green-400">2</div>
-          <p class="text-sm text-muted">Compliant</p>
+      <h3 class="text-lg sm:text-xl font-semibold text-brand mb-4 flex items-center gap-3"><i data-lucide="folder-check" class="w-5 h-5"></i> Document Health Overview</h3>
+      <div class="grid grid-cols-1 sm:grid-cols-3 gap-6 text-center">
+        <div class="bg-green-500/10 border border-green-500/20 rounded-lg p-4">
+          <p class="text-3xl font-bold text-green-400">2</p>
+          <p class="text-sm text-green-400/80">Compliant</p>
         </div>
-        <div class="bg-yellow-900/20 rounded-lg p-4">
-          <div class="text-2xl font-bold text-yellow-400">1</div>
-          <p class="text-sm text-muted">Needs Update</p>
+        <div class="bg-yellow-500/10 border border-yellow-500/20 rounded-lg p-4">
+          <p class="text-3xl font-bold text-yellow-400">1</p>
+          <p class="text-sm text-yellow-400/80">Needs Update</p>
         </div>
-        <div class="bg-slate-700 rounded-lg p-4">
-          <div class="text-2xl font-bold text-slate-200">1</div>
-          <p class="text-sm text-muted">Drafts</p>
+        <div class="bg-slate-500/10 border border-slate-500/20 rounded-lg p-4">
+          <p class="text-3xl font-bold text-slate-300">1</p>
+          <p class="text-sm text-slate-400">Drafts</p>
         </div>
       </div>
     </section>
 
-    <!-- AI Suggestions -->
     <section class="bg-panel rounded-xl p-6">
-      <h3 class="text-xl font-semibold text-mint mb-3">🧠 AI Suggestions</h3>
-      <ul class="space-y-2 text-light text-sm">
-        <li>💡 Add a cookie policy for your eCommerce site.</li>
-        <li>🧾 Consider creating a co-founder agreement if raising funds.</li>
-        <li>🔒 CCPA email templates are now available to use.</li>
+      <h3 class="text-lg sm:text-xl font-semibold text-brand mb-4 flex items-center gap-3"><i data-lucide="brain-circuit" class="w-5 h-5"></i> AI Suggestions</h3>
+      <ul class="space-y-3 text-light text-sm">
+        <li class="flex items-start gap-3"><i data-lucide="lightbulb" class="w-4 h-4 text-yellow-400 mt-0.5 shrink-0"></i> <span>Add a cookie policy for your eCommerce site. <a href="#" class="underline text-brand">Generate now</a></span></li>
+        <li class="flex items-start gap-3"><i data-lucide="lightbulb" class="w-4 h-4 text-yellow-400 mt-0.5 shrink-0"></i> <span>Consider creating a co-founder agreement if you plan on raising funds.</span></li>
+        <li class="flex items-start gap-3"><i data-lucide="lightbulb" class="w-4 h-4 text-yellow-400 mt-0.5 shrink-0"></i> <span>CCPA-compliant email templates are now available in the Legal Email Generator.</span></li>
       </ul>
     </section>
 
-    <!-- Document Table -->
     <section class="bg-panel rounded-xl p-6">
-      <h3 class="text-xl font-semibold text-mint mb-4">📄 Your Documents</h3>
+      <h3 class="text-lg sm:text-xl font-semibold text-brand mb-4 flex items-center gap-3"><i data-lucide="files" class="w-5 h-5"></i> Your Documents</h3>
       <div class="overflow-x-auto">
         <table class="min-w-full text-sm text-left text-light">
-          <thead>
-            <tr class="text-muted border-b border-slate-600">
-              <th class="px-4 py-2">Name</th>
-              <th class="px-4 py-2">Created</th>
-              <th class="px-4 py-2">Status</th>
-              <th class="px-4 py-2">Actions</th>
+          <thead class="border-b border-slate-700">
+            <tr class="text-muted">
+              <th scope="col" class="px-4 py-3 font-medium">Name</th>
+              <th scope="col" class="px-4 py-3 font-medium">Created</th>
+              <th scope="col" class="px-4 py-3 font-medium">Status</th>
+              <th scope="col" class="px-4 py-3 font-medium text-right">Actions</th>
             </tr>
           </thead>
           <tbody>
-            <tr class="border-b border-slate-700 hover:bg-slate-800">
-              <td class="px-4 py-2">Privacy Policy</td>
-              <td class="px-4 py-2">Jun 22, 2025</td>
-              <td class="px-4 py-2 text-green-400 font-medium">✅ Compliant</td>
-              <td class="px-4 py-2 space-x-2">
-                <button class="text-mint hover:underline">Edit</button>
-                <button class="text-mint hover:underline">Download</button>
+            <tr class="border-b border-slate-800 hover:bg-slate-800/50">
+              <td class="px-4 py-3">Privacy Policy</td>
+              <td class="px-4 py-3 text-muted">July 18, 2025</td>
+              <td class="px-4 py-3">
+                <span class="inline-flex items-center gap-1.5 py-1 px-2 rounded-md text-xs font-medium bg-green-500/10 text-green-400">
+                    <i data-lucide="check-circle-2" class="w-3.5 h-3.5"></i> Compliant
+                </span>
+              </td>
+              <td class="px-4 py-3 text-right space-x-2">
+                <button class="text-brand hover:underline">Edit</button>
+                <button class="text-brand hover:underline">Download</button>
               </td>
             </tr>
-            <tr class="border-b border-slate-700 hover:bg-slate-800">
-              <td class="px-4 py-2">Terms of Service</td>
-              <td class="px-4 py-2">Jun 10, 2025</td>
-              <td class="px-4 py-2 text-yellow-400 font-medium">⚠️ Needs Update</td>
-              <td class="px-4 py-2 space-x-2">
-                <button class="text-mint hover:underline">View</button>
+            <tr class="border-b border-slate-800 hover:bg-slate-800/50">
+              <td class="px-4 py-3">Terms of Service</td>
+              <td class="px-4 py-3 text-muted">July 08, 2025</td>
+              <td class="px-4 py-3">
+                <span class="inline-flex items-center gap-1.5 py-1 px-2 rounded-md text-xs font-medium bg-yellow-500/10 text-yellow-400">
+                    <i data-lucide="alert-triangle" class="w-3.5 h-3.5"></i> Needs Update
+                </span>
+              </td>
+              <td class="px-4 py-3 text-right space-x-2">
+                <button class="text-brand hover:underline">View</button>
               </td>
             </tr>
-            <tr class="hover:bg-slate-800">
-              <td class="px-4 py-2">Refund Policy</td>
-              <td class="px-4 py-2">–</td>
-              <td class="px-4 py-2 text-muted font-medium">🕒 Draft</td>
-              <td class="px-4 py-2 space-x-2">
-                <button class="text-mint hover:underline">Continue</button>
+            <tr class="hover:bg-slate-800/50">
+              <td class="px-4 py-3">Refund Policy</td>
+              <td class="px-4 py-3 text-muted">–</td>
+              <td class="px-4 py-3">
+                <span class="inline-flex items-center gap-1.5 py-1 px-2 rounded-md text-xs font-medium bg-slate-500/10 text-slate-400">
+                    <i data-lucide="clock" class="w-3.5 h-3.5"></i> Draft
+                </span>
+              </td>
+              <td class="px-4 py-3 text-right space-x-2">
+                <button class="text-brand hover:underline">Continue</button>
               </td>
             </tr>
           </tbody>
