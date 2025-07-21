@@ -5,150 +5,166 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Sign In – ContraktAI</title>
   <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/alpinejs" defer></script>
   <script src="https://unpkg.com/lucide@latest"></script>
   <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&display=swap" rel="stylesheet" />
   <style>
-    @font-face {
-      font-family: 'Radeil3D';
-      src: url('fonts/Radeil3D.otf') format('opentype');
-    }
-
     body {
       font-family: 'Outfit', sans-serif;
-      background-color: #1c1a28;
+      background-color: #0f172a; /* bg-dark */
     }
+    .bg-dark { background-color: #0f172a; }
+    .bg-panel { background-color: #1e293b; }
+    .text-light { color: #f1f5f9; }
+    .text-muted { color: #94a3b8; }
+    .border-dark { border-color: #334155; }
+    .text-brand { color: #facc15; }
+    .border-brand { border-color: #facc15; }
 
-    .bg-dark { background-color: #161616; }
-    .bg-panel { background-color: #1f1f1f; }
-    .text-light { color: #e2e2e2; }
-    .text-muted { color: #a0a0b0; }
-    .border-light { border-color: #514b62; }
-    .text-mint { color: #4ADE80; }
-    .border-mint { border-color: #4ADE80; }
-
-    .floating-label {
-      position: relative;
-    }
-
-    .floating-label input {
-      padding: 1.25rem 1rem 0.5rem 1rem;
-      width: 100%;
-      background: #1f1f1f;
-      border: 1px solid #514b62;
+    /* Floating Label Styles */
+    .floating-label-group { position: relative; }
+    .floating-label-input {
+      border: 1px solid #334155; /* border-dark */
+      background-color: #1e293b; /* bg-panel */
       border-radius: 0.5rem;
-      font-size: 1rem;
+      padding: 1rem;
+      width: 100%;
+      color: #f1f5f9; /* text-light */
       outline: none;
-      color: #e2e2e2;
+      transition: border-color 0.2s ease;
     }
-
-    .floating-label label {
+    .floating-label-input:focus {
+      border-color: #facc15; /* border-brand */
+      box-shadow: 0 0 0 2px #facc15;
+    }
+    .floating-label {
       position: absolute;
-      left: 1rem;
-      top: 1.25rem;
-      color: #a0a0b0;
-      font-size: 1rem;
-      background-color: #1f1f1f; /* Match input background */
-      padding: 0 0.25rem;
-      transition: all 0.2s ease;
       pointer-events: none;
+      left: 1rem;
+      top: 1rem;
+      transition: all 0.2s ease-out;
+      color: #94a3b8; /* text-muted */
+      background-color: #1e293b; /* bg-panel */
+      padding: 0 0.25rem;
     }
-
-    .floating-label input:focus + label,
-    .floating-label input:not(:placeholder-shown) + label {
-      top: 0.35rem;
+    .floating-label-input:focus + .floating-label,
+    .floating-label-input:not(:placeholder-shown) + .floating-label {
+      top: -0.5rem;
       left: 0.75rem;
       font-size: 0.75rem;
-      color: #4ADE80;
-      background-color: #1f1f1f; /* Ensure background matches when label moves up */
+      color: #facc15; /* text-brand */
     }
 
-    .toggle-btn {
+    /* Autofill Background Fix */
+    input:-webkit-autofill,
+    input:-webkit-autofill:hover, 
+    input:-webkit-autofill:focus, 
+    input:-webkit-autofill:active {
+        -webkit-text-fill-color: #f1f5f9 !important;
+        box-shadow: 0 0 0px 1000px #1e293b inset !important;
+        transition: background-color 5000s ease-in-out 0s;
+    }
+
+    /* NEW: Animation for Left Panel */
+    @keyframes floatUp {
+      0% {
+        opacity: 0;
+        transform: translateY(100px) scale(0.8);
+      }
+      25%, 75% {
+        opacity: 0.1;
+      }
+      100% {
+        opacity: 0;
+        transform: translateY(-100px) scale(1.2);
+      }
+    }
+    .floating-item {
       position: absolute;
-      top: 50%;
-      right: 1rem;
-      transform: translateY(-50%);
-      cursor: pointer;
-      font-size: 0.875rem;
-      color: #4ADE80;
-      background-color: #1f1f1f; /* Add background to match */
-      padding: 0 0.25rem;
-    }
-
-    input:focus, textarea:focus, select:focus, button:focus {
-      outline: none;
-      box-shadow: 0 0 0 2px #4ADE80;
-      border-color: #4ADE80;
-    }
-
-    input:hover, textarea:hover, select:hover, button:hover {
-      border-color: #4ADE80;
-    }
-
-    a:hover {
-      color: #4ADE80;
+      background-color: #facc15;
+      border-radius: 0.5rem;
+      animation: floatUp 20s infinite ease-in-out;
     }
   </style>
 </head>
+<body class="text-light">
 
-<body class="min-h-screen flex items-center justify-center">
-
-  <div class="bg-panel rounded-xl shadow-lg w-full max-w-md p-8 border border-light">
-    <div class="flex items-center justify-center gap-2 mb-6">
-      <i data-lucide="lock" class="w-8 h-8 text-mint"></i>
-      <h2 class="text-2xl font-bold text-center text-light">Welcome Back</h2>
+  <div class="min-h-screen flex">
+    <!-- Left Panel (Branding) - Hidden on small screens -->
+    <div class="hidden lg:flex w-1/2 bg-panel items-center justify-center p-12 relative overflow-hidden">
+        <!-- Animation Container -->
+        <div class="absolute inset-0">
+            <div class="floating-item" style="width: 150px; height: 40px; left: 10%; top: 20%; animation-duration: 25s; animation-delay: -5s;"></div>
+            <div class="floating-item" style="width: 80px; height: 80px; left: 80%; top: 10%; animation-duration: 22s; animation-delay: -2s;"></div>
+            <div class="floating-item" style="width: 50px; height: 50px; left: 20%; top: 70%; animation-duration: 30s; animation-delay: -10s;"></div>
+            <div class="floating-item" style="width: 200px; height: 50px; left: 60%; top: 80%; animation-duration: 18s; animation-delay: -7s;"></div>
+            <div class="floating-item" style="width: 100px; height: 100px; left: 30%; top: 40%; animation-duration: 28s; animation-delay: 0s;"></div>
+            <div class="absolute text-brand/10" style="left: 15%; top: 50%; animation: floatUp 22s infinite ease-in-out; animation-delay: -3s;"><i data-lucide="file-text" class="w-24 h-24"></i></div>
+            <div class="absolute text-brand/10" style="left: 70%; top: 30%; animation: floatUp 26s infinite ease-in-out; animation-delay: -8s;"><i data-lucide="shield-check" class="w-20 h-20"></i></div>
+            <div class="absolute text-brand/10" style="left: 45%; top: 75%; animation: floatUp 20s infinite ease-in-out; animation-delay: -1s;"><i data-lucide="gavel" class="w-16 h-16"></i></div>
+        </div>
+        
+        <div class="text-center z-10">
+            <h1 class="text-4xl font-bold text-brand mb-4">ContraktAI</h1>
+            <p class="text-xl text-muted max-w-sm">AI-Powered Legal Documents. Done Right, Instantly.</p>
+        </div>
     </div>
 
-    <!-- Google Sign In -->
-    <div class="mb-6">
-      <button class="w-full flex items-center justify-center gap-3 border border-light rounded-lg py-2 text-sm text-light hover:bg-dark hover:border-mint transition">
-        <img src="https://www.svgrepo.com/show/475656/google-color.svg" alt="Google logo" class="w-5 h-5" />
-        Sign In with Google
-      </button>
-      <div class="text-center text-sm text-muted mt-4 mb-1">or</div>
+    <!-- Right Panel (Login Form) -->
+    <div class="w-full lg:w-1/2 flex items-center justify-center p-6 sm:p-12 bg-dark">
+      <div class="w-full max-w-md">
+        <div class="text-center lg:text-left mb-10">
+            <h2 class="text-3xl font-bold text-light">Welcome Back</h2>
+            <p class="text-muted mt-2">Sign in to access your dashboard.</p>
+        </div>
+
+        <!-- Social Login -->
+        <div class="space-y-3">
+             <button class="w-full flex items-center justify-center gap-3 border border-dark rounded-lg py-3 text-sm text-light hover:bg-panel hover:border-brand transition">
+                <img src="https://www.svgrepo.com/show/475656/google-color.svg" alt="Google logo" class="w-5 h-5" />
+                Sign In with Google
+            </button>
+        </div>
+
+        <div class="flex items-center my-6">
+            <hr class="flex-grow border-dark" />
+            <span class="mx-4 text-xs text-muted">OR</span>
+            <hr class="flex-grow border-dark" />
+        </div>
+
+        <!-- Login Form -->
+        <form class="space-y-6" x-data="{ showPassword: false }">
+          <div class="floating-label-group">
+            <input type="email" id="email" class="floating-label-input" placeholder=" " required />
+            <label for="email" class="floating-label">Email Address</label>
+          </div>
+
+          <div class="floating-label-group relative">
+            <input :type="showPassword ? 'text' : 'password'" id="password" class="floating-label-input pr-12" placeholder=" " required />
+            <label for="password" class="floating-label">Password</label>
+            <button type="button" @click="showPassword = !showPassword" class="absolute top-1/2 right-4 -translate-y-1/2 text-muted hover:text-brand">
+                <i x-show="!showPassword" data-lucide="eye" class="w-5 h-5"></i>
+                <i x-show="showPassword" data-lucide="eye-off" class="w-5 h-5"></i>
+            </button>
+          </div>
+
+          <div class="text-right">
+            <a href="#" class="text-sm text-brand hover:underline font-medium">Forgot Password?</a>
+          </div>
+
+          <button type="submit" class="w-full bg-amber-400 text-slate-900 py-3 rounded-lg hover:bg-amber-500 transition font-semibold flex items-center justify-center gap-2">
+            <i data-lucide="log-in" class="w-5 h-5"></i> Sign In
+          </button>
+        </form>
+
+        <p class="text-sm text-center mt-8 text-muted">Don't have an account?
+          <a href="signup.html" class="text-brand font-medium hover:underline">Sign Up</a>
+        </p>
+      </div>
     </div>
-
-    <!-- Login Form -->
-    <form class="space-y-5">
-      <div class="floating-label">
-        <input type="email" id="email" placeholder=" " required />
-        <label for="email">Email</label>
-      </div>
-
-      <div class="floating-label relative">
-        <input type="password" id="password" placeholder=" " required />
-        <label for="password">Password</label>
-        <span class="toggle-btn" onclick="togglePassword('password')">Show</span>
-      </div>
-
-      <!-- Forgot Password -->
-      <div class="text-right -mt-3">
-        <a href="#" class="text-sm text-mint hover:underline font-medium">Forgot Password?</a>
-      </div>
-
-      <button type="submit"
-        class="w-full bg-[#4ADE80] text-black py-3 rounded-lg hover:bg-green-400 transition font-semibold flex items-center justify-center gap-2">
-        <i data-lucide="log-in" class="icon"></i> Sign In
-      </button>
-    </form>
-
-    <p class="text-sm text-center mt-6 text-muted">Don't have an account?
-      <a href="signup.html" class="text-mint font-medium hover:underline">Sign Up</a>
-    </p>
   </div>
 
   <script>
-    function togglePassword(id) {
-      const input = document.getElementById(id);
-      const toggle = input.nextElementSibling.nextElementSibling;
-      if (input.type === "password") {
-        input.type = "text";
-        toggle.textContent = "Hide";
-      } else {
-        input.type = "password";
-        toggle.textContent = "Show";
-      }
-    }
-
     lucide.createIcons();
   </script>
 </body>
