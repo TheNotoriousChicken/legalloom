@@ -11,153 +11,231 @@
   <style>
     body {
       font-family: 'Outfit', sans-serif;
-      background-color: #f9fafb;
+      background-color: #0f172a; /* bg-dark */
     }
+    .bg-dark { background-color: #0f172a; }
+    .bg-panel { background-color: #1e293b; }
+    .text-light { color: #f1f5f9; }
+    .text-muted { color: #94a3b8; }
+    .border-dark { border-color: #334155; }
+    .icon { width: 18px; height: 18px; stroke-width: 1.8; }
+    .text-brand { color: #facc15; }
+    .border-brand { border-color: #facc15; }
+
+    input:focus, textarea:focus, select:focus, button:focus {
+      outline: none;
+      box-shadow: 0 0 0 2px #facc15;
+      border-color: #facc15;
+    }
+    a:hover { color: #facc15; }
+    [x-cloak] { display: none !important; }
+
+    .table-header-sortable {
+        cursor: pointer;
+        transition: color 0.2s ease-in-out;
+    }
+    .table-header-sortable:hover {
+        color: #f1f5f9;
+    }
+    .diff-del { background-color: rgba(239, 68, 68, 0.1); text-decoration: line-through; }
+    .diff-ins { background-color: rgba(74, 222, 128, 0.1); }
   </style>
 </head>
 
-<body class="text-gray-900">
+<body class="text-light bg-dark">
 <div class="flex min-h-screen" x-data="docLogs">
   
+  <!-- Sidebar Overlay for mobile -->
+  <div x-show="sidebarOpen" x-transition:enter="transition-opacity ease-linear duration-300" x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100" x-transition:leave="transition-opacity ease-linear duration-300" x-transition:leave-start="opacity-100" x-transition:leave-end="opacity-0" class="fixed inset-0 bg-black/70 z-30 sm:hidden" @click="sidebarOpen = false" x-cloak></div>
+
   <!-- Sidebar -->
-  <aside class="fixed inset-y-0 left-0 w-64 bg-white shadow-lg z-40 transform transition-transform duration-200 sm:translate-x-0" :class="{ '-translate-x-full': !sidebarOpen }">
-    <div class="flex flex-col h-full px-6 py-6">
-      <div class="flex items-center justify-between mb-8">
-        <h1 class="text-2xl font-bold text-indigo-600">Admin Panel</h1>
+  <aside x-cloak class="fixed z-40 inset-y-0 left-0 w-64 bg-panel shadow-lg sm:relative sm:translate-x-0 transform transition-transform duration-300 ease-in-out" :class="sidebarOpen ? 'translate-x-0' : '-translate-x-full'">
+    <div class="flex flex-col h-full">
+      <div class="flex items-center justify-between h-20 px-6 shrink-0 border-b border-slate-700">
+        <a href="admin-dash.html" class="text-2xl font-bold text-brand">Admin Panel</a>
         <button class="sm:hidden" @click="sidebarOpen = false">
-          <svg class="w-6 h-6 text-gray-600" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-            <path d="M6 18L18 6M6 6l12 12" />
-          </svg>
+          <i data-lucide="x" class="w-6 h-6 text-light"></i>
         </button>
       </div>
-      <nav class="flex flex-col gap-4 text-slate-700 text-sm font-medium">
-        <a href="admin-dash.html" class="flex items-center gap-2 hover:text-indigo-600">
-          <i data-lucide="layout-dashboard" class="w-5 h-5 text-indigo-500"></i>
-          Dashboard
-        </a>
-
-        <a href="admin-user-management.html" class="flex items-center gap-2 hover:text-indigo-600">
-          <i data-lucide="users" class="w-5 h-5 text-indigo-500"></i>
-          User Management
-        </a>
-
-        <a href="admin-docs-log.html" class="flex items-center gap-2 hover:text-indigo-600">
-          <i data-lucide="file-text" class="w-5 h-5 text-indigo-500"></i>
-          Document Logs
-        </a>
-
-        <a href="admin-feedback.html" class="flex items-center gap-2 hover:text-indigo-600">
-          <i data-lucide="mail" class="w-5 h-5 text-indigo-500"></i>
-          Feedback
-        </a>
-
-        <a href="admin-analytics.html" class="flex items-center gap-2 hover:text-indigo-600">
-          <i data-lucide="bar-chart-2" class="w-5 h-5 text-indigo-500"></i>
-          Analytics
-        </a>
-
-        <a href="admin-system-settings.html" class="flex items-center gap-2 hover:text-indigo-600">
-          <i data-lucide="settings" class="w-5 h-5 text-indigo-500"></i>
-          System Settings
-        </a>
-
-        <a href="admin-ai-logs.html" class="flex items-center gap-2 hover:text-indigo-600">
-          <i data-lucide="brain" class="w-5 h-5 text-indigo-500"></i>
-          AI Logs
-        </a>
-
-        <a href="admin-templates.html" class="flex items-center gap-2 hover:text-indigo-600">
-          <i data-lucide="folder" class="w-5 h-5 text-indigo-500"></i>
-          Templates
-        </a>
-
-        <a href="admin-announcement.html" class="flex items-center gap-2 hover:text-indigo-600">
-          <i data-lucide="megaphone" class="w-5 h-5 text-indigo-500"></i>
-          Announcements
-        </a>
-
-        <a href="admin-audit-logs.html" class="flex items-center gap-2 hover:text-indigo-600">
-          <i data-lucide="shield-check" class="w-5 h-5 text-indigo-500"></i>
-          Audit Logs
-        </a>
-
-        <a href="#" class="mt-6 flex items-center gap-2 text-red-500 hover:text-red-600">
-          <i data-lucide="log-out" class="w-5 h-5"></i>
-          Logout
-        </a>
+      <nav class="flex-1 px-6 py-6 flex flex-col justify-between">
+          <div class="flex flex-col gap-4 text-sm font-medium text-light">
+            <a href="admin-dash.html" class="flex items-center gap-3 p-2 rounded-lg hover:bg-slate-700"><i data-lucide="layout-dashboard" class="icon"></i>Dashboard</a>
+            <a href="admin-user-management.html" class="flex items-center gap-3 p-2 rounded-lg hover:bg-slate-700"><i data-lucide="users" class="icon"></i>User Management</a>
+            <a href="admin-docs-log.html" class="flex items-center gap-3 p-2 rounded-lg bg-slate-700 text-brand font-semibold"><i data-lucide="file-text" class="icon"></i>Document Logs</a>
+            <a href="admin-feedback.html" class="flex items-center gap-3 p-2 rounded-lg hover:bg-slate-700"><i data-lucide="mail" class="icon"></i>Feedback</a>
+            <a href="admin-analytics.html" class="flex items-center gap-3 p-2 rounded-lg hover:bg-slate-700"><i data-lucide="bar-chart-2" class="icon"></i>Analytics</a>
+            <a href="admin-system-settings.html" class="flex items-center gap-3 p-2 rounded-lg hover:bg-slate-700"><i data-lucide="settings" class="icon"></i>System Settings</a>
+            <a href="admin-ai-logs.html" class="flex items-center gap-3 p-2 rounded-lg hover:bg-slate-700"><i data-lucide="brain" class="icon"></i>AI Logs</a>
+            <a href="admin-templates.html" class="flex items-center gap-3 p-2 rounded-lg hover:bg-slate-700"><i data-lucide="folder" class="icon"></i>Templates</a>
+            <a href="admin-announcement.html" class="flex items-center gap-3 p-2 rounded-lg hover:bg-slate-700"><i data-lucide="megaphone" class="icon"></i>Announcements</a>
+            <a href="admin-audit-logs.html" class="flex items-center gap-3 p-2 rounded-lg hover:bg-slate-700"><i data-lucide="shield-check" class="icon"></i>Audit Logs</a>
+        </div>
+        <div>
+            <a href="#" class="flex items-center gap-3 p-2 rounded-lg text-red-400 hover:bg-red-900/50 hover:text-red-300"><i data-lucide="log-out" class="icon"></i>Logout</a>
+        </div>
       </nav>
     </div>
   </aside>
 
   <!-- Main -->
-  <main class="flex-1 sm:ml-64 p-8">
-    <section class="bg-white rounded-xl shadow p-6">
-      <h2 class="text-3xl font-bold text-slate-800 mb-1">📄 Document Logs</h2>
-      <p class="text-slate-600 mb-6">Track document actions made by users including edits, creations, and deletions.</p>
+  <main class="flex-1 p-4 sm:p-8 space-y-6 sm:space-y-8">
+    <!-- Header -->
+    <div class="flex items-center gap-4">
+        <button class="sm:hidden text-light" @click.stop="sidebarOpen = true"><i data-lucide="menu" class="w-7 h-7"></i></button>
+        <div class="flex items-center gap-3">
+            <i data-lucide="file-text" class="w-8 h-8 text-brand"></i>
+            <div>
+                <h2 class="text-2xl sm:text-3xl font-bold">Document Logs</h2>
+                <p class="text-sm sm:text-base text-muted">Track document actions made by users.</p>
+            </div>
+        </div>
+    </div>
 
+    <!-- Document Logs Table -->
+    <section class="bg-panel rounded-xl shadow p-6">
       <!-- Filters -->
       <div class="flex flex-col sm:flex-row justify-between gap-4 mb-6">
-        <input type="text" x-model="search" placeholder="🔍 Search by user or email..." class="w-full sm:w-1/2 border border-slate-300 rounded-lg px-4 py-2 text-sm" />
-        <input type="date" x-model="dateFilter" class="border border-slate-300 rounded-lg px-3 py-2 text-sm" />
+        <div class="relative w-full sm:max-w-xs">
+            <i data-lucide="search" class="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted"></i>
+            <input type="text" x-model="search" @input="currentPage = 1" placeholder="Search by user or email..." class="w-full rounded-lg pl-10 pr-4 py-2 text-sm bg-dark border border-dark text-light" />
+        </div>
+        <div class="flex items-center gap-4">
+            <select x-model="filterAction" @change="currentPage = 1" class="bg-dark border border-dark rounded-lg px-3 py-2 text-sm text-light">
+                <option value="all">All Actions</option>
+                <option value="Created">Created</option>
+                <option value="Edited">Edited</option>
+                <option value="Deleted">Deleted</option>
+            </select>
+            <input type="date" x-model="dateFilter" @change="currentPage = 1" class="bg-dark border border-dark rounded-lg px-3 py-2 text-sm text-light" />
+        </div>
       </div>
 
       <!-- Table -->
       <div class="overflow-x-auto">
-        <table class="min-w-full text-sm border rounded-lg">
-          <thead class="bg-slate-100 text-slate-600 font-medium border-b">
+        <table class="min-w-full text-sm">
+          <thead class="text-left text-muted border-b border-dark">
             <tr>
-              <th class="text-left px-4 py-3">User</th>
-              <th class="text-left px-4 py-3">Email</th>
-              <th class="text-left px-4 py-3">Document</th>
-              <th class="text-left px-4 py-3">Action</th>
-              <th class="text-left px-4 py-3">Date</th>
+              <th @click="sortBy('user')" class="px-4 py-3 font-semibold table-header-sortable">User</th>
+              <th @click="sortBy('document')" class="px-4 py-3 font-semibold table-header-sortable">Document</th>
+              <th @click="sortBy('action')" class="px-4 py-3 font-semibold table-header-sortable">Action</th>
+              <th @click="sortBy('date')" class="px-4 py-3 font-semibold table-header-sortable">Date</th>
             </tr>
           </thead>
-          <tbody>
-            <template x-for="log in filteredLogs()" :key="log.id">
-              <tr class="border-b hover:bg-slate-50">
-                <td class="px-4 py-2" x-text="log.user"></td>
-                <td class="px-4 py-2 text-slate-600" x-text="log.email"></td>
-                <td class="px-4 py-2" x-text="log.document"></td>
-                <td class="px-4 py-2" :class="{
-                  'text-green-600': log.action === 'Created',
-                  'text-yellow-600': log.action === 'Edited',
-                  'text-red-600': log.action === 'Deleted'
+          <tbody class="divide-y divide-dark">
+            <template x-for="log in paginatedLogs()" :key="log.id">
+              <tr @click="viewLog(log)" class="hover:bg-slate-800/50 cursor-pointer">
+                <td class="px-4 py-3" x-text="log.user"></td>
+                <td class="px-4 py-3 font-semibold" x-text="log.document"></td>
+                <td class="px-4 py-3 font-semibold" :class="{
+                  'text-green-400': log.action === 'Created',
+                  'text-yellow-400': log.action === 'Edited',
+                  'text-red-400': log.action === 'Deleted'
                 }" x-text="log.action"></td>
-                <td class="px-4 py-2 text-slate-500" x-text="log.date"></td>
+                <td class="px-4 py-3 text-muted" x-text="log.date"></td>
               </tr>
             </template>
           </tbody>
         </table>
       </div>
+      
+      <!-- Pagination -->
+      <div class="mt-6 flex justify-between items-center">
+        <p class="text-sm text-muted">Showing <span x-text="(currentPage - 1) * perPage + 1"></span> to <span x-text="Math.min(currentPage * perPage, sortedLogs().length)"></span> of <span x-text="sortedLogs().length"></span> logs</p>
+        <div class="flex items-center gap-2">
+            <button @click="prevPage" :disabled="currentPage === 1" class="p-2 rounded-md hover:bg-slate-700 disabled:opacity-50 disabled:cursor-not-allowed"><i data-lucide="chevron-left" class="w-4 h-4"></i></button>
+            <span class="text-sm" x-text="currentPage + ' / ' + totalPages()"></span>
+            <button @click="nextPage" :disabled="currentPage === totalPages()" class="p-2 rounded-md hover:bg-slate-700 disabled:opacity-50 disabled:cursor-not-allowed"><i data-lucide="chevron-right" class="w-4 h-4"></i></button>
+        </div>
+      </div>
     </section>
   </main>
+
+  <!-- View Log Modal -->
+  <div x-show="showModal" x-transition:enter="ease-out duration-300" x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100" x-transition:leave="ease-in duration-200" x-transition:leave-start="opacity-100" x-transition:leave-end="opacity-0" class="fixed inset-0 bg-black/70 z-50 flex items-center justify-center p-4" x-cloak>
+      <div @click.away="showModal = false" class="bg-panel rounded-xl shadow-lg w-full max-w-2xl max-h-[90vh] flex flex-col">
+          <div class="flex justify-between items-center p-4 border-b border-slate-700">
+              <h4 class="font-semibold text-brand flex items-center gap-2"><i data-lucide="history"></i> Log Details</h4>
+              <button @click="showModal = false"><i data-lucide="x" class="w-5 h-5 text-muted hover:text-light"></i></button>
+          </div>
+          <div class="p-6 overflow-y-auto space-y-4 text-sm" x-show="selectedLog">
+              <p><strong class="text-muted w-20 inline-block">User:</strong> <span x-text="selectedLog.user"></span></p>
+              <p><strong class="text-muted w-20 inline-block">Document:</strong> <span x-text="selectedLog.document"></span></p>
+              <p><strong class="text-muted w-20 inline-block">Action:</strong> <span x-text="selectedLog.action"></span></p>
+              <p><strong class="text-muted w-20 inline-block">Date:</strong> <span x-text="selectedLog.date"></span></p>
+              <div class="pt-4">
+                  <h5 class="font-semibold text-light mb-2">Content / Changes</h5>
+                  <div class="bg-dark rounded-lg p-4 whitespace-pre-wrap" x-html="selectedLog.content"></div>
+              </div>
+          </div>
+      </div>
+  </div>
 </div>
 
 <script>
   document.addEventListener('alpine:init', () => {
     Alpine.data('docLogs', () => ({
-      search: '',
-      dateFilter: '',
-      logs: [
-        { id: 1, user: 'Alex Johnson', email: 'alex@loom.com', document: 'Privacy Policy', action: 'Created', date: '2025-07-01' },
-        { id: 2, user: 'Priya Kapoor', email: 'priya@loom.com', document: 'Refund Terms', action: 'Edited', date: '2025-07-02' },
-        { id: 3, user: 'Ravi Desai', email: 'ravi@loom.com', document: 'NDA Template', action: 'Deleted', date: '2025-07-02' },
-        { id: 4, user: 'Sara Müller', email: 'sara@loom.com', document: 'Service Agreement', action: 'Edited', date: '2025-07-01' },
-      ],
+      search: '', dateFilter: '', filterAction: 'all',
+      logs: [],
+      showModal: false, selectedLog: null,
+      sortColumn: 'date', sortDirection: 'desc',
+      currentPage: 1, perPage: 10,
+
+      init() {
+        this.logs = [
+          { id: 1, user: 'Alex Johnson', email: 'alex@loom.com', document: 'Privacy Policy', action: 'Created', date: '2025-07-21', content: 'Initial version of the privacy policy created for the new website launch.' },
+          { id: 2, user: 'Priya Kapoor', email: 'priya@loom.com', document: 'Refund Terms', action: 'Edited', date: '2025-07-20', content: 'Changed the refund period from <del class="diff-del">30 days</del> to <ins class="diff-ins">14 days</ins> for all digital goods.' },
+          { id: 3, user: 'Ravi Desai', email: 'ravi@loom.com', document: 'NDA Template', action: 'Deleted', date: '2025-07-19', content: 'Old NDA template (v1.2) was removed from the system as it is now obsolete.' },
+          { id: 4, user: 'Sara Müller', email: 'sara@loom.com', document: 'Service Agreement', action: 'Edited', date: '2025-07-18', content: 'Added a new clause for <ins class="diff-ins">Force Majeure events</ins>.' },
+        ];
+      },
 
       filteredLogs() {
         return this.logs.filter(log => {
-          const searchMatch = log.user.toLowerCase().includes(this.search.toLowerCase()) || log.email.toLowerCase().includes(this.search.toLowerCase());
+          const searchMatch = log.user.toLowerCase().includes(this.search.toLowerCase()) || log.document.toLowerCase().includes(this.search.toLowerCase());
           const dateMatch = !this.dateFilter || log.date === this.dateFilter;
-          return searchMatch && dateMatch;
+          const actionMatch = this.filterAction === 'all' || log.action === this.filterAction;
+          return searchMatch && dateMatch && actionMatch;
         });
+      },
+      
+      sortedLogs() {
+        return this.filteredLogs().sort((a, b) => {
+            const modifier = this.sortDirection === 'asc' ? 1 : -1;
+            if (a[this.sortColumn] < b[this.sortColumn]) return -1 * modifier;
+            if (a[this.sortColumn] > b[this.sortColumn]) return 1 * modifier;
+            return 0;
+        });
+      },
+
+      paginatedLogs() {
+          const start = (this.currentPage - 1) * this.perPage;
+          const end = start + this.perPage;
+          return this.sortedLogs().slice(start, end);
+      },
+
+      totalPages() {
+          return Math.ceil(this.sortedLogs().length / this.perPage);
+      },
+
+      prevPage() { this.currentPage = Math.max(1, this.currentPage - 1); },
+      nextPage() { this.currentPage = Math.min(this.totalPages(), this.currentPage + 1); },
+
+      sortBy(column) {
+        if (this.sortColumn === column) {
+            this.sortDirection = this.sortDirection === 'asc' ? 'desc' : 'asc';
+        } else {
+            this.sortColumn = column;
+            this.sortDirection = 'asc';
+        }
+      },
+
+      viewLog(log) {
+        this.selectedLog = log;
+        this.showModal = true;
       }
     }))
   });
-</script>
 
-<script>
   lucide.createIcons();
 </script>
 
