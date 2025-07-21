@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="en" x-data="{ sidebarOpen: false }">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>AI Contract Reviewer – ContraktAI</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/alpinejs" defer></script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com/3.4.1?plugins=typography"></script>
+  <style>
+    body { font-family: 'Outfit', sans-serif; background-color: #0f172a; }
+    .bg-dark { background-color: #0f172a; }
+    .bg-panel { background-color: #1e293b; }
+    .text-light { color: #f1f5f9; }
+    .text-muted { color: #94a3b8; }
+    .border-dark { border-color: #334155; }
+    .icon { width: 18px; height: 18px; stroke-width: 1.8; }
+    .text-brand { color: #facc15; }
+    .border-brand { border-color: #facc15; }
+    input:focus, textarea:focus, select:focus, button:focus { outline: none; box-shadow: 0 0 0 2px #facc15; border-color: #facc15; }
+    a:hover { color: #facc15; }
+    [x-cloak] { display: none !important; }
+  </style>
+</head>
+
+<body class="text-light bg-dark">
+<div class="flex min-h-screen" x-data="contractReviewer">
+
+  <!-- Sidebar -->
+  <aside x-cloak class="fixed z-40 inset-y-0 left-0 w-64 bg-panel shadow-lg sm:relative sm:translate-x-0 transform transition-transform duration-300 ease-in-out" :class="sidebarOpen ? 'translate-x-0' : '-translate-x-full'">
+    <div class="flex flex-col h-full">
+      <div class="flex items-center justify-between h-20 px-6 shrink-0 border-b border-slate-700">
+        <a href="dashboard.html" class="text-2xl font-bold text-brand">ContraktAI</a>
+        <button class="sm:hidden" @click="sidebarOpen = false">
+          <i data-lucide="x" class="w-6 h-6 text-light"></i>
+        </button>
+      </div>
+      <nav class="flex-1 px-6 py-6 flex flex-col justify-between">
+          <div class="flex flex-col gap-4 text-sm font-medium text-light">
+            <a href="dashboard.html" class="flex items-center gap-3 p-2 rounded-lg hover:bg-slate-700"><i data-lucide="layout-dashboard" class="icon"></i>Dashboard</a>
+            <a href="#" class="flex items-center gap-3 p-2 rounded-lg hover:bg-slate-700"><i data-lucide="file" class="icon"></i>My Documents</a>
+            <a href="contract-reviewer.html" class="flex items-center gap-3 p-2 rounded-lg bg-slate-700 text-brand font-semibold"><i data-lucide="scan-eye" class="icon"></i>Contract Reviewer</a>
+            <a href="custom-clause.html" class="flex items-center gap-3 p-2 rounded-lg hover:bg-slate-700"><i data-lucide="wrench" class="icon"></i>Clause Builder</a>
+            <a href="legal-mail-gen.html" class="flex items-center gap-3 p-2 rounded-lg hover:bg-slate-700"><i data-lucide="mail" class="icon"></i>Legal Email Gen</a>
+            <a href="clause-explainer.html" class="flex items-center gap-3 p-2 rounded-lg hover:bg-slate-700"><i data-lucide="file-text" class="icon"></i>Clause Explainer</a>
+            <a href="multilingual-gen.html" class="flex items-center gap-3 p-2 rounded-lg hover:bg-slate-700"><i data-lucide="languages" class="icon"></i>Multilingual Gen</a>
+        </div>
+        <div>
+            <a href="#" class="flex items-center gap-3 p-2 rounded-lg text-red-400 hover:bg-red-900/50 hover:text-red-300"><i data-lucide="log-out" class="icon"></i>Logout</a>
+        </div>
+      </nav>
+    </div>
+  </aside>
+
+  <!-- Main Content -->
+  <main class="flex-1 p-4 sm:p-8 space-y-6 sm:space-y-8">
+     <!-- Page Header -->
+    <div class="flex items-center gap-4">
+        <button class="sm:hidden text-light" @click.stop="sidebarOpen = true"><i data-lucide="menu" class="w-7 h-7"></i></button>
+        <div class="flex items-center gap-3">
+            <i data-lucide="scan-eye" class="w-8 h-8 text-brand"></i>
+            <div>
+                <h2 class="text-2xl sm:text-3xl font-bold">AI Contract Reviewer</h2>
+                <p class="text-sm sm:text-base text-muted">Upload a contract to get an instant analysis and risk assessment.</p>
+            </div>
+        </div>
+    </div>
+      
+    <!-- Uploader Section -->
+    <section class="bg-panel rounded-xl shadow p-6">
+        <div x-show="!analysisResult">
+            <label 
+                for="file-upload" 
+                class="relative block w-full h-48 rounded-lg border-2 border-dashed border-dark hover:border-brand transition-colors flex flex-col justify-center items-center text-center cursor-pointer"
+                @dragover.prevent @dragenter.prevent @dragleave.prevent @drop.prevent="handleDrop($event)"
+            >
+                <i data-lucide="upload-cloud" class="w-12 h-12 text-muted"></i>
+                <p class="mt-2 text-sm text-light">
+                    <span class="font-semibold text-brand">Upload a file</span> or drag and drop
+                </p>
+                <p class="text-xs text-muted">.txt files only</p>
+                <input id="file-upload" type="file" class="sr-only" accept=".txt" @change="handleFileSelect($event)">
+            </label>
+            <div x-show="fileName" class="mt-4 text-center text-sm text-muted" x-cloak>
+                Selected file: <span x-text="fileName" class="font-semibold text-light"></span>
+            </div>
+            <button 
+                @click="analyzeContract" 
+                :disabled="!docText || loading" 
+                class="w-full mt-6 bg-amber-400 text-slate-900 font-semibold py-3 rounded-lg hover:bg-amber-500 transition flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+                <i x-show="!loading" data-lucide="scan-line" class="icon"></i>
+                <span x-text="loading ? 'Analyzing...' : 'Analyze Contract'"></span>
+            </button>
+        </div>
+        
+        <!-- Loading State -->
+        <div x-show="loading" class="flex flex-col items-center justify-center text-center p-8">
+            <svg class="animate-spin h-10 w-10 text-brand mb-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>
+            <p class="text-lg font-semibold text-light">Analyzing your document...</p>
+            <p class="text-sm text-muted">This may take a moment.</p>
+        </div>
+    </section>
+
+    <!-- Analysis Output -->
+    <section x-show="analysisResult" x-cloak class="bg-panel rounded-xl shadow p-6 space-y-8">
+        <div class="flex justify-between items-start">
+            <div>
+                <h3 class="text-xl font-bold text-brand">Analysis Report</h3>
+                <p class="text-muted text-sm" x-text="`For file: ${fileName}`"></p>
+            </div>
+            <button @click="reset" class="text-sm text-muted hover:text-brand flex items-center gap-1.5"><i data-lucide="arrow-left" class="w-4 h-4"></i> Start New Analysis</button>
+        </div>
+
+        <!-- Risk Score -->
+        <div class="rounded-lg p-6" :class="{ 'bg-green-500/10 border-green-500/20': analysisResult?.risk_score === 'Low', 'bg-yellow-500/10 border-yellow-500/20': analysisResult?.risk_score === 'Medium', 'bg-red-500/10 border-red-500/20': analysisResult?.risk_score === 'High' }">
+            <h4 class="text-sm font-semibold text-muted mb-2">OVERALL RISK SCORE</h4>
+            <p class="text-3xl font-bold" :class="{ 'text-green-400': analysisResult?.risk_score === 'Low', 'text-yellow-400': analysisResult?.risk_score === 'Medium', 'text-red-400': analysisResult?.risk_score === 'High' }" x-text="analysisResult?.risk_score"></p>
+            <p class="text-sm text-slate-300 mt-2" x-text="analysisResult?.risk_summary"></p>
+        </div>
+
+        <!-- Key Terms -->
+        <div>
+            <h4 class="font-semibold text-light mb-4 flex items-center gap-2"><i data-lucide="key" class="w-5 h-5 text-brand"></i> Key Terms Summary</h4>
+            <div class="space-y-4">
+                <template x-for="term in analysisResult?.key_terms" :key="term.term">
+                    <div class="p-4 bg-dark rounded-lg">
+                        <p class="font-semibold text-light" x-text="term.term"></p>
+                        <p class="text-sm text-muted" x-text="term.summary"></p>
+                    </div>
+                </template>
+            </div>
+        </div>
+
+        <!-- Clauses of Concern -->
+        <div>
+            <h4 class="font-semibold text-light mb-4 flex items-center gap-2"><i data-lucide="alert-triangle" class="w-5 h-5 text-brand"></i> Clauses of Concern</h4>
+            <div class="space-y-4">
+                <template x-for="clause in analysisResult?.flagged_clauses" :key="clause.clause">
+                    <div class="p-4 bg-dark rounded-lg border-l-4 border-yellow-500">
+                        <p class="font-semibold text-yellow-400">Potential Issue: <span x-text="clause.issue" class="font-normal text-light"></span></p>
+                        <p class="text-sm text-muted mt-2 italic">"<span x-text="clause.clause"></span>"</p>
+                    </div>
+                </template>
+                <div x-show="!analysisResult?.flagged_clauses || analysisResult?.flagged_clauses.length === 0" class="p-4 bg-dark rounded-lg border-l-4 border-green-500">
+                     <p class="font-semibold text-green-400">No major clauses of concern were detected.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+  </main>
+</div>
+
+<script>
+  document.addEventListener('alpine:init', () => {
+    Alpine.data('contractReviewer', () => ({
+      docText: '',
+      fileName: '',
+      loading: false,
+      analysisResult: null,
+
+      handleFileSelect(event) {
+        const file = event.target.files[0];
+        if (!file) return;
+        this.processFile(file);
+      },
+
+      handleDrop(event) {
+        const file = event.dataTransfer.files[0];
+        if (!file) return;
+        this.processFile(file);
+      },
+
+      processFile(file) {
+        if (file.type !== 'text/plain') {
+            alert('Please upload a valid .txt file.');
+            return;
+        }
+        this.fileName = file.name;
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          this.docText = e.target.result;
+        };
+        reader.readAsText(file);
+      },
+
+      async analyzeContract() {
+        if (!this.docText.trim()) {
+            alert("Please upload or paste a document to analyze.");
+            return;
+        }
+        this.loading = true;
+        this.analysisResult = null;
+
+        const prompt = `You are an expert AI legal assistant. Your task is to analyze the provided legal contract and return a structured JSON object with your findings.
+
+**Instructions:**
+1.  Read the entire contract text carefully.
+2.  Identify the key terms (e.g., Parties, Effective Date, Term/Duration, Payment Terms, Governing Law, Termination Clause, Liability Limitations). For each, provide a brief, one-sentence summary in plain language.
+3.  Identify and flag any clauses that are potentially risky, unusual, one-sided, or ambiguous. For each flagged clause, state the potential issue and quote the exact text of the clause.
+4.  Provide an overall risk score for the document: "Low", "Medium", or "High".
+5.  Write a concise, 1-2 sentence summary explaining the reason for the risk score.
+6.  Your entire response must be a single, valid JSON object with the following structure and nothing else:
+    {
+      "risk_score": "Low | Medium | High",
+      "risk_summary": "...",
+      "key_terms": [
+        { "term": "Term Name", "summary": "..." }
+      ],
+      "flagged_clauses": [
+        { "issue": "Potential Issue", "clause": "The full text of the clause..." }
+      ]
+    }
+
+**Contract to Analyze:**
+"""
+${this.docText}
+"""`;
+
+        try {
+            const response = await fetch("https://api.together.xyz/v1/chat/completions", {
+                method: "POST",
+                headers: {
+                    "Authorization": "Bearer tgp_v1_wRf1bIQjSxwgngfjzB9sgBN1S8iuY8LyRP2R2_awM9I",
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    model: "meta-llama/Llama-3.3-70B-Instruct-Turbo-Free",
+                    messages: [{ role: "user", content: prompt }],
+                    temperature: 0.3,
+                    response_format: { "type": "json_object" }
+                })
+            });
+
+            if (!response.ok) throw new Error(`API Error: ${response.statusText}`);
+            
+            const data = await response.json();
+            this.analysisResult = JSON.parse(data.choices[0].message.content);
+
+        } catch(error) {
+            console.error("Failed to analyze contract:", error);
+            alert("An error occurred during analysis. Please check the console and try again.");
+        } finally {
+            this.loading = false;
+        }
+      },
+
+      reset() {
+          this.docText = '';
+          this.fileName = '';
+          this.analysisResult = null;
+          document.getElementById('file-upload').value = '';
+      }
+    }));
+  });
+
+  lucide.createIcons();
+</script>
+</body>
+</html>
