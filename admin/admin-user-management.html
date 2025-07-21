@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" x-data="{ sidebarOpen: false, filter: 'all', search: '' }">
+<html lang="en" x-data="{ sidebarOpen: false }">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -11,34 +11,31 @@
   <style>
     body {
       font-family: 'Outfit', sans-serif;
-      background-color: #1c1a28;
+      background-color: #0f172a; /* bg-dark */
     }
+    .bg-dark { background-color: #0f172a; }
+    .bg-panel { background-color: #1e293b; }
+    .text-light { color: #f1f5f9; }
+    .text-muted { color: #94a3b8; }
+    .border-dark { border-color: #334155; }
+    .icon { width: 18px; height: 18px; stroke-width: 1.8; }
+    .text-brand { color: #facc15; }
+    .border-brand { border-color: #facc15; }
 
-    .bg-dark { background-color: #161616; }
-    .bg-panel { background-color: #1f1f1f; }
-    .text-light { color: #e2e2e2; }
-    .text-muted { color: #a0a0b0; }
-    .text-mint { color: #4ADE80; }
-    .border-light { border-color: #514b62; }
-
-    input, select {
-      background-color: #161616;
-      color: #e2e2e2;
-      border-color: #514b62;
-    }
-
-    input:focus, select:focus {
+    input:focus, textarea:focus, select:focus, button:focus {
       outline: none;
-      border-color: #4ADE80;
-      box-shadow: 0 0 0 2px #4ADE80;
+      box-shadow: 0 0 0 2px #facc15;
+      border-color: #facc15;
     }
+    a:hover { color: #facc15; }
+    [x-cloak] { display: none !important; }
 
-    a:hover, button:hover {
-      color: #4ADE80;
+    .table-header-sortable {
+        cursor: pointer;
+        transition: color 0.2s ease-in-out;
     }
-
-    table th, table td {
-      border-color: #2e2e2e;
+    .table-header-sortable:hover {
+        color: #f1f5f9;
     }
   </style>
 </head>
@@ -47,90 +44,160 @@
 <div class="flex min-h-screen" x-data="userAdmin">
 
   <!-- Sidebar -->
-  <aside class="w-64 bg-panel shadow-lg hidden sm:block">
-    <div class="px-6 py-6">
-      <h1 class="text-2xl font-bold text-mint mb-8">Admin Panel</h1>
-      <nav class="flex flex-col gap-4 text-sm font-medium text-light">
-        <a href="admin-dash.html" class="flex items-center gap-2 hover:text-mint"><i data-lucide="layout-dashboard" class="w-5 h-5 text-mint"></i> Dashboard</a>
-        <a href="admin-user-management.html" class="flex items-center gap-2 hover:text-mint"><i data-lucide="users" class="w-5 h-5 text-mint"></i> User Management</a>
-        <a href="admin-docs-log.html" class="flex items-center gap-2 hover:text-mint"><i data-lucide="file-text" class="w-5 h-5 text-mint"></i> Document Logs</a>
-        <a href="admin-feedback.html" class="flex items-center gap-2 hover:text-mint"><i data-lucide="mail" class="w-5 h-5 text-mint"></i> Feedback</a>
-        <a href="admin-analytics.html" class="flex items-center gap-2 hover:text-mint"><i data-lucide="bar-chart-2" class="w-5 h-5 text-mint"></i> Analytics</a>
-        <a href="admin-system-settings.html" class="flex items-center gap-2 hover:text-mint"><i data-lucide="settings" class="w-5 h-5 text-mint"></i> System Settings</a>
-        <a href="admin-ai-logs.html" class="flex items-center gap-2 hover:text-mint"><i data-lucide="brain" class="w-5 h-5 text-mint"></i> AI Logs</a>
-        <a href="admin-templates.html" class="flex items-center gap-2 hover:text-mint"><i data-lucide="folder" class="w-5 h-5 text-mint"></i> Templates</a>
-        <a href="admin-announcement.html" class="flex items-center gap-2 text-mint font-semibold"><i data-lucide="megaphone" class="w-5 h-5 text-mint"></i> Announcements</a>
-        <a href="admin-audit-logs.html" class="flex items-center gap-2 hover:text-mint"><i data-lucide="shield-check" class="w-5 h-5 text-mint"></i> Audit Logs</a>
-        <a href="#" class="mt-6 flex items-center gap-2 text-red-400 hover:text-red-500"><i data-lucide="log-out" class="w-5 h-5"></i> Logout</a>
+  <aside x-cloak class="fixed z-40 inset-y-0 left-0 w-64 bg-panel shadow-lg sm:relative sm:translate-x-0 transform transition-transform duration-300 ease-in-out" :class="sidebarOpen ? 'translate-x-0' : '-translate-x-full'">
+    <div class="flex flex-col h-full">
+      <div class="flex items-center justify-between h-20 px-6 shrink-0 border-b border-slate-700">
+        <a href="admin-dash.html" class="text-2xl font-bold text-brand">Admin Panel</a>
+        <button class="sm:hidden" @click="sidebarOpen = false">
+          <i data-lucide="x" class="w-6 h-6 text-light"></i>
+        </button>
+      </div>
+      <nav class="flex-1 px-6 py-6 flex flex-col justify-between">
+          <div class="flex flex-col gap-4 text-sm font-medium text-light">
+            <a href="admin-dash.html" class="flex items-center gap-3 p-2 rounded-lg hover:bg-slate-700"><i data-lucide="layout-dashboard" class="icon"></i>Dashboard</a>
+            <a href="admin-user-management.html" class="flex items-center gap-3 p-2 rounded-lg bg-slate-700 text-brand font-semibold"><i data-lucide="users" class="icon"></i>User Management</a>
+            <a href="admin-docs-log.html" class="flex items-center gap-3 p-2 rounded-lg hover:bg-slate-700"><i data-lucide="file-text" class="icon"></i>Document Logs</a>
+            <a href="admin-feedback.html" class="flex items-center gap-3 p-2 rounded-lg hover:bg-slate-700"><i data-lucide="mail" class="icon"></i>Feedback</a>
+            <a href="admin-analytics.html" class="flex items-center gap-3 p-2 rounded-lg hover:bg-slate-700"><i data-lucide="bar-chart-2" class="icon"></i>Analytics</a>
+            <a href="admin-system-settings.html" class="flex items-center gap-3 p-2 rounded-lg hover:bg-slate-700"><i data-lucide="settings" class="icon"></i>System Settings</a>
+            <a href="admin-ai-logs.html" class="flex items-center gap-3 p-2 rounded-lg hover:bg-slate-700"><i data-lucide="brain" class="icon"></i>AI Logs</a>
+            <a href="admin-templates.html" class="flex items-center gap-3 p-2 rounded-lg hover:bg-slate-700"><i data-lucide="folder" class="icon"></i>Templates</a>
+            <a href="admin-announcement.html" class="flex items-center gap-3 p-2 rounded-lg hover:bg-slate-700"><i data-lucide="megaphone" class="icon"></i>Announcements</a>
+            <a href="admin-audit-logs.html" class="flex items-center gap-3 p-2 rounded-lg hover:bg-slate-700"><i data-lucide="shield-check" class="icon"></i>Audit Logs</a>
+        </div>
+        <div>
+            <a href="#" class="flex items-center gap-3 p-2 rounded-lg text-red-400 hover:bg-red-900/50 hover:text-red-300"><i data-lucide="log-out" class="icon"></i>Logout</a>
+        </div>
       </nav>
     </div>
   </aside>
 
   <!-- Main -->
-  <main class="flex-1 p-14">
-    <section class="bg-panel rounded-xl shadow p-6 border border-light">
-      <h2 class="text-3xl font-bold text-mint mb-1">User Management</h2>
-      <p class="text-muted mb-6">View and manage all registered ContraktAI users.</p>
+  <main class="flex-1 p-4 sm:p-8 space-y-6 sm:space-y-8">
+    <!-- Header -->
+    <div class="flex items-center gap-4">
+        <button class="sm:hidden text-light" @click.stop="sidebarOpen = true"><i data-lucide="menu" class="w-7 h-7"></i></button>
+        <div class="flex items-center gap-3">
+            <i data-lucide="users" class="w-8 h-8 text-brand"></i>
+            <div>
+                <h2 class="text-2xl sm:text-3xl font-bold">User Management</h2>
+                <p class="text-sm sm:text-base text-muted">View and manage all registered ContraktAI users.</p>
+            </div>
+        </div>
+    </div>
 
+    <!-- User Management Table -->
+    <section class="bg-panel rounded-xl shadow p-6">
       <!-- Search + Filter -->
-      <div class="flex flex-col sm:flex-row justify-between gap-4 mb-6">
-        <input type="text" x-model="search" placeholder="🔍 Search users..." class="w-full sm:w-1/3 rounded-lg px-4 py-2 text-sm border border-light" />
+      <div class="flex flex-col sm:flex-row justify-between gap-4 mb-4">
+        <div class="relative w-full sm:max-w-xs">
+            <i data-lucide="search" class="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted"></i>
+            <input type="text" x-model="search" @input="currentPage = 1" placeholder="Search by name or email..." class="w-full rounded-lg pl-10 pr-4 py-2 text-sm bg-dark border border-dark text-light" />
+        </div>
         <div class="flex items-center gap-3 text-sm">
-          <label class="font-medium text-light">Status:</label>
-          <select x-model="filter" class="rounded-lg px-3 py-2 border border-light">
-            <option value="all">All</option>
+          <label class="font-medium text-light whitespace-nowrap">Filter by:</label>
+          <select x-model="filter" @change="currentPage = 1" class="rounded-lg px-3 py-2 bg-dark border border-dark text-light">
+            <option value="all">All Status</option>
             <option value="active">Active</option>
             <option value="banned">Banned</option>
           </select>
         </div>
       </div>
-
+      
       <!-- User Table -->
-      <div class="overflow-x-auto border border-light rounded-lg">
+      <div class="overflow-x-auto">
         <table class="min-w-full text-sm">
-          <thead class="bg-dark text-muted font-semibold border-b border-light">
+          <thead class="text-left text-muted border-b border-dark">
             <tr>
-              <th class="text-left px-4 py-3">Name</th>
-              <th class="text-left px-4 py-3">Email</th>
-              <th class="text-left px-4 py-3">Status</th>
-              <th class="text-left px-4 py-3">Actions</th>
+              <th @click="sortBy('name')" class="px-4 py-3 font-semibold table-header-sortable">Name <i data-lucide="arrow-up-down" class="inline w-3 h-3"></i></th>
+              <th @click="sortBy('email')" class="px-4 py-3 font-semibold table-header-sortable">Email <i data-lucide="arrow-up-down" class="inline w-3 h-3"></i></th>
+              <th @click="sortBy('status')" class="px-4 py-3 font-semibold table-header-sortable">Status <i data-lucide="arrow-up-down" class="inline w-3 h-3"></i></th>
+              <th class="px-4 py-3 font-semibold text-right">Actions</th>
             </tr>
           </thead>
-          <tbody>
-            <template x-for="user in filteredUsers()" :key="user.email">
-              <tr class="border-b border-light hover:bg-[#23232d]">
+          <tbody class="divide-y divide-dark">
+            <template x-for="user in paginatedUsers()" :key="user.id">
+              <tr class="hover:bg-slate-800/50">
                 <td class="px-4 py-3" x-text="user.name"></td>
                 <td class="px-4 py-3 text-muted" x-text="user.email"></td>
                 <td class="px-4 py-3">
-                  <span :class="user.status === 'active' ? 'text-green-400' : 'text-red-400'" x-text="user.status.charAt(0).toUpperCase() + user.status.slice(1)"></span>
+                  <span class="px-2 py-1 text-xs font-semibold rounded-full" :class="user.status === 'active' ? 'bg-green-500/10 text-green-400' : 'bg-red-500/10 text-red-400'" x-text="user.status.charAt(0).toUpperCase() + user.status.slice(1)"></span>
                 </td>
-                <td class="px-4 py-3 space-x-3">
-                  <button class="text-mint hover:underline">View</button>
-                  <button class="text-yellow-400 hover:underline" @click="toggleStatus(user)">Toggle</button>
-                  <button class="text-red-400 hover:underline" @click="deleteUser(user)">Delete</button>
+                <td class="px-4 py-3 text-right space-x-4">
+                  <button @click="viewUser(user)" class="text-muted hover:text-brand">View</button>
+                  <button @click="toggleStatus(user)" class="text-muted hover:text-brand">Toggle Status</button>
+                  <button @click="deleteUser(user.id)" class="text-muted hover:text-red-400">Delete</button>
                 </td>
               </tr>
             </template>
           </tbody>
         </table>
       </div>
+      
+      <!-- Pagination -->
+      <div class="mt-6 flex justify-between items-center">
+        <p class="text-sm text-muted">Showing <span x-text="(currentPage - 1) * perPage + 1"></span> to <span x-text="Math.min(currentPage * perPage, filteredUsers().length)"></span> of <span x-text="filteredUsers().length"></span> users</p>
+        <div class="flex items-center gap-2">
+            <button @click="prevPage" :disabled="currentPage === 1" class="p-2 rounded-md hover:bg-slate-700 disabled:opacity-50 disabled:cursor-not-allowed"><i data-lucide="chevron-left" class="w-4 h-4"></i></button>
+            <span class="text-sm" x-text="currentPage + ' / ' + totalPages()"></span>
+            <button @click="nextPage" :disabled="currentPage === totalPages()" class="p-2 rounded-md hover:bg-slate-700 disabled:opacity-50 disabled:cursor-not-allowed"><i data-lucide="chevron-right" class="w-4 h-4"></i></button>
+        </div>
+      </div>
     </section>
   </main>
+
+  <!-- View User Modal -->
+  <div x-show="showUserModal" x-transition:enter="ease-out duration-300" x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100" x-transition:leave="ease-in duration-200" x-transition:leave-start="opacity-100" x-transition:leave-end="opacity-0" class="fixed inset-0 bg-black/70 z-50 flex items-center justify-center p-4" x-cloak>
+      <div @click.away="showUserModal = false" class="bg-panel rounded-xl shadow-lg w-full max-w-lg max-h-[90vh] flex flex-col">
+          <div class="flex justify-between items-center p-4 border-b border-slate-700">
+              <h4 class="font-semibold text-brand flex items-center gap-2"><i data-lucide="user"></i> User Details</h4>
+              <button @click="showUserModal = false"><i data-lucide="x" class="w-5 h-5 text-muted hover:text-light"></i></button>
+          </div>
+          <div class="p-6 overflow-y-auto space-y-6" x-show="selectedUser">
+              <div class="flex items-center gap-4">
+                  <div class="w-16 h-16 rounded-full bg-slate-700 flex items-center justify-center text-2xl font-bold" x-text="selectedUser.name.charAt(0)"></div>
+                  <div>
+                      <p class="text-xl font-bold" x-text="selectedUser.name"></p>
+                      <p class="text-sm text-muted" x-text="selectedUser.email"></p>
+                  </div>
+              </div>
+              <div class="grid grid-cols-2 gap-4 text-sm">
+                  <div class="bg-dark p-3 rounded-lg"><p class="text-muted">Plan</p><p class="font-semibold" x-text="selectedUser.plan"></p></div>
+                  <div class="bg-dark p-3 rounded-lg"><p class="text-muted">Status</p><p class="font-semibold" :class="selectedUser.status === 'active' ? 'text-green-400' : 'text-red-400'" x-text="selectedUser.status.charAt(0).toUpperCase() + selectedUser.status.slice(1)"></p></div>
+                  <div class="bg-dark p-3 rounded-lg"><p class="text-muted">Signup Date</p><p class="font-semibold" x-text="selectedUser.signupDate"></p></div>
+                  <div class="bg-dark p-3 rounded-lg"><p class="text-muted">Last Active</p><p class="font-semibold" x-text="selectedUser.lastActive"></p></div>
+              </div>
+              <div>
+                  <h5 class="font-semibold text-light mb-2">Recent Activity</h5>
+                  <ul class="space-y-2 text-sm text-muted">
+                      <template x-for="activity in selectedUser.recentActivity" :key="activity">
+                          <li class="flex items-center gap-2"><i data-lucide="file-text" class="w-4 h-4"></i><span x-text="activity"></span></li>
+                      </template>
+                  </ul>
+              </div>
+          </div>
+      </div>
+  </div>
 </div>
 
 <!-- Alpine Script -->
 <script>
   document.addEventListener('alpine:init', () => {
     Alpine.data('userAdmin', () => ({
-      search: '',
-      filter: 'all',
-      users: [
-        { name: 'Alex Johnson', email: 'alex@loom.com', status: 'active' },
-        { name: 'Priya Kapoor', email: 'priya@loom.com', status: 'banned' },
-        { name: 'Ravi Desai', email: 'ravi@loom.com', status: 'active' },
-        { name: 'Sara Müller', email: 'sara@loom.com', status: 'active' }
-      ],
+      search: '', filter: 'all', users: [],
+      showUserModal: false, selectedUser: null,
+      sortColumn: 'name', sortDirection: 'asc',
+      currentPage: 1, perPage: 10,
 
+      init() {
+        this.users = [
+          { id: 1, name: 'Alex Johnson', email: 'alex@loom.com', status: 'active', plan: 'Pro', signupDate: '2025-07-15', lastActive: '2 hours ago', recentActivity: ['Generated NDA', 'Used Clause Explainer'] },
+          { id: 2, name: 'Priya Kapoor', email: 'priya@loom.com', status: 'banned', plan: 'Free', signupDate: '2025-07-14', lastActive: '1 day ago', recentActivity: ['Generated Privacy Policy'] },
+          { id: 3, name: 'Ravi Desai', email: 'ravi@loom.com', status: 'active', plan: 'Free', signupDate: '2025-07-12', lastActive: '3 days ago', recentActivity: ['Used Email Generator'] },
+          { id: 4, name: 'Sara Müller', email: 'sara@loom.com', status: 'active', plan: 'Pro', signupDate: '2025-07-11', lastActive: '5 hours ago', recentActivity: ['Generated Service Agreement', 'Translated Document'] },
+        ];
+      },
+      
       filteredUsers() {
         return this.users.filter(user => {
           const matchSearch = user.name.toLowerCase().includes(this.search.toLowerCase()) || user.email.toLowerCase().includes(this.search.toLowerCase());
@@ -139,20 +206,54 @@
         });
       },
 
+      sortedUsers() {
+        return this.filteredUsers().sort((a, b) => {
+            const modifier = this.sortDirection === 'asc' ? 1 : -1;
+            if (a[this.sortColumn] < b[this.sortColumn]) return -1 * modifier;
+            if (a[this.sortColumn] > b[this.sortColumn]) return 1 * modifier;
+            return 0;
+        });
+      },
+
+      paginatedUsers() {
+          const start = (this.currentPage - 1) * this.perPage;
+          const end = start + this.perPage;
+          return this.sortedUsers().slice(start, end);
+      },
+
+      totalPages() {
+          return Math.ceil(this.filteredUsers().length / this.perPage);
+      },
+
+      prevPage() { this.currentPage = Math.max(1, this.currentPage - 1); },
+      nextPage() { this.currentPage = Math.min(this.totalPages(), this.currentPage + 1); },
+
+      sortBy(column) {
+        if (this.sortColumn === column) {
+            this.sortDirection = this.sortDirection === 'asc' ? 'desc' : 'asc';
+        } else {
+            this.sortColumn = column;
+            this.sortDirection = 'asc';
+        }
+      },
+      
       toggleStatus(user) {
         user.status = user.status === 'active' ? 'banned' : 'active';
       },
 
-      deleteUser(user) {
-        if (confirm(`Delete user: ${user.name}?`)) {
-          this.users = this.users.filter(u => u !== user);
+      viewUser(user) {
+        this.selectedUser = user;
+        this.showUserModal = true;
+      },
+
+      deleteUser(userId) {
+        if (confirm(`Are you sure you want to delete this user?`)) {
+          this.users = this.users.filter(u => u.id !== userId);
         }
       }
     }));
   });
-</script>
 
-<script>
   lucide.createIcons();
 </script>
 
