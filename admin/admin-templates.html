@@ -1,188 +1,275 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" x-data="{ sidebarOpen: false }">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Templates – Admin Panel</title>
   <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/alpinejs" defer></script>
   <script src="https://unpkg.com/lucide@latest"></script>
   <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700&display=swap" rel="stylesheet">
   <style>
     body {
       font-family: 'Outfit', sans-serif;
-      background-color: #f9fafb;
+      background-color: #0f172a; /* bg-dark */
+    }
+    .bg-dark { background-color: #0f172a; }
+    .bg-panel { background-color: #1e293b; }
+    .text-light { color: #f1f5f9; }
+    .text-muted { color: #94a3b8; }
+    .border-dark { border-color: #334155; }
+    .icon { width: 18px; height: 18px; stroke-width: 1.8; }
+    .text-brand { color: #facc15; }
+    .border-brand { border-color: #facc15; }
+
+    input:focus, textarea:focus, select:focus, button:focus {
+      outline: none;
+      box-shadow: 0 0 0 2px #facc15;
+      border-color: #facc15;
+    }
+    a:hover { color: #facc15; }
+    [x-cloak] { display: none !important; }
+    
+    select {
+        -webkit-appearance: none;
+        -moz-appearance: none;
+        appearance: none;
+        padding-right: 2.5rem; 
+    }
+    .table-header-sortable {
+        cursor: pointer;
+        transition: color 0.2s ease-in-out;
+    }
+    .table-header-sortable:hover {
+        color: #f1f5f9;
     }
   </style>
 </head>
-<body class="text-gray-900">
+<body class="text-light bg-dark">
 
-<div class="flex min-h-screen">
+<div class="flex min-h-screen" x-data="templatesAdmin">
+  <!-- Sidebar Overlay for mobile -->
+  <div x-show="sidebarOpen" x-transition:enter="transition-opacity ease-linear duration-300" x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100" x-transition:leave="transition-opacity ease-linear duration-300" x-transition:leave-start="opacity-100" x-transition:leave-end="opacity-0" class="fixed inset-0 bg-black/70 z-30 sm:hidden" @click="sidebarOpen = false" x-cloak></div>
+
   <!-- Sidebar -->
-  <aside class="w-64 bg-white shadow-lg hidden sm:block">
-    <div class="px-6 py-6">
-      <h1 class="text-2xl font-bold text-indigo-600 mb-8">Admin Panel</h1>
-      <nav class="flex flex-col gap-4 text-slate-700 text-sm font-medium">
-        <a href="admin-dash.html" class="flex items-center gap-2 hover:text-indigo-600">
-          <i data-lucide="layout-dashboard" class="w-5 h-5 text-indigo-500"></i>
-          Dashboard
-        </a>
-
-        <a href="admin-user-management.html" class="flex items-center gap-2 hover:text-indigo-600">
-          <i data-lucide="users" class="w-5 h-5 text-indigo-500"></i>
-          User Management
-        </a>
-
-        <a href="admin-docs-log.html" class="flex items-center gap-2 hover:text-indigo-600">
-          <i data-lucide="file-text" class="w-5 h-5 text-indigo-500"></i>
-          Document Logs
-        </a>
-
-        <a href="admin-feedback.html" class="flex items-center gap-2 hover:text-indigo-600">
-          <i data-lucide="mail" class="w-5 h-5 text-indigo-500"></i>
-          Feedback
-        </a>
-
-        <a href="admin-analytics.html" class="flex items-center gap-2 hover:text-indigo-600">
-          <i data-lucide="bar-chart-2" class="w-5 h-5 text-indigo-500"></i>
-          Analytics
-        </a>
-
-        <a href="admin-system-settings.html" class="flex items-center gap-2 hover:text-indigo-600">
-          <i data-lucide="settings" class="w-5 h-5 text-indigo-500"></i>
-          System Settings
-        </a>
-
-        <a href="admin-ai-logs.html" class="flex items-center gap-2 hover:text-indigo-600">
-          <i data-lucide="brain" class="w-5 h-5 text-indigo-500"></i>
-          AI Logs
-        </a>
-
-        <a href="admin-templates.html" class="flex items-center gap-2 hover:text-indigo-600">
-          <i data-lucide="folder" class="w-5 h-5 text-indigo-500"></i>
-          Templates
-        </a>
-
-        <a href="admin-announcement.html" class="flex items-center gap-2 hover:text-indigo-600">
-          <i data-lucide="megaphone" class="w-5 h-5 text-indigo-500"></i>
-          Announcements
-        </a>
-
-        <a href="admin-audit-logs.html" class="flex items-center gap-2 hover:text-indigo-600">
-          <i data-lucide="shield-check" class="w-5 h-5 text-indigo-500"></i>
-          Audit Logs
-        </a>
-
-        <a href="#" class="mt-6 flex items-center gap-2 text-red-500 hover:text-red-600">
-          <i data-lucide="log-out" class="w-5 h-5"></i>
-          Logout
-        </a>
+  <aside x-cloak class="fixed z-40 inset-y-0 left-0 w-64 bg-panel shadow-lg sm:relative sm:translate-x-0 transform transition-transform duration-300 ease-in-out" :class="sidebarOpen ? 'translate-x-0' : '-translate-x-full'">
+    <div class="flex flex-col h-full">
+      <div class="flex items-center justify-between h-20 px-6 shrink-0 border-b border-slate-700">
+        <a href="admin-dash.html" class="text-2xl font-bold text-brand">Admin Panel</a>
+        <button class="sm:hidden" @click="sidebarOpen = false">
+          <i data-lucide="x" class="w-6 h-6 text-light"></i>
+        </button>
+      </div>
+      <nav class="flex-1 px-6 py-6 flex flex-col justify-between">
+          <div class="flex flex-col gap-4 text-sm font-medium text-light">
+            <a href="admin-dash.html" class="flex items-center gap-3 p-2 rounded-lg hover:bg-slate-700"><i data-lucide="layout-dashboard" class="icon"></i>Dashboard</a>
+            <a href="admin-user-management.html" class="flex items-center gap-3 p-2 rounded-lg hover:bg-slate-700"><i data-lucide="users" class="icon"></i>User Management</a>
+            <a href="admin-docs-log.html" class="flex items-center gap-3 p-2 rounded-lg hover:bg-slate-700"><i data-lucide="file-text" class="icon"></i>Document Logs</a>
+            <a href="admin-feedback.html" class="flex items-center gap-3 p-2 rounded-lg hover:bg-slate-700"><i data-lucide="mail" class="icon"></i>Feedback</a>
+            <a href="admin-analytics.html" class="flex items-center gap-3 p-2 rounded-lg hover:bg-slate-700"><i data-lucide="bar-chart-2" class="icon"></i>Analytics</a>
+            <a href="admin-system-settings.html" class="flex items-center gap-3 p-2 rounded-lg hover:bg-slate-700"><i data-lucide="settings" class="icon"></i>System Settings</a>
+            <a href="admin-ai-logs.html" class="flex items-center gap-3 p-2 rounded-lg hover:bg-slate-700"><i data-lucide="brain" class="icon"></i>AI Logs</a>
+            <a href="admin-templates.html" class="flex items-center gap-3 p-2 rounded-lg bg-slate-700 text-brand font-semibold"><i data-lucide="folder" class="icon"></i>Templates</a>
+            <a href="admin-announcement.html" class="flex items-center gap-3 p-2 rounded-lg hover:bg-slate-700"><i data-lucide="megaphone" class="icon"></i>Announcements</a>
+            <a href="admin-audit-logs.html" class="flex items-center gap-3 p-2 rounded-lg hover:bg-slate-700"><i data-lucide="shield-check" class="icon"></i>Audit Logs</a>
+        </div>
+        <div>
+            <a href="#" class="flex items-center gap-3 p-2 rounded-lg text-red-400 hover:bg-red-900/50 hover:text-red-300"><i data-lucide="log-out" class="icon"></i>Logout</a>
+        </div>
       </nav>
     </div>
   </aside>
 
   <!-- Main -->
-  <main class="flex-1 p-10 space-y-10">
-    <h2 class="text-3xl font-bold text-slate-800">🗂 Templates</h2>
-
-    <!-- Filters -->
-    <div class="flex flex-wrap items-center justify-between mb-6 gap-4">
-      <div class="flex gap-4">
-        <input type="text" placeholder="Search template..." class="border border-slate-300 px-3 py-2 rounded-lg text-sm w-64">
-        <select class="border border-slate-300 px-3 py-2 rounded-lg text-sm">
-          <option>All Types</option>
-          <option>NDA</option>
-          <option>Service Agreement</option>
-          <option>Privacy Policy</option>
-          <option>Terms of Service</option>
-          <option>Freelance Contract</option>
-          <option>EULA</option>
-        </select>
-        <select class="border border-slate-300 px-3 py-2 rounded-lg text-sm">
-          <option>All Languages</option>
-          <option>English (US)</option>
-          <option>English (UK)</option>
-          <option>Hindi</option>
-          <option>Spanish</option>
-          <option>French (Canada)</option>
-          <option>German</option>
-        </select>
-      </div>
-      <div class="flex gap-3">
-        <button class="bg-indigo-600 text-white px-4 py-2 rounded text-sm">📤 Export CSV</button>
-        <button class="border border-indigo-600 text-indigo-700 px-4 py-2 rounded text-sm">📤 Export JSON</button>
-      </div>
+  <main class="flex-1 p-4 sm:p-8 space-y-6 sm:space-y-8">
+    <!-- Header -->
+    <div class="flex items-center gap-4">
+        <button class="sm:hidden text-light" @click.stop="sidebarOpen = true"><i data-lucide="menu" class="w-7 h-7"></i></button>
+        <div class="flex items-center gap-3">
+            <i data-lucide="folder" class="w-8 h-8 text-brand"></i>
+            <div>
+                <h2 class="text-2xl sm:text-3xl font-bold">Template Management</h2>
+                <p class="text-sm sm:text-base text-muted">Manage the document templates available to users.</p>
+            </div>
+        </div>
     </div>
 
     <!-- Templates Table -->
-    <div class="overflow-x-auto">
-      <table class="min-w-full text-sm text-left border-collapse">
-        <thead class="text-slate-500 font-semibold">
-          <tr>
-            <th class="px-4 py-3">Title</th>
-            <th class="px-4 py-3">Type</th>
-            <th class="px-4 py-3">Language</th>
-            <th class="px-4 py-3">Last Updated</th>
-            <th class="px-4 py-3">Actions</th>
-          </tr>
-        </thead>
-        <tbody class="text-slate-700">
-          <tr class="border-t">
-            <td class="px-4 py-3">Standard NDA</td>
-            <td class="px-4 py-3">NDA</td>
-            <td class="px-4 py-3">English (US)</td>
-            <td class="px-4 py-3">2025-06-29</td>
-            <td class="px-4 py-3 space-x-3">
-              <a href="#" class="text-indigo-600">Edit</a>
-              <a href="#" class="text-red-600">Delete</a>
-            </td>
-          </tr>
-          <tr class="border-t">
-            <td class="px-4 py-3">Freelance Service Agreement</td>
-            <td class="px-4 py-3">Service Agreement</td>
-            <td class="px-4 py-3">Hindi</td>
-            <td class="px-4 py-3">2025-06-30</td>
-            <td class="px-4 py-3 space-x-3">
-              <a href="#" class="text-indigo-600">Edit</a>
-              <a href="#" class="text-red-600">Delete</a>
-            </td>
-          </tr>
-          <tr class="border-t">
-            <td class="px-4 py-3">GDPR Privacy Policy</td>
-            <td class="px-4 py-3">Privacy Policy</td>
-            <td class="px-4 py-3">French (Canada)</td>
-            <td class="px-4 py-3">2025-07-01</td>
-            <td class="px-4 py-3 space-x-3">
-              <a href="#" class="text-indigo-600">Edit</a>
-              <a href="#" class="text-red-600">Delete</a>
-            </td>
-          </tr>
-          <tr class="border-t">
-            <td class="px-4 py-3">End-User License Agreement</td>
-            <td class="px-4 py-3">EULA</td>
-            <td class="px-4 py-3">Spanish</td>
-            <td class="px-4 py-3">2025-06-28</td>
-            <td class="px-4 py-3 space-x-3">
-              <a href="#" class="text-indigo-600">Edit</a>
-              <a href="#" class="text-red-600">Delete</a>
-            </td>
-          </tr>
-          <tr class="border-t">
-            <td class="px-4 py-3">Co-Founder Agreement</td>
-            <td class="px-4 py-3">Terms of Service</td>
-            <td class="px-4 py-3">English (UK)</td>
-            <td class="px-4 py-3">2025-06-25</td>
-            <td class="px-4 py-3 space-x-3">
-              <a href="#" class="text-indigo-600">Edit</a>
-              <a href="#" class="text-red-600">Delete</a>
-            </td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
+    <section class="bg-panel rounded-xl shadow p-6">
+      <!-- Filters -->
+      <div class="flex flex-wrap items-center justify-between mb-6 gap-4">
+        <div class="flex gap-4">
+            <div class="relative w-full sm:w-auto">
+                <i data-lucide="search" class="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted"></i>
+                <input type="text" x-model="search" placeholder="Search templates..." class="w-full sm:w-64 pl-10 pr-4 py-2 rounded-lg border border-dark bg-dark text-light text-sm">
+            </div>
+            <div class="relative">
+                <select x-model="filterType" class="rounded-lg px-3 py-2 border border-dark bg-dark text-light text-sm">
+                  <option value="all">All Types</option>
+                  <option>NDA</option>
+                  <option>Service Agreement</option>
+                </select>
+                <i data-lucide="chevron-down" class="w-4 h-4 text-muted absolute top-1/2 right-3 -translate-y-1/2 pointer-events-none"></i>
+            </div>
+        </div>
+        <button @click="openModal(null)" class="bg-amber-400 text-slate-900 px-4 py-2 rounded-lg font-semibold text-sm flex items-center gap-2 hover:bg-amber-500 transition">
+            <i data-lucide="plus" class="w-4 h-4"></i> Add New Template
+        </button>
+      </div>
+
+      <!-- Templates Table -->
+      <div class="overflow-x-auto">
+        <table class="min-w-full text-sm">
+          <thead class="text-left text-muted border-b border-dark">
+            <tr>
+              <th @click="sortBy('title')" class="px-4 py-3 font-semibold table-header-sortable">Title</th>
+              <th @click="sortBy('type')" class="px-4 py-3 font-semibold table-header-sortable">Type</th>
+              <th @click="sortBy('usage')" class="px-4 py-3 font-semibold table-header-sortable">Usage Count</th>
+              <th @click="sortBy('lastUpdated')" class="px-4 py-3 font-semibold table-header-sortable">Last Updated</th>
+              <th class="px-4 py-3 font-semibold text-right">Actions</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-dark">
+            <template x-for="template in sortedTemplates" :key="template.id">
+              <tr class="hover:bg-slate-800/50">
+                <td class="px-4 py-3 font-semibold" x-text="template.title"></td>
+                <td class="px-4 py-3 text-muted" x-text="template.type"></td>
+                <td class="px-4 py-3 text-muted" x-text="template.usage"></td>
+                <td class="px-4 py-3 text-muted" x-text="template.lastUpdated"></td>
+                <td class="px-4 py-3 space-x-4 text-right">
+                    <button @click="duplicateTemplate(template)" class="text-muted hover:text-brand">Duplicate</button>
+                    <button @click="openModal(template)" class="text-muted hover:text-brand">Edit</button>
+                    <button @click="deleteTemplate(template.id)" class="text-muted hover:text-red-400">Delete</button>
+                </td>
+              </tr>
+            </template>
+          </tbody>
+        </table>
+      </div>
+    </section>
   </main>
+
+  <!-- Add/Edit Template Modal -->
+  <div x-show="showModal" x-transition class="fixed inset-0 bg-black/70 z-50 flex items-center justify-center p-4">
+      <div @click.away="showModal = false" class="bg-panel rounded-xl shadow-lg w-full max-w-2xl max-h-[90vh] flex flex-col">
+          <div class="flex justify-between items-center p-4 border-b border-slate-700">
+              <h4 class="font-semibold text-brand text-lg" x-text="modalTitle"></h4>
+              <button @click="showModal = false"><i data-lucide="x" class="w-5 h-5 text-muted hover:text-light"></i></button>
+          </div>
+          <div class="p-6 overflow-y-auto space-y-4">
+              <div>
+                  <label class="block text-sm font-medium text-muted mb-1">Template Title</label>
+                  <input type="text" x-model="editableTemplate.title" class="w-full bg-dark border border-dark rounded-lg p-2 text-light">
+              </div>
+              <div class="grid grid-cols-2 gap-4">
+                  <div>
+                      <label class="block text-sm font-medium text-muted mb-1">Type</label>
+                      <input type="text" x-model="editableTemplate.type" class="w-full bg-dark border border-dark rounded-lg p-2 text-light">
+                  </div>
+                  <div>
+                      <label class="block text-sm font-medium text-muted mb-1">Language</label>
+                      <input type="text" x-model="editableTemplate.language" class="w-full bg-dark border border-dark rounded-lg p-2 text-light">
+                  </div>
+              </div>
+              <div>
+                  <label class="block text-sm font-medium text-muted mb-1">Template Content</label>
+                  <textarea x-model="editableTemplate.content" rows="10" class="w-full bg-dark border border-dark rounded-lg p-2 text-light font-mono text-xs"></textarea>
+              </div>
+          </div>
+          <div class="p-4 bg-slate-800/50 border-t border-slate-700 flex justify-end gap-3">
+              <button @click="showModal = false" class="text-muted hover:bg-slate-700 px-4 py-2 rounded-lg text-sm font-semibold">Cancel</button>
+              <button @click="saveTemplate" class="bg-brand text-slate-900 px-4 py-2 rounded-lg text-sm font-semibold hover:bg-amber-500">Save Template</button>
+          </div>
+      </div>
+  </div>
 </div>
 
 <script>
+  document.addEventListener('alpine:init', () => {
+    Alpine.data('templatesAdmin', () => ({
+      search: '', filterType: 'all',
+      templates: [],
+      showModal: false,
+      modalTitle: '',
+      editableTemplate: {},
+      sortColumn: 'lastUpdated',
+      sortDirection: 'desc',
+
+      init() {
+        this.templates = [
+          { id: 1, title: 'Standard NDA', type: 'NDA', language: 'English (US)', lastUpdated: '2025-06-29', usage: 152, content: 'This Non-Disclosure Agreement...' },
+          { id: 2, title: 'Freelance Service Agreement', type: 'Service Agreement', language: 'Hindi', lastUpdated: '2025-06-30', usage: 89, content: 'This Service Agreement...' },
+          { id: 3, title: 'GDPR Privacy Policy', type: 'Privacy Policy', language: 'French (Canada)', lastUpdated: '2025-07-01', usage: 210, content: 'This Privacy Policy...' },
+        ];
+      },
+
+      get filteredTemplates() {
+        return this.templates.filter(t =>
+            (t.title.toLowerCase().includes(this.search.toLowerCase())) &&
+            (this.filterType === 'all' || t.type === this.filterType)
+        );
+      },
+
+      get sortedTemplates() {
+        return [...this.filteredTemplates].sort((a, b) => {
+            const modifier = this.sortDirection === 'asc' ? 1 : -1;
+            if (a[this.sortColumn] < b[this.sortColumn]) return -1 * modifier;
+            if (a[this.sortColumn] > b[this.sortColumn]) return 1 * modifier;
+            return 0;
+        });
+      },
+
+      sortBy(column) {
+        if (this.sortColumn === column) {
+            this.sortDirection = this.sortDirection === 'asc' ? 'desc' : 'asc';
+        } else {
+            this.sortColumn = column;
+            this.sortDirection = 'asc';
+        }
+      },
+
+      openModal(template) {
+        if (template) {
+            this.modalTitle = 'Edit Template';
+            this.editableTemplate = JSON.parse(JSON.stringify(template)); // Deep copy
+        } else {
+            this.modalTitle = 'Add New Template';
+            this.editableTemplate = { id: null, title: '', type: '', language: '', lastUpdated: new Date().toISOString().slice(0,10), usage: 0, content: '' };
+        }
+        this.showModal = true;
+      },
+
+      saveTemplate() {
+        if (!this.editableTemplate.title) return alert('Title is required.');
+        
+        if (this.editableTemplate.id) { // Editing existing
+            const index = this.templates.findIndex(t => t.id === this.editableTemplate.id);
+            this.templates[index] = this.editableTemplate;
+            this.templates[index].lastUpdated = new Date().toISOString().slice(0,10);
+        } else { // Adding new
+            this.editableTemplate.id = Date.now();
+            this.templates.unshift(this.editableTemplate);
+        }
+        this.showModal = false;
+      },
+
+      deleteTemplate(id) {
+        if (confirm('Are you sure you want to delete this template?')) {
+            this.templates = this.templates.filter(t => t.id !== id);
+        }
+      },
+
+      duplicateTemplate(template) {
+        const newTemplate = JSON.parse(JSON.stringify(template));
+        newTemplate.id = Date.now();
+        newTemplate.title = `Copy of ${template.title}`;
+        newTemplate.lastUpdated = new Date().toISOString().slice(0,10);
+        newTemplate.usage = 0;
+        this.templates.unshift(newTemplate);
+      }
+    }));
+  });
+
   lucide.createIcons();
 </script>
 
