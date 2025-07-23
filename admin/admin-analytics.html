@@ -1,339 +1,191 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" x-data="{ sidebarOpen: false }">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Admin Analytics – ContraktAI</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://unpkg.com/alpinejs" defer></script>
   <script src="https://unpkg.com/lucide@latest"></script>
   <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700&display=swap" rel="stylesheet">
   <style>
-    @font-face {
-      font-family: 'Radeil3D';
-      src: url('fonts/Radeil3D.otf') format('opentype');
-    }
-
     body {
       font-family: 'Outfit', sans-serif;
-      background-color: #1c1a28;
+      background-color: #0f172a; /* bg-dark */
     }
-
-    .bg-dark { background-color: #161616; }
-    .bg-panel { background-color: #1f1f1f; }
-    .text-light { color: #e2e2e2; }
-    .text-muted { color: #a0a0b0; }
-    .border-light { border-color: #514b62; }
+    .bg-dark { background-color: #0f172a; }
+    .bg-panel { background-color: #1e293b; }
+    .text-light { color: #f1f5f9; }
+    .text-muted { color: #94a3b8; }
+    .border-dark { border-color: #334155; }
     .icon { width: 18px; height: 18px; stroke-width: 1.8; }
-    .text-mint { color: #4ADE80; }
-    .border-mint { border-color: #4ADE80; }
+    .text-brand { color: #facc15; }
+    .border-brand { border-color: #facc15; }
 
     input:focus, textarea:focus, select:focus, button:focus {
       outline: none;
-      box-shadow: 0 0 0 2px #4ADE80;
-      border-color: #4ADE80;
+      box-shadow: 0 0 0 2px #facc15;
+      border-color: #facc15;
     }
-
-    input:hover, textarea:hover, select:hover, button:hover {
-      border-color: #4ADE80;
-    }
-
-    a:hover {
-      color: #4ADE80;
-    }
-
-    .chart-container {
-      background-color: #1f1f1f;
-      border-radius: 0.75rem;
-      padding: 1.5rem;
+    a:hover { color: #facc15; }
+    [x-cloak] { display: none !important; }
+    
+    select {
+        -webkit-appearance: none;
+        -moz-appearance: none;
+        appearance: none;
+        padding-right: 2.5rem; 
     }
   </style>
 </head>
 <body class="text-light bg-dark">
 <div class="flex min-h-screen">
+  <!-- Sidebar Overlay for mobile -->
+  <div x-show="sidebarOpen" x-transition:enter="transition-opacity ease-linear duration-300" x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100" x-transition:leave="transition-opacity ease-linear duration-300" x-transition:leave-start="opacity-100" x-transition:leave-end="opacity-0" class="fixed inset-0 bg-black/70 z-30 sm:hidden" @click="sidebarOpen = false" x-cloak></div>
+
   <!-- Sidebar -->
-  <aside class="w-64 bg-panel shadow-lg hidden sm:block">
-    <div class="px-6 py-6">
-      <h1 class="text-2xl font-bold text-mint mb-8">Admin Panel</h1>
-      <nav class="flex flex-col gap-4 text-slate-300 text-sm font-medium">
-        <a href="admin-dash.html" class="flex items-center gap-2 hover:text-mint">
-          <i data-lucide="layout-dashboard" class="w-5 h-5 text-mint"></i>
-          Dashboard
-        </a>
-        <a href="admin-user-management.html" class="flex items-center gap-2 hover:text-mint">
-          <i data-lucide="users" class="w-5 h-5 text-mint"></i>
-          User Management
-        </a>
-        <a href="admin-docs-log.html" class="flex items-center gap-2 hover:text-mint">
-          <i data-lucide="file-text" class="w-5 h-5 text-mint"></i>
-          Document Logs
-        </a>
-        <a href="admin-feedback.html" class="flex items-center gap-2 hover:text-mint">
-          <i data-lucide="mail" class="w-5 h-5 text-mint"></i>
-          Feedback
-        </a>
-        <a href="admin-analytics.html" class="flex items-center gap-2 text-mint font-semibold">
-          <i data-lucide="bar-chart-2" class="w-5 h-5 text-mint"></i>
-          Analytics
-        </a>
-        <a href="admin-system-settings.html" class="flex items-center gap-2 hover:text-mint">
-          <i data-lucide="settings" class="w-5 h-5 text-mint"></i>
-          System Settings
-        </a>
-        <a href="admin-ai-logs.html" class="flex items-center gap-2 hover:text-mint">
-          <i data-lucide="brain" class="w-5 h-5 text-mint"></i>
-          AI Logs
-        </a>
-        <a href="admin-templates.html" class="flex items-center gap-2 hover:text-mint">
-          <i data-lucide="folder" class="w-5 h-5 text-mint"></i>
-          Templates
-        </a>
-        <a href="admin-announcement.html" class="flex items-center gap-2 hover:text-mint">
-          <i data-lucide="megaphone" class="w-5 h-5 text-mint"></i>
-          Announcements
-        </a>
-        <a href="admin-audit-logs.html" class="flex items-center gap-2 hover:text-mint">
-          <i data-lucide="shield-check" class="w-5 h-5 text-mint"></i>
-          Audit Logs
-        </a>
-        <a href="#" class="mt-6 flex items-center gap-2 text-red-400 hover:text-red-500">
-          <i data-lucide="log-out" class="w-5 h-5"></i>
-          Logout
-        </a>
+  <aside x-cloak class="fixed z-40 inset-y-0 left-0 w-64 bg-panel shadow-lg sm:relative sm:translate-x-0 transform transition-transform duration-300 ease-in-out" :class="sidebarOpen ? 'translate-x-0' : '-translate-x-full'">
+    <div class="flex flex-col h-full">
+      <div class="flex items-center justify-between h-20 px-6 shrink-0 border-b border-slate-700">
+        <a href="admin-dash.html" class="text-2xl font-bold text-brand">Admin Panel</a>
+        <button class="sm:hidden" @click="sidebarOpen = false">
+          <i data-lucide="x" class="w-6 h-6 text-light"></i>
+        </button>
+      </div>
+      <nav class="flex-1 px-6 py-6 flex flex-col justify-between">
+          <div class="flex flex-col gap-4 text-sm font-medium text-light">
+            <a href="admin-dash.html" class="flex items-center gap-3 p-2 rounded-lg hover:bg-slate-700"><i data-lucide="layout-dashboard" class="icon"></i>Dashboard</a>
+            <a href="admin-user-management.html" class="flex items-center gap-3 p-2 rounded-lg hover:bg-slate-700"><i data-lucide="users" class="icon"></i>User Management</a>
+            <a href="admin-docs-log.html" class="flex items-center gap-3 p-2 rounded-lg hover:bg-slate-700"><i data-lucide="file-text" class="icon"></i>Document Logs</a>
+            <a href="admin-feedback.html" class="flex items-center gap-3 p-2 rounded-lg hover:bg-slate-700"><i data-lucide="mail" class="icon"></i>Feedback</a>
+            <a href="admin-analytics.html" class="flex items-center gap-3 p-2 rounded-lg bg-slate-700 text-brand font-semibold"><i data-lucide="bar-chart-2" class="icon"></i>Analytics</a>
+            <a href="admin-system-settings.html" class="flex items-center gap-3 p-2 rounded-lg hover:bg-slate-700"><i data-lucide="settings" class="icon"></i>System Settings</a>
+            <a href="admin-ai-logs.html" class="flex items-center gap-3 p-2 rounded-lg hover:bg-slate-700"><i data-lucide="brain" class="icon"></i>AI Logs</a>
+            <a href="admin-templates.html" class="flex items-center gap-3 p-2 rounded-lg hover:bg-slate-700"><i data-lucide="folder" class="icon"></i>Templates</a>
+            <a href="admin-announcement.html" class="flex items-center gap-3 p-2 rounded-lg hover:bg-slate-700"><i data-lucide="megaphone" class="icon"></i>Announcements</a>
+            <a href="admin-audit-logs.html" class="flex items-center gap-3 p-2 rounded-lg hover:bg-slate-700"><i data-lucide="shield-check" class="icon"></i>Audit Logs</a>
+        </div>
+        <div>
+            <a href="#" class="flex items-center gap-3 p-2 rounded-lg text-red-400 hover:bg-red-900/50 hover:text-red-300"><i data-lucide="log-out" class="icon"></i>Logout</a>
+        </div>
       </nav>
     </div>
   </aside>
 
   <!-- Main -->
-  <main class="flex-1 p-14 space-y-10">
-    <div class="flex items-center gap-3">
-      <i data-lucide="bar-chart-2" class="w-8 h-8 text-mint"></i>
-      <h2 class="text-3xl font-bold">Analytics Dashboard</h2>
+  <main class="flex-1 p-4 sm:p-8 space-y-6 sm:space-y-8">
+    <!-- Header -->
+    <div class="flex items-center gap-4">
+        <button class="sm:hidden text-light" @click.stop="sidebarOpen = true"><i data-lucide="menu" class="w-7 h-7"></i></button>
+        <div class="flex items-center gap-3">
+            <i data-lucide="bar-chart-2" class="w-8 h-8 text-brand"></i>
+            <div>
+                <h2 class="text-2xl sm:text-3xl font-bold">Analytics Dashboard</h2>
+                <p class="text-sm sm:text-base text-muted">Key metrics and usage data for the platform.</p>
+            </div>
+        </div>
     </div>
 
     <!-- KPIs -->
-    <div class="grid grid-cols-1 sm:grid-cols-4 gap-6">
-      <div class="bg-panel shadow rounded-xl p-4 border-l-4 border-indigo-500">
-        <div class="flex items-center gap-2 mb-2">
-          <i data-lucide="users" class="w-5 h-5 text-indigo-400"></i>
-          <p class="text-sm text-muted">Active Users</p>
-        </div>
-        <div class="flex justify-between items-center">
-          <h3 class="text-2xl font-bold text-mint">1,482</h3>
-          <span class="text-sm text-green-400 font-medium bg-green-900 bg-opacity-40 px-2 py-1 rounded-full flex items-center gap-1">
-            <i data-lucide="trending-up" class="w-4 h-4"></i>+3.2%
-          </span>
-        </div>
-      </div>
-      <div class="bg-panel shadow rounded-xl p-4 border-l-4 border-blue-500">
-        <div class="flex items-center gap-2 mb-2">
-          <i data-lucide="file-text" class="w-5 h-5 text-blue-400"></i>
-          <p class="text-sm text-muted">Documents Generated</p>
-        </div>
-        <div class="flex justify-between items-center">
-          <h3 class="text-2xl font-bold text-mint">3,709</h3>
-          <span class="text-sm text-green-400 font-medium bg-green-900 bg-opacity-40 px-2 py-1 rounded-full flex items-center gap-1">
-            <i data-lucide="trending-up" class="w-4 h-4"></i>+7.5%
-          </span>
-        </div>
-      </div>
-      <div class="bg-panel shadow rounded-xl p-4 border-l-4 border-purple-500">
-        <div class="flex items-center gap-2 mb-2">
-          <i data-lucide="brain" class="w-5 h-5 text-purple-400"></i>
-          <p class="text-sm text-muted">AI Requests</p>
-        </div>
-        <div class="flex justify-between items-center">
-          <h3 class="text-2xl font-bold text-mint">8,942</h3>
-          <span class="text-sm text-green-400 font-medium bg-green-900 bg-opacity-40 px-2 py-1 rounded-full flex items-center gap-1">
-            <i data-lucide="trending-up" class="w-4 h-4"></i>+9.8%
-          </span>
-        </div>
-      </div>
-      <div class="bg-panel shadow rounded-xl p-4 border-l-4 border-yellow-500">
-        <div class="flex items-center gap-2 mb-2">
-          <i data-lucide="clock" class="w-5 h-5 text-yellow-400"></i>
-          <p class="text-sm text-muted">Avg. Response Time</p>
-        </div>
-        <div class="flex justify-between items-center">
-          <h3 class="text-2xl font-bold text-mint">1.4s</h3>
-          <span class="text-sm text-red-400 font-medium bg-red-900 bg-opacity-40 px-2 py-1 rounded-full flex items-center gap-1">
-            <i data-lucide="trending-down" class="w-4 h-4"></i>-2.1%
-          </span>
-        </div>
-      </div>
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+      <div class="bg-panel p-6 rounded-xl shadow"><p class="text-sm font-semibold text-muted">Active Users</p><p class="text-3xl font-bold text-light mt-1">1,482</p><p class="text-xs text-green-400 mt-2">+3.2% this month</p></div>
+      <div class="bg-panel p-6 rounded-xl shadow"><p class="text-sm font-semibold text-muted">Docs Generated</p><p class="text-3xl font-bold text-light mt-1">3,709</p><p class="text-xs text-green-400 mt-2">+7.5% this month</p></div>
+      <div class="bg-panel p-6 rounded-xl shadow"><p class="text-sm font-semibold text-muted">AI Requests</p><p class="text-3xl font-bold text-light mt-1">8,942</p><p class="text-xs text-green-400 mt-2">+9.8% this month</p></div>
+      <div class="bg-panel p-6 rounded-xl shadow"><p class="text-sm font-semibold text-muted">Avg. Response Time</p><p class="text-3xl font-bold text-light mt-1">1.4s</p><p class="text-xs text-red-400 mt-2">-2.1% this month</p></div>
+    </div>
+    
+    <!-- NEW: Operational & Cost Metrics -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div class="bg-panel p-6 rounded-xl shadow"><p class="text-sm font-semibold text-muted">AI Cost (Today)</p><p class="text-3xl font-bold text-light mt-1">$5.72</p><p class="text-xs text-muted mt-2">Estimated based on usage</p></div>
+        <div class="bg-panel p-6 rounded-xl shadow"><p class="text-sm font-semibold text-muted">API Success Rate</p><p class="text-3xl font-bold text-green-400 mt-1">99.8%</p><p class="text-xs text-muted mt-2">Last 24 hours</p></div>
+        <div class="bg-panel p-6 rounded-xl shadow"><p class="text-sm font-semibold text-muted">Avg. API Latency</p><p class="text-3xl font-bold text-light mt-1">1.2s</p><p class="text-xs text-muted mt-2">Last 24 hours</p></div>
     </div>
 
     <!-- Usage Chart -->
-    <div class="bg-panel shadow rounded-xl p-6 border-l-4 border-mint">
-      <div class="flex justify-between items-center mb-4">
-        <div class="flex items-center gap-2">
-          <i data-lucide="calendar" class="w-5 h-5 text-mint"></i>
-          <h3 class="text-lg font-semibold">Usage Over Time</h3>
-        </div>
-        <div class="flex items-center gap-2">
-          <i data-lucide="calendar-days" class="w-4 h-4 text-muted"></i>
-          <select class="border border-light rounded px-3 py-1 text-sm bg-dark text-light">
+    <div class="bg-panel shadow rounded-xl p-6">
+      <div class="flex flex-col sm:flex-row justify-between sm:items-center mb-4 gap-4">
+        <h3 class="text-lg font-semibold text-light">Usage Over Time</h3>
+        <div class="relative">
+          <select class="bg-dark border border-dark rounded-lg px-3 py-2 text-sm text-light pr-10">
             <option>Last 7 days</option>
             <option>Last 30 days</option>
           </select>
+          <i data-lucide="chevron-down" class="w-4 h-4 text-muted absolute top-1/2 right-3 -translate-y-1/2 pointer-events-none"></i>
         </div>
       </div>
-      <canvas id="usageChart" height="100"></canvas>
+      <div class="h-80"><canvas id="usageChart"></canvas></div>
     </div>
 
     <!-- Region + Tool Usage -->
-    <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
-      <div class="bg-panel shadow rounded-xl p-6 border-l-4 border-indigo-500">
-        <div class="flex items-center gap-2 mb-4">
-          <i data-lucide="globe" class="w-5 h-5 text-indigo-400"></i>
-          <h3 class="text-lg font-semibold">Region Breakdown</h3>
-        </div>
-        <ul class="text-sm space-y-3 text-muted">
-          <li class="flex items-center gap-2"><i data-lucide="flag" class="w-4 h-4"></i>🇮🇳 India – 42%</li>
-          <li class="flex items-center gap-2"><i data-lucide="flag" class="w-4 h-4"></i>🇺🇸 US – 29%</li>
-          <li class="flex items-center gap-2"><i data-lucide="flag" class="w-4 h-4"></i>🇪🇺 EU – 18%</li>
-          <li class="flex items-center gap-2"><i data-lucide="flag" class="w-4 h-4"></i>🌏 Other – 11%</li>
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+      <div class="bg-panel shadow rounded-xl p-6">
+        <h3 class="text-lg font-semibold text-light mb-4">Tool Usage Breakdown</h3>
+        <div class="h-64 flex items-center justify-center"><canvas id="toolChart"></canvas></div>
+      </div>
+      <div class="bg-panel shadow rounded-xl p-6">
+        <h3 class="text-lg font-semibold text-light mb-4">Top Regions by User</h3>
+        <ul class="text-sm space-y-4 text-muted">
+          <li class="flex items-center gap-3"><span>🇮🇳</span><span>India</span><span class="ml-auto font-semibold text-light">42%</span></li>
+          <li class="flex items-center gap-3"><span>🇺🇸</span><span>United States</span><span class="ml-auto font-semibold text-light">29%</span></li>
+          <li class="flex items-center gap-3"><span>🇪🇺</span><span>European Union</span><span class="ml-auto font-semibold text-light">18%</span></li>
+          <li class="flex items-center gap-3"><span>🌏</span><span>Other</span><span class="ml-auto font-semibold text-light">11%</span></li>
         </ul>
       </div>
-      <div class="bg-panel shadow rounded-xl p-6 border-l-4 border-blue-500">
-        <div class="flex items-center gap-2 mb-4">
-          <i data-lucide="wrench" class="w-5 h-5 text-blue-400"></i>
-          <h3 class="text-lg font-semibold">Tool Usage</h3>
-        </div>
-        <canvas id="toolChart" height="100"></canvas>
-      </div>
     </div>
 
-    <!-- Free vs Pro Users -->
-    <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
-      <div class="bg-panel shadow rounded-xl p-6 border-l-4 border-green-500">
-        <div class="flex items-center gap-2 mb-3">
-          <i data-lucide="user" class="w-5 h-5 text-green-400"></i>
-          <h3 class="text-lg font-semibold">Free Users</h3>
-        </div>
-        <div class="flex items-center justify-between">
-          <p class="text-3xl font-bold text-mint">1,173</p>
-          <span class="text-sm text-green-400 font-medium bg-green-900 bg-opacity-40 px-3 py-1 rounded-full flex items-center gap-1">
-            <i data-lucide="arrow-up" class="w-4 h-4"></i>+5.3%
-          </span>
-        </div>
-        <p class="text-sm text-muted mt-2 flex items-center gap-1">
-          <i data-lucide="calendar" class="w-4 h-4"></i>Compared to last 7 days
-        </p>
-      </div>
-
-      <div class="bg-panel shadow rounded-xl p-6 border-l-4 border-red-500">
-        <div class="flex items-center gap-2 mb-3">
-          <i data-lucide="user-check" class="w-5 h-5 text-red-400"></i>
-          <h3 class="text-lg font-semibold">Pro Users</h3>
-        </div>
-        <div class="flex items-center justify-between">
-          <p class="text-3xl font-bold text-mint">309</p>
-          <span class="text-sm text-red-400 font-medium bg-red-900 bg-opacity-40 px-3 py-1 rounded-full flex items-center gap-1">
-            <i data-lucide="arrow-down" class="w-4 h-4"></i>-1.8%
-          </span>
-        </div>
-        <p class="text-sm text-muted mt-2 flex items-center gap-1">
-          <i data-lucide="calendar" class="w-4 h-4"></i>Compared to last 7 days
-        </p>
-      </div>
-    </div>
-
-    <!-- Export Buttons -->
-    <div class="flex gap-3">
-      <button class="bg-mint text-black px-5 py-2 rounded bg-green-400 transition text-sm flex items-center gap-2">
-        <i data-lucide="file-text" class="w-4 h-4"></i>
-        Export CSV
-      </button>
-      <button class="bg-panel border border-mint text-mint px-5 py-2 rounded hover:bg-green-900 hover:bg-opacity-20 transition text-sm flex items-center gap-2">
-        <i data-lucide="code" class="w-4 h-4"></i>
-        Export JSON
-      </button>
-    </div>
   </main>
 </div>
 
 <!-- Chart JS Logic -->
 <script>
-  // Set Chart.js default colors
-  Chart.defaults.color = '#a0a0b0';
-  Chart.defaults.borderColor = '#514b62';
+  document.addEventListener('DOMContentLoaded', function() {
+    // Set Chart.js defaults for dark theme
+    Chart.defaults.color = '#94a3b8'; // text-muted
+    Chart.defaults.borderColor = '#334155'; // border-dark
 
-  const ctx = document.getElementById('usageChart').getContext('2d');
-  new Chart(ctx, {
-    type: 'line',
-    data: {
-      labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
-      datasets: [{
-        label: 'Active Users',
-        data: [212, 298, 314, 421, 390, 250, 278],
-        borderColor: '#4ADE80',
-        backgroundColor: 'rgba(74, 222, 128, 0.1)',
-        tension: 0.4,
-        fill: true
-      }]
-    },
-    options: {
-      responsive: true,
-      scales: {
-        y: { 
-          beginAtZero: true,
-          grid: {
-            color: '#2d2d2d'
-          }
-        },
-        x: {
-          grid: {
-            color: '#2d2d2d'
-          }
-        }
+    // Usage Chart
+    const usageCtx = document.getElementById('usageChart').getContext('2d');
+    new Chart(usageCtx, {
+      type: 'line',
+      data: {
+        labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+        datasets: [{
+          label: 'Active Users',
+          data: [212, 298, 314, 421, 390, 250, 278],
+          borderColor: '#facc15',
+          backgroundColor: 'rgba(250, 204, 21, 0.1)',
+          tension: 0.4,
+          fill: true
+        }]
       },
-      plugins: {
-        legend: {
-          labels: {
-            boxWidth: 0,
-            padding: 20,
-            font: {
-              size: 14
-            }
-          }
-        }
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        scales: { y: { beginAtZero: true } },
+        plugins: { legend: { display: false } }
       }
-    }
-  });
+    });
 
-  const toolCtx = document.getElementById('toolChart').getContext('2d');
-  new Chart(toolCtx, {
-    type: 'bar',
-    data: {
-      labels: ['Clause Builder', 'Email Gen', 'Doc Gen', 'Explainer'],
-      datasets: [{
-        label: 'Tool Usage',
-        data: [34, 27, 21, 18],
-        backgroundColor: ['#4ADE80', '#8b5cf6', '#4f46e5', '#c084fc']
-      }]
-    },
-    options: {
-      responsive: true,
-      scales: {
-        y: { 
-          beginAtZero: true,
-          grid: {
-            color: '#2d2d2d'
-          }
-        },
-        x: {
-          grid: {
-            color: '#2d2d2d'
-          }
-        }
+    // Tool Usage Chart
+    const toolCtx = document.getElementById('toolChart').getContext('2d');
+    new Chart(toolCtx, {
+      type: 'doughnut',
+      data: {
+        labels: ['Clause Builder', 'Email Gen', 'Doc Gen', 'Explainer'],
+        datasets: [{
+          data: [34, 27, 21, 18],
+          backgroundColor: ['#facc15', '#fb923c', '#f87171', '#c084fc'],
+          borderColor: '#1e293b',
+          borderWidth: 4
+        }]
       },
-      plugins: {
-        legend: {
-          display: false
-        }
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: { legend: { position: 'bottom' } }
       }
-    }
+    });
   });
 </script>
 
