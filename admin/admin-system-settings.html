@@ -30,16 +30,29 @@
     a:hover { color: #facc15; }
     [x-cloak] { display: none !important; }
 
-    /* Custom Toggle Switch */
+    /* DEFINITIVE FIX for Custom Toggle Switch */
+    .toggle-bg {
+        transition: background-color 0.2s ease-in-out;
+    }
     .toggle-bg:after {
       content: '';
-      @apply absolute top-0.5 left-0.5 bg-white border border-gray-300 rounded-full h-5 w-5 transition shadow-sm;
+      position: absolute;
+      top: 2px;
+      left: 2px;
+      background-color: white;
+      border-radius: 9999px;
+      height: 1.25rem; /* h-5 */
+      width: 1.25rem; /* w-5 */
+      transition: transform 0.2s ease-in-out;
+      box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
     }
     input:checked + .toggle-bg:after {
-      @apply transform translate-x-full;
+      transform: translateX(100%);
+      transform: translateX(calc(2.75rem - 100% - 4px)); /* w-11 - 100% - padding */
     }
     input:checked + .toggle-bg {
-      @apply bg-brand border-brand;
+      background-color: #facc15; /* bg-brand */
+      border-color: #facc15; /* border-brand */
     }
   </style>
 </head>
@@ -142,8 +155,20 @@
             <section class="bg-panel rounded-xl shadow p-6">
               <h3 class="text-lg font-semibold text-light mb-4 flex items-center gap-2"><i data-lucide="shield" class="w-5 h-5 text-brand"></i> Access Control</h3>
               <div class="space-y-4">
-                <label for="signups" class="flex items-center justify-between cursor-pointer"><span class="text-sm font-medium text-muted">Allow New Signups</span><input type="checkbox" id="signups" class="sr-only" checked><div class="relative w-11 h-6 bg-slate-700 rounded-full border border-dark toggle-bg"></div></label>
-                <label for="maintenance" class="flex items-center justify-between cursor-pointer"><span class="text-sm font-medium text-muted">Enable Maintenance Mode</span><input type="checkbox" id="maintenance" class="sr-only"><div class="relative w-11 h-6 bg-slate-700 rounded-full border border-dark toggle-bg"></div></label>
+                <label for="signups" class="flex items-center justify-between cursor-pointer">
+                    <span class="text-sm font-medium text-muted">Allow New Signups</span>
+                    <div class="relative">
+                        <input type="checkbox" id="signups" class="sr-only" checked>
+                        <div class="w-11 h-6 bg-slate-700 rounded-full border border-dark toggle-bg"></div>
+                    </div>
+                </label>
+                <label for="maintenance" class="flex items-center justify-between cursor-pointer">
+                    <span class="text-sm font-medium text-muted">Enable Maintenance Mode</span>
+                    <div class="relative">
+                        <input type="checkbox" id="maintenance" class="sr-only">
+                        <div class="w-11 h-6 bg-slate-700 rounded-full border border-dark toggle-bg"></div>
+                    </div>
+                </label>
               </div>
             </section>
             
