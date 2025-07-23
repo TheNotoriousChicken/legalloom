@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" x-data="{ sidebarOpen: false, announcements: [], newAnnouncement: { title: '', content: '', category: '', audience: '' } }">
+<html lang="en" x-data="{ sidebarOpen: false }">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
@@ -11,115 +11,250 @@
   <style>
     body {
       font-family: 'Outfit', sans-serif;
-      background-color: #1c1a28;
+      background-color: #0f172a; /* bg-dark */
     }
-    .bg-dark { background-color: #161616; }
-    .bg-panel { background-color: #1f1f1f; }
-    .text-light { color: #e2e2e2; }
-    .text-muted { color: #a0a0b0; }
-    .text-mint { color: #4ADE80; }
-    .border-light { border-color: #161616; }
-    input:focus, textarea:focus, select:focus, button:focus {
+    .bg-dark { background-color: #0f172a; }
+    .bg-panel { background-color: #1e293b; }
+    .text-light { color: #f1f5f9; }
+    .text-muted { color: #94a3b8; }
+    .border-dark { border-color: #334155; }
+    .icon { width: 18px; height: 18px; stroke-width: 1.8; }
+    .text-brand { color: #facc15; }
+    .border-brand { border-color: #facc15; }
+
+    input:focus, textarea:focus, select:focus, button:focus, [contenteditable]:focus {
       outline: none;
-      box-shadow: 0 0 0 2px #4ADE80;
-      border-color: #4ADE80;
+      box-shadow: 0 0 0 2px #facc15;
+      border-color: #facc15;
+    }
+    a:hover { color: #facc15; }
+    [x-cloak] { display: none !important; }
+    
+    select {
+        -webkit-appearance: none;
+        -moz-appearance: none;
+        appearance: none;
+        padding-right: 2.5rem; 
+    }
+    .rich-text-editor {
+        min-height: 120px;
     }
   </style>
 </head>
 <body class="text-light bg-dark">
-<div class="flex min-h-screen">
+<div class="flex min-h-screen" x-data="announcementsAdmin">
+  <!-- Sidebar Overlay for mobile -->
+  <div x-show="sidebarOpen" x-transition:enter="transition-opacity ease-linear duration-300" x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100" x-transition:leave="transition-opacity ease-linear duration-300" x-transition:leave-start="opacity-100" x-transition:leave-end="opacity-0" class="fixed inset-0 bg-black/70 z-30 sm:hidden" @click="sidebarOpen = false" x-cloak></div>
+
   <!-- Sidebar -->
-  <aside class="w-64 bg-panel shadow-lg hidden sm:block">
-    <div class="px-6 py-6">
-      <h1 class="text-2xl font-bold text-mint mb-8">Admin Panel</h1>
-      <nav class="flex flex-col gap-4 text-sm font-medium text-light">
-        <a href="admin-dash.html" class="flex items-center gap-2 hover:text-mint"><i data-lucide="layout-dashboard" class="w-5 h-5 text-mint"></i> Dashboard</a>
-        <a href="admin-user-management.html" class="flex items-center gap-2 hover:text-mint"><i data-lucide="users" class="w-5 h-5 text-mint"></i> User Management</a>
-        <a href="admin-docs-log.html" class="flex items-center gap-2 hover:text-mint"><i data-lucide="file-text" class="w-5 h-5 text-mint"></i> Document Logs</a>
-        <a href="admin-feedback.html" class="flex items-center gap-2 hover:text-mint"><i data-lucide="mail" class="w-5 h-5 text-mint"></i> Feedback</a>
-        <a href="admin-analytics.html" class="flex items-center gap-2 hover:text-mint"><i data-lucide="bar-chart-2" class="w-5 h-5 text-mint"></i> Analytics</a>
-        <a href="admin-system-settings.html" class="flex items-center gap-2 hover:text-mint"><i data-lucide="settings" class="w-5 h-5 text-mint"></i> System Settings</a>
-        <a href="admin-ai-logs.html" class="flex items-center gap-2 hover:text-mint"><i data-lucide="brain" class="w-5 h-5 text-mint"></i> AI Logs</a>
-        <a href="admin-templates.html" class="flex items-center gap-2 hover:text-mint"><i data-lucide="folder" class="w-5 h-5 text-mint"></i> Templates</a>
-        <a href="admin-announcement.html" class="flex items-center gap-2 text-mint font-semibold"><i data-lucide="megaphone" class="w-5 h-5 text-mint"></i> Announcements</a>
-        <a href="admin-audit-logs.html" class="flex items-center gap-2 hover:text-mint"><i data-lucide="shield-check" class="w-5 h-5 text-mint"></i> Audit Logs</a>
-        <a href="#" class="mt-6 flex items-center gap-2 text-red-400 hover:text-red-500"><i data-lucide="log-out" class="w-5 h-5"></i> Logout</a>
+  <aside x-cloak class="fixed z-40 inset-y-0 left-0 w-64 bg-panel shadow-lg sm:relative sm:translate-x-0 transform transition-transform duration-300 ease-in-out" :class="sidebarOpen ? 'translate-x-0' : '-translate-x-full'">
+    <div class="flex flex-col h-full">
+      <div class="flex items-center justify-between h-20 px-6 shrink-0 border-b border-slate-700">
+        <a href="admin-dash.html" class="text-2xl font-bold text-brand">Admin Panel</a>
+        <button class="sm:hidden" @click="sidebarOpen = false">
+          <i data-lucide="x" class="w-6 h-6 text-light"></i>
+        </button>
+      </div>
+      <nav class="flex-1 px-6 py-6 flex flex-col justify-between">
+          <div class="flex flex-col gap-4 text-sm font-medium text-light">
+            <a href="admin-dash.html" class="flex items-center gap-3 p-2 rounded-lg hover:bg-slate-700"><i data-lucide="layout-dashboard" class="icon"></i>Dashboard</a>
+            <a href="admin-user-management.html" class="flex items-center gap-3 p-2 rounded-lg hover:bg-slate-700"><i data-lucide="users" class="icon"></i>User Management</a>
+            <a href="admin-docs-log.html" class="flex items-center gap-3 p-2 rounded-lg hover:bg-slate-700"><i data-lucide="file-text" class="icon"></i>Document Logs</a>
+            <a href="admin-feedback.html" class="flex items-center gap-3 p-2 rounded-lg hover:bg-slate-700"><i data-lucide="mail" class="icon"></i>Feedback</a>
+            <a href="admin-analytics.html" class="flex items-center gap-3 p-2 rounded-lg hover:bg-slate-700"><i data-lucide="bar-chart-2" class="icon"></i>Analytics</a>
+            <a href="admin-system-settings.html" class="flex items-center gap-3 p-2 rounded-lg hover:bg-slate-700"><i data-lucide="settings" class="icon"></i>System Settings</a>
+            <a href="admin-ai-logs.html" class="flex items-center gap-3 p-2 rounded-lg hover:bg-slate-700"><i data-lucide="brain" class="icon"></i>AI Logs</a>
+            <a href="admin-templates.html" class="flex items-center gap-3 p-2 rounded-lg hover:bg-slate-700"><i data-lucide="folder" class="icon"></i>Templates</a>
+            <a href="admin-announcement.html" class="flex items-center gap-3 p-2 rounded-lg bg-slate-700 text-brand font-semibold"><i data-lucide="megaphone" class="icon"></i>Announcements</a>
+            <a href="admin-audit-logs.html" class="flex items-center gap-3 p-2 rounded-lg hover:bg-slate-700"><i data-lucide="shield-check" class="icon"></i>Audit Logs</a>
+        </div>
+        <div>
+            <a href="#" class="flex items-center gap-3 p-2 rounded-lg text-red-400 hover:bg-red-900/50 hover:text-red-300"><i data-lucide="log-out" class="icon"></i>Logout</a>
+        </div>
       </nav>
     </div>
   </aside>
 
   <!-- Main Content -->
-  <main class="flex-1 p-14 space-y-10">
-    <div class="flex items-center gap-3 mb-2">
-      <i data-lucide="megaphone" class="w-7 h-7 text-mint"></i>
-      <h2 class="text-3xl font-bold text-mint">Announcements</h2>
+  <main class="flex-1 p-4 sm:p-8 space-y-6 sm:space-y-8">
+    <!-- Header -->
+    <div class="flex items-center gap-4">
+        <button class="sm:hidden text-light" @click.stop="sidebarOpen = true"><i data-lucide="menu" class="w-7 h-7"></i></button>
+        <div class="flex items-center gap-3">
+            <i data-lucide="megaphone" class="w-8 h-8 text-brand"></i>
+            <div>
+                <h2 class="text-2xl sm:text-3xl font-bold">Announcements</h2>
+                <p class="text-sm sm:text-base text-muted">Create and manage platform-wide announcements.</p>
+            </div>
+        </div>
     </div>
 
     <!-- Add Announcement -->
-    <section class="bg-panel border border-light rounded-xl p-6">
-      <div class="flex items-center gap-2 mb-4">
-        <i data-lucide="plus-circle" class="w-5 h-5 text-mint"></i>
-        <h3 class="text-xl font-semibold text-mint">Create New Announcement</h3>
-      </div>
+    <section class="bg-panel rounded-xl p-6">
+      <h3 class="text-lg font-semibold text-light mb-4 flex items-center gap-2"><i data-lucide="plus-circle" class="w-5 h-5 text-brand"></i> Create New Announcement</h3>
       <div class="space-y-4">
-        <input x-model="newAnnouncement.title" type="text" placeholder="Title..." class="w-full border border-light rounded p-3 bg-dark text-light text-sm" />
-        <textarea x-model="newAnnouncement.content" placeholder="Write announcement content..." rows="5" class="w-full border border-light rounded p-3 bg-dark text-light text-sm resize-none"></textarea>
+        <input x-model="newAnnouncement.title" type="text" placeholder="Title..." class="w-full border border-dark rounded-lg p-3 bg-dark text-light text-sm" />
+        
+        <!-- Rich Text Editor -->
+        <div>
+            <div class="flex items-center gap-2 border border-dark border-b-0 rounded-t-lg bg-dark p-2">
+                <button @click="format('bold')" class="p-1 rounded hover:bg-slate-700"><i data-lucide="bold" class="w-4 h-4"></i></button>
+                <button @click="format('italic')" class="p-1 rounded hover:bg-slate-700"><i data-lucide="italic" class="w-4 h-4"></i></button>
+                <button @click="format('insertUnorderedList')" class="p-1 rounded hover:bg-slate-700"><i data-lucide="list" class="w-4 h-4"></i></button>
+            </div>
+            <div id="newContentEditor" @input="newAnnouncement.content = $event.target.innerHTML" contenteditable="true" class="rich-text-editor w-full border border-dark rounded-b-lg p-3 bg-dark text-light text-sm resize-y"></div>
+        </div>
 
         <div class="flex flex-col sm:flex-row gap-4">
-          <select x-model="newAnnouncement.category" class="w-full sm:w-1/2 border border-light rounded p-2 bg-dark text-light text-sm">
-            <option value="">Select Category</option>
-            <option>General</option>
-            <option>Feature</option>
-            <option>Maintenance</option>
-          </select>
-          <select x-model="newAnnouncement.audience" class="w-full sm:w-1/2 border border-light rounded p-2 bg-dark text-light text-sm">
-            <option value="">Target Audience</option>
-            <option>All Users</option>
-            <option>Free Users</option>
-            <option>Pro Users</option>
-          </select>
+          <div class="relative flex-1">
+            <select x-model="newAnnouncement.category" class="w-full border border-dark rounded-lg p-2 bg-dark text-light text-sm">
+              <option value="">Select Category</option>
+              <option>General</option>
+              <option>Feature</option>
+              <option>Maintenance</option>
+            </select>
+            <i data-lucide="chevron-down" class="w-4 h-4 text-muted absolute top-1/2 right-3 -translate-y-1/2 pointer-events-none"></i>
+          </div>
+          <div class="relative flex-1">
+            <select x-model="newAnnouncement.audience" class="w-full border border-dark rounded-lg p-2 bg-dark text-light text-sm">
+              <option value="">Target Audience</option>
+              <option>All Users</option>
+              <option>Free Users</option>
+              <option>Pro Users</option>
+            </select>
+            <i data-lucide="chevron-down" class="w-4 h-4 text-muted absolute top-1/2 right-3 -translate-y-1/2 pointer-events-none"></i>
+          </div>
         </div>
 
-        <button @click="announcements.unshift({ ...newAnnouncement, date: new Date().toLocaleDateString() }); newAnnouncement = { title: '', content: '', category: '', audience: '' }" class="bg-mint text-black px-6 py-2 rounded bg-green-400 font-semibold text-sm flex items-center gap-2">
-          <i data-lucide='send' class="w-4 h-4"></i> Publish
-        </button>
+        <div class="flex gap-4">
+            <button @click="addAnnouncement('Draft')" class="bg-slate-700 text-light px-6 py-2 rounded-lg font-semibold text-sm flex items-center gap-2 hover:bg-slate-600 transition">
+              <i data-lucide='save' class="w-4 h-4"></i> Save as Draft
+            </button>
+            <button @click="addAnnouncement('Published')" class="bg-amber-400 text-slate-900 px-6 py-2 rounded-lg font-semibold text-sm flex items-center gap-2 hover:bg-amber-500 transition">
+              <i data-lucide='send' class="w-4 h-4"></i> Publish
+            </button>
+        </div>
       </div>
     </section>
 
-    <!-- Announcement List -->
-    <section class="space-y-6">
-      <template x-for="(note, index) in announcements" :key="index">
-        <div class="bg-panel border border-light rounded-xl p-6 space-y-2">
-          <div class="flex justify-between items-center">
-            <h3 class="text-lg font-bold text-light" x-text="note.title"></h3>
-            <span class="text-xs text-muted" x-text="note.date"></span>
-          </div>
-          <div class="flex flex-wrap gap-2 text-xs font-medium text-white">
-            <template x-if="note.category === 'General'">
-              <span class="bg-mint/20 text-mint px-2 py-1 rounded" x-text="note.category"></span>
-            </template>
-            <template x-if="note.category === 'Feature'">
-              <span class="bg-blue-500/20 text-blue-400 px-2 py-1 rounded" x-text="note.category"></span>
-            </template>
-            <template x-if="note.category === 'Maintenance'">
-              <span class="bg-yellow-500/20 text-yellow-400 px-2 py-1 rounded" x-text="note.category"></span>
-            </template>
-            <template x-if=\"note.category !== 'General' && note.category !== 'Feature' && note.category !== 'Maintenance'\">
-              <span class=\"bg-muted/20 text-muted px-2 py-1 rounded\" x-text=\"note.category\"></span>
-            </template>
-
-            <span class="bg-gray-500/20 text-gray-300 px-2 py-1 rounded" x-text="note.audience"></span>
-          </div>
-          <p class="text-light text-sm whitespace-pre-line" x-text="note.content"></p>
-        </div>
-      </template>
-    </section>
+    <!-- Announcement Lists -->
+    <div class="space-y-8">
+        <!-- Drafts -->
+        <section x-show="drafts.length > 0" x-cloak>
+            <h3 class="text-lg font-semibold text-light mb-4">Drafts</h3>
+            <div class="space-y-4">
+                <template x-for="note in drafts" :key="note.id">
+                    <div class="bg-panel border border-dark rounded-xl p-4 space-y-3">
+                        <div class="flex justify-between items-center"><h4 class="font-bold text-light" x-text="note.title"></h4><div class="flex items-center gap-4 text-xs"><span class="text-muted" x-text="note.date"></span><button @click="openModal(note)" class="text-muted hover:text-brand"><i data-lucide="edit"></i></button><button @click="deleteAnnouncement(note.id)" class="text-muted hover:text-red-400"><i data-lucide="trash-2"></i></button></div></div>
+                        <div class="flex flex-wrap gap-2 text-xs font-medium"><span class="bg-yellow-500/10 text-yellow-400 px-2 py-1 rounded">Draft</span></div>
+                        <div class="text-light text-sm whitespace-pre-line prose prose-sm max-w-none prose-invert" x-html="note.content"></div>
+                    </div>
+                </template>
+            </div>
+        </section>
+        <!-- Published -->
+        <section>
+            <h3 class="text-lg font-semibold text-light mb-4">Published Announcements</h3>
+            <div class="space-y-4">
+                <template x-for="note in published" :key="note.id">
+                    <div class="bg-panel border border-dark rounded-xl p-4 space-y-3">
+                        <div class="flex justify-between items-center"><h4 class="font-bold text-light" x-text="note.title"></h4><div class="flex items-center gap-4 text-xs"><span class="text-muted" x-text="note.date"></span><button @click="openModal(note)" class="text-muted hover:text-brand"><i data-lucide="edit"></i></button><button @click="deleteAnnouncement(note.id)" class="text-muted hover:text-red-400"><i data-lucide="trash-2"></i></button></div></div>
+                        <div class="flex flex-wrap gap-2 text-xs font-medium"><span class="px-2 py-1 rounded" :class="getCategoryClass(note.category)" x-text="note.category || 'General'"></span><span class="bg-slate-700/50 text-slate-300 px-2 py-1 rounded" x-text="note.audience || 'All Users'"></span></div>
+                        <div class="text-light text-sm whitespace-pre-line prose prose-sm max-w-none prose-invert" x-html="note.content"></div>
+                    </div>
+                </template>
+            </div>
+        </section>
+    </div>
   </main>
+
+  <!-- Edit Modal -->
+  <div x-show="showModal" x-transition class="fixed inset-0 bg-black/70 z-50 flex items-center justify-center p-4">
+      <div @click.away="showModal = false" class="bg-panel rounded-xl shadow-lg w-full max-w-2xl max-h-[90vh] flex flex-col">
+          <div class="flex justify-between items-center p-4 border-b border-slate-700"><h4 class="font-semibold text-brand text-lg">Edit Announcement</h4><button @click="showModal = false"><i data-lucide="x" class="w-5 h-5 text-muted hover:text-light"></i></button></div>
+          <div class="p-6 overflow-y-auto space-y-4">
+              <input x-model="editableAnnouncement.title" type="text" class="w-full border border-dark rounded-lg p-3 bg-dark text-light text-sm" />
+              <div id="editContentEditor" @input="editableAnnouncement.content = $event.target.innerHTML" contenteditable="true" class="rich-text-editor w-full border border-dark rounded-lg p-3 bg-dark text-light text-sm resize-y" x-html="editableAnnouncement.content"></div>
+          </div>
+          <div class="p-4 bg-slate-800/50 border-t border-slate-700 flex justify-end gap-3">
+              <button @click="showModal = false" class="text-muted hover:bg-slate-700 px-4 py-2 rounded-lg text-sm font-semibold">Cancel</button>
+              <button @click="saveAnnouncement" class="bg-brand text-slate-900 px-4 py-2 rounded-lg text-sm font-semibold hover:bg-amber-500">Save Changes</button>
+          </div>
+      </div>
+  </div>
 </div>
 
 <script>
+  function announcementsAdmin() {
+    return {
+        announcements: [],
+        newAnnouncement: { title: '', content: '', category: '', audience: '', status: 'Draft' },
+        showModal: false,
+        editableAnnouncement: {},
+
+        init() {
+            this.announcements = [
+                { id: 1, title: 'New Feature: Contract Reviewer', content: 'We have launched a new AI-powered contract reviewer. Upload your documents now to get instant feedback!', category: 'Feature', audience: 'All Users', date: '2025-07-22', status: 'Published' },
+                { id: 2, title: 'Scheduled Maintenance', content: 'The platform will be down for scheduled maintenance on July 25th from 2:00 AM to 3:00 AM UTC.', category: 'Maintenance', audience: 'All Users', date: '2025-07-21', status: 'Published' },
+                { id: 3, title: 'Upcoming UI Update', content: 'We are planning a major UI overhaul for the dashboard.', category: 'General', audience: 'All Users', date: '2025-07-20', status: 'Draft' }
+            ];
+        },
+        get drafts() { return this.announcements.filter(a => a.status === 'Draft').sort((a, b) => new Date(b.date) - new Date(a.date)); },
+        get published() { return this.announcements.filter(a => a.status === 'Published').sort((a, b) => new Date(b.date) - new Date(a.date)); },
+
+        addAnnouncement(status) {
+            if (!this.newAnnouncement.title || !this.newAnnouncement.content) {
+                alert('Please fill out the title and content.');
+                return;
+            }
+            this.announcements.unshift({ 
+                ...this.newAnnouncement,
+                id: Date.now(),
+                status: status,
+                date: new Date().toLocaleDateString('en-CA')
+            });
+            this.newAnnouncement = { title: '', content: '', category: '', audience: '', status: 'Draft' };
+            document.getElementById('newContentEditor').innerHTML = '';
+        },
+        
+        openModal(note) {
+            this.editableAnnouncement = JSON.parse(JSON.stringify(note));
+            this.showModal = true;
+            this.$nextTick(() => {
+                document.getElementById('editContentEditor').innerHTML = this.editableAnnouncement.content;
+            });
+        },
+
+        saveAnnouncement() {
+            const index = this.announcements.findIndex(a => a.id === this.editableAnnouncement.id);
+            if (index > -1) {
+                this.announcements[index] = { ...this.editableAnnouncement };
+            }
+            this.showModal = false;
+        },
+
+        deleteAnnouncement(id) {
+            if (confirm('Are you sure you want to delete this announcement?')) {
+                this.announcements = this.announcements.filter(a => a.id !== id);
+            }
+        },
+        
+        format(command) { 
+            const editor = document.activeElement.id === 'editContentEditor' ? 'editContentEditor' : 'newContentEditor';
+            document.getElementById(editor).focus();
+            document.execCommand(command, false, null); 
+        },
+        
+        getCategoryClass(category) {
+            switch(category) {
+                case 'Feature': return 'bg-blue-500/10 text-blue-400';
+                case 'Maintenance': return 'bg-yellow-500/10 text-yellow-400';
+                default: return 'bg-slate-500/10 text-slate-400';
+            }
+        }
+    }
+  }
   lucide.createIcons();
 </script>
 </body>
 </html>
-
