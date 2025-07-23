@@ -1,156 +1,210 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" x-data="{ sidebarOpen: false }">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>AI Logs – ContraktAI Admin</title>
   <script src="https://cdn.tailwindcss.com"></script>
-  <script src="https://unpkg.com/lucide@latest"></script>
   <script src="https://unpkg.com/alpinejs" defer></script>
+  <script src="https://unpkg.com/lucide@latest"></script>
   <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700&display=swap" rel="stylesheet" />
   <style>
     body {
       font-family: 'Outfit', sans-serif;
-      background-color: #1c1a28;
+      background-color: #0f172a; /* bg-dark */
     }
-    .bg-dark { background-color: #161616; }
-    .bg-panel { background-color: #1f1f1f; }
-    .text-light { color: #e2e2e2; }
-    .text-muted { color: #a0a0b0; }
-    .border-light { border-color: #514b62; }
-    .text-mint { color: #4ADE80; }
-    .border-mint { border-color: #4ADE80; }
+    .bg-dark { background-color: #0f172a; }
+    .bg-panel { background-color: #1e293b; }
+    .text-light { color: #f1f5f9; }
+    .text-muted { color: #94a3b8; }
+    .border-dark { border-color: #334155; }
+    .icon { width: 18px; height: 18px; stroke-width: 1.8; }
+    .text-brand { color: #facc15; }
+    .border-brand { border-color: #facc15; }
 
     input:focus, textarea:focus, select:focus, button:focus {
       outline: none;
-      box-shadow: 0 0 0 2px #4ADE80;
-      border-color: #4ADE80;
+      box-shadow: 0 0 0 2px #facc15;
+      border-color: #facc15;
+    }
+    a:hover { color: #facc15; }
+    [x-cloak] { display: none !important; }
+    
+    select {
+        -webkit-appearance: none;
+        -moz-appearance: none;
+        appearance: none;
+        padding-right: 2.5rem; 
+    }
+    .table-header-sortable {
+        cursor: pointer;
+        transition: color 0.2s ease-in-out;
+    }
+    .table-header-sortable:hover {
+        color: #f1f5f9;
     }
   </style>
 </head>
 
 <body class="text-light bg-dark">
-<div class="flex min-h-screen" x-data="aiLogs()" x-init="init()">
+<div class="flex min-h-screen" x-data="aiLogs()">
+
+  <!-- Sidebar Overlay for mobile -->
+  <div x-show="sidebarOpen" x-transition:enter="transition-opacity ease-linear duration-300" x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100" x-transition:leave="transition-opacity ease-linear duration-300" x-transition:leave-start="opacity-100" x-transition:leave-end="opacity-0" class="fixed inset-0 bg-black/70 z-30 sm:hidden" @click="sidebarOpen = false" x-cloak></div>
 
   <!-- Sidebar -->
-  <aside class="w-64 bg-panel shadow-lg hidden sm:block">
-    <div class="px-6 py-6">
-      <h1 class="text-2xl font-bold text-mint mb-8">Admin Panel</h1>
-      <nav class="flex flex-col gap-4 text-sm font-medium text-light">
-        <a href="admin-dash.html" class="flex items-center gap-2 hover:text-mint">
-          <i data-lucide="layout-dashboard" class="w-5 h-5 text-mint"></i> Dashboard
-        </a>
-        <a href="admin-user-management.html" class="flex items-center gap-2 hover:text-mint">
-          <i data-lucide="users" class="w-5 h-5 text-mint"></i> User Management
-        </a>
-        <a href="admin-docs-log.html" class="flex items-center gap-2 hover:text-mint">
-          <i data-lucide="file-text" class="w-5 h-5 text-mint"></i> Document Logs
-        </a>
-        <a href="admin-feedback.html" class="flex items-center gap-2 hover:text-mint">
-          <i data-lucide="mail" class="w-5 h-5 text-mint"></i> Feedback
-        </a>
-        <a href="admin-analytics.html" class="flex items-center gap-2 hover:text-mint">
-          <i data-lucide="bar-chart-2" class="w-5 h-5 text-mint"></i> Analytics
-        </a>
-        <a href="admin-system-settings.html" class="flex items-center gap-2 hover:text-mint">
-          <i data-lucide="settings" class="w-5 h-5 text-mint"></i> System Settings
-        </a>
-        <a href="admin-ai-logs.html" class="flex items-center gap-2 text-mint font-semibold">
-          <i data-lucide="brain" class="w-5 h-5 text-mint"></i> AI Logs
-        </a>
-        <a href="admin-templates.html" class="flex items-center gap-2 hover:text-mint">
-          <i data-lucide="folder" class="w-5 h-5 text-mint"></i> Templates
-        </a>
-        <a href="admin-announcement.html" class="flex items-center gap-2 hover:text-mint">
-          <i data-lucide="megaphone" class="w-5 h-5 text-mint"></i> Announcements
-        </a>
-        <a href="admin-audit-logs.html" class="flex items-center gap-2 hover:text-mint">
-          <i data-lucide="shield-check" class="w-5 h-5 text-mint"></i> Audit Logs
-        </a>
-        <a href="#" class="mt-6 flex items-center gap-2 text-red-400 hover:text-red-500">
-          <i data-lucide="log-out" class="w-5 h-5"></i> Logout
-        </a>
+  <aside x-cloak class="fixed z-40 inset-y-0 left-0 w-64 bg-panel shadow-lg sm:relative sm:translate-x-0 transform transition-transform duration-300 ease-in-out" :class="sidebarOpen ? 'translate-x-0' : '-translate-x-full'">
+    <div class="flex flex-col h-full">
+      <div class="flex items-center justify-between h-20 px-6 shrink-0 border-b border-slate-700">
+        <a href="admin-dash.html" class="text-2xl font-bold text-brand">Admin Panel</a>
+        <button class="sm:hidden" @click="sidebarOpen = false">
+          <i data-lucide="x" class="w-6 h-6 text-light"></i>
+        </button>
+      </div>
+      <nav class="flex-1 px-6 py-6 flex flex-col justify-between">
+          <div class="flex flex-col gap-4 text-sm font-medium text-light">
+            <a href="admin-dash.html" class="flex items-center gap-3 p-2 rounded-lg hover:bg-slate-700"><i data-lucide="layout-dashboard" class="icon"></i>Dashboard</a>
+            <a href="admin-user-management.html" class="flex items-center gap-3 p-2 rounded-lg hover:bg-slate-700"><i data-lucide="users" class="icon"></i>User Management</a>
+            <a href="admin-docs-log.html" class="flex items-center gap-3 p-2 rounded-lg hover:bg-slate-700"><i data-lucide="file-text" class="icon"></i>Document Logs</a>
+            <a href="admin-feedback.html" class="flex items-center gap-3 p-2 rounded-lg hover:bg-slate-700"><i data-lucide="mail" class="icon"></i>Feedback</a>
+            <a href="admin-analytics.html" class="flex items-center gap-3 p-2 rounded-lg hover:bg-slate-700"><i data-lucide="bar-chart-2" class="icon"></i>Analytics</a>
+            <a href="admin-system-settings.html" class="flex items-center gap-3 p-2 rounded-lg hover:bg-slate-700"><i data-lucide="settings" class="icon"></i>System Settings</a>
+            <a href="admin-ai-logs.html" class="flex items-center gap-3 p-2 rounded-lg bg-slate-700 text-brand font-semibold"><i data-lucide="brain" class="icon"></i>AI Logs</a>
+            <a href="admin-templates.html" class="flex items-center gap-3 p-2 rounded-lg hover:bg-slate-700"><i data-lucide="folder" class="icon"></i>Templates</a>
+            <a href="admin-announcement.html" class="flex items-center gap-3 p-2 rounded-lg hover:bg-slate-700"><i data-lucide="megaphone" class="icon"></i>Announcements</a>
+            <a href="admin-audit-logs.html" class="flex items-center gap-3 p-2 rounded-lg hover:bg-slate-700"><i data-lucide="shield-check" class="icon"></i>Audit Logs</a>
+        </div>
+        <div>
+            <a href="#" class="flex items-center gap-3 p-2 rounded-lg text-red-400 hover:bg-red-900/50 hover:text-red-300"><i data-lucide="log-out" class="icon"></i>Logout</a>
+        </div>
       </nav>
     </div>
   </aside>
 
   <!-- Main -->
-  <main class="flex-1 p-14 space-y-8">
-    <h2 class="text-3xl font-bold text-light flex items-center gap-2">
-      <i data-lucide="brain" class="w-8 h-8 text-mint"></i> AI Logs
-    </h2>
-
-    <!-- Filters -->
-    <div class="flex flex-wrap gap-4 items-center">
-      <input x-model="search" type="text" placeholder="Search by user or prompt..."
-             class="px-4 py-2 rounded border border-light bg-dark text-light focus:border-mint w-64 text-sm" />
-      <select x-model="selectedTool" class="px-3 py-2 border border-light bg-dark text-light rounded text-sm focus:border-mint">
-        <option value="">All Tools</option>
-        <option>Clause Builder</option>
-        <option>Email Gen</option>
-        <option>Doc Gen</option>
-        <option>Clause Explainer</option>
-      </select>
-      <select x-model="selectedStatus" class="px-3 py-2 border border-light bg-dark text-light rounded text-sm focus:border-mint">
-        <option value="">All Status</option>
-        <option>Success</option>
-        <option>Error</option>
-      </select>
+  <main class="flex-1 p-4 sm:p-8 space-y-6 sm:space-y-8">
+    <!-- Header -->
+    <div class="flex items-center gap-4">
+        <button class="sm:hidden text-light" @click.stop="sidebarOpen = true"><i data-lucide="menu" class="w-7 h-7"></i></button>
+        <div class="flex items-center gap-3">
+            <i data-lucide="brain" class="w-8 h-8 text-brand"></i>
+            <div>
+                <h2 class="text-2xl sm:text-3xl font-bold">AI Logs</h2>
+                <p class="text-sm sm:text-base text-muted">Monitor and review all AI interactions.</p>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Stat Cards -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div class="bg-panel p-6 rounded-xl shadow"><p class="text-sm font-semibold text-muted">Total Requests (Filtered)</p><p class="text-3xl font-bold text-light mt-1" x-text="sortedLogs.length"></p></div>
+        <div class="bg-panel p-6 rounded-xl shadow"><p class="text-sm font-semibold text-muted">Total AI Cost (Filtered)</p><p class="text-3xl font-bold text-light mt-1" x-text="totalCost"></p><p class="text-xs text-muted mt-2">Estimated</p></div>
+        <div class="bg-panel p-6 rounded-xl shadow"><p class="text-sm font-semibold text-muted">Errors (Filtered)</p><p class="text-3xl font-bold text-red-400 mt-1" x-text="errorCount"></p></div>
     </div>
 
-    <!-- Logs Table -->
-    <div class="bg-panel rounded-xl shadow overflow-x-auto">
-      <table class="min-w-full text-sm">
-        <thead class="text-left text-muted border-b border-light">
-          <tr>
-            <th class="px-4 py-2">Time</th>
-            <th class="px-4 py-2">User</th>
-            <th class="px-4 py-2">Tool</th>
-            <th class="px-4 py-2">Prompt Preview</th>
-            <th class="px-4 py-2">Status</th>
-            <th class="px-4 py-2">Tokens</th>
-          </tr>
-        </thead>
-        <tbody>
-          <template x-for="log in filteredLogs" :key="log.id">
-            <tr class="border-b border-light hover:bg-gray-800 cursor-pointer"
-                @click="openLog(log)">
-              <td class="px-4 py-2 text-light" x-text="log.time"></td>
-              <td class="px-4 py-2 text-light" x-text="log.user"></td>
-              <td class="px-4 py-2 text-light" x-text="log.tool"></td>
-              <td class="px-4 py-2 text-muted truncate max-w-xs" x-text="log.prompt.slice(0, 50) + '...'"></td>
-              <td class="px-4 py-2">
-                <span :class="log.status === 'Success' ? 'text-mint' : 'text-red-400'" x-text="log.status"></span>
-              </td>
-              <td class="px-4 py-2 text-light" x-text="log.tokens"></td>
-            </tr>
-          </template>
-        </tbody>
-      </table>
-    </div>
+    <!-- AI Logs Table -->
+    <section class="bg-panel rounded-xl shadow p-6">
+        <!-- Filters -->
+        <div class="flex flex-wrap gap-4 items-center mb-6">
+          <div class="relative w-full sm:w-auto sm:flex-1">
+            <i data-lucide="search" class="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted"></i>
+            <input x-model="search" type="text" placeholder="Search by user or prompt..."
+                 class="w-full pl-10 pr-4 py-2 rounded-lg border border-dark bg-dark text-light text-sm" />
+          </div>
+          <div class="relative">
+            <select x-model="selectedTool" class="rounded-lg px-3 py-2 border border-dark bg-dark text-light text-sm">
+                <option value="">All Tools</option>
+                <option>Clause Builder</option>
+                <option>Email Gen</option>
+                <option>Doc Gen</option>
+                <option>Clause Explainer</option>
+            </select>
+            <i data-lucide="chevron-down" class="w-4 h-4 text-muted absolute top-1/2 right-3 -translate-y-1/2 pointer-events-none"></i>
+          </div>
+          <div class="relative">
+            <select x-model="selectedStatus" class="rounded-lg px-3 py-2 border border-dark bg-dark text-light text-sm pr-10">
+                <option value="">All Status</option>
+                <option>Success</option>
+                <option>Error</option>
+                <option>Flagged</option>
+            </select>
+            <i data-lucide="chevron-down" class="w-4 h-4 text-muted absolute top-1/2 right-3 -translate-y-1/2 pointer-events-none"></i>
+          </div>
+        </div>
+
+        <!-- Logs Table -->
+        <div class="overflow-x-auto">
+          <table class="min-w-full text-sm">
+            <thead class="text-left text-muted border-b border-dark">
+              <tr>
+                <th @click="sortBy('time')" class="px-4 py-3 font-semibold table-header-sortable">Time</th>
+                <th @click="sortBy('user')" class="px-4 py-3 font-semibold table-header-sortable">User</th>
+                <th @click="sortBy('tool')" class="px-4 py-3 font-semibold table-header-sortable">Tool</th>
+                <th class="px-4 py-3 font-semibold">Prompt Preview</th>
+                <th @click="sortBy('status')" class="px-4 py-3 font-semibold table-header-sortable">Status</th>
+                <th @click="sortBy('tokens')" class="px-4 py-3 font-semibold table-header-sortable">Tokens</th>
+                <th @click="sortBy('cost')" class="px-4 py-3 font-semibold table-header-sortable">Cost</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-dark">
+              <template x-for="log in paginatedLogs" :key="log.id">
+                <tr class="hover:bg-slate-800/50 cursor-pointer" @click="openLog(log)">
+                  <td class="px-4 py-3 text-light" x-text="log.time"></td>
+                  <td class="px-4 py-3 text-light flex items-center gap-2">
+                    <i data-lucide="flag" class="w-3 h-3 text-yellow-400" x-show="log.flagged"></i>
+                    <span x-text="log.user"></span>
+                  </td>
+                  <td class="px-4 py-3 text-light" x-text="log.tool"></td>
+                  <td class="px-4 py-3 text-muted truncate max-w-xs" x-text="log.prompt.slice(0, 50) + (log.prompt.length > 50 ? '...' : '')"></td>
+                  <td class="px-4 py-3">
+                    <span class="font-semibold" :class="log.status === 'Success' ? 'text-green-400' : 'text-red-400'" x-text="log.status"></span>
+                  </td>
+                  <td class="px-4 py-3 text-light" x-text="log.tokens"></td>
+                  <td class="px-4 py-3 text-light" x-text="formatCost(log.cost)"></td>
+                </tr>
+              </template>
+            </tbody>
+          </table>
+        </div>
+        <!-- Pagination -->
+        <div class="mt-6 flex justify-between items-center">
+            <p class="text-sm text-muted">Showing <span x-text="(currentPage - 1) * perPage + 1"></span> to <span x-text="Math.min(currentPage * perPage, sortedLogs.length)"></span> of <span x-text="sortedLogs.length"></span> logs</p>
+            <div class="flex items-center gap-2">
+                <button @click="prevPage" :disabled="currentPage === 1" class="p-2 rounded-md hover:bg-slate-700 disabled:opacity-50"><i data-lucide="chevron-left" class="w-4 h-4"></i></button>
+                <span class="text-sm" x-text="currentPage + ' / ' + totalPages"></span>
+                <button @click="nextPage" :disabled="currentPage === totalPages" class="p-2 rounded-md hover:bg-slate-700 disabled:opacity-50"><i data-lucide="chevron-right" class="w-4 h-4"></i></button>
+            </div>
+        </div>
+    </section>
 
     <!-- Modal -->
-    <div x-show="showModal" x-transition
-         class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
-      <div class="bg-panel rounded-lg p-6 max-w-2xl w-full max-h-[90vh] overflow-auto">
-        <div class="flex justify-between items-center mb-4">
-          <h3 class="text-xl font-bold text-mint">Log Details</h3>
-          <button @click="showModal = false" class="text-light hover:text-mint">
-            <i data-lucide="x" class="w-6 h-6"></i>
-          </button>
+    <div x-show="showModal" x-transition class="fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center p-4 z-50">
+      <div @click.away="showModal = false" class="bg-panel rounded-xl shadow-lg p-6 max-w-2xl w-full max-h-[90vh] overflow-auto flex flex-col">
+        <div class="flex justify-between items-center mb-4 shrink-0">
+          <h3 class="text-xl font-bold text-brand">Log Details</h3>
+          <button @click="showModal = false" class="text-muted hover:text-light"><i data-lucide="x" class="w-6 h-6"></i></button>
         </div>
-        <div class="space-y-4">
-          <div x-text="`User: ${selectedLog.user}`"></div>
-          <div x-text="`Tool: ${selectedLog.tool}`"></div>
-          <div x-text="`Status: ${selectedLog.status}`"></div>
-          <div x-text="`Tokens: ${selectedLog.tokens}`"></div>
-          <div class="mt-4">
-            <h4 class="font-semibold text-mint mb-2">Full Prompt:</h4>
-            <div class="bg-dark p-4 rounded whitespace-pre-line" x-text="selectedLog.prompt"></div>
+        <div class="space-y-4 text-sm overflow-y-auto" x-show="selectedLog">
+          <div><strong class="text-muted w-24 inline-block">User:</strong> <span x-text="selectedLog.user"></span></div>
+          <div><strong class="text-muted w-24 inline-block">Tool:</strong> <span x-text="selectedLog.tool"></span></div>
+          <div><strong class="text-muted w-24 inline-block">Status:</strong> <span :class="selectedLog.status === 'Success' ? 'text-green-400' : 'text-red-400'" x-text="selectedLog.status"></span></div>
+          <div><strong class="text-muted w-24 inline-block">Tokens:</strong> <span x-text="selectedLog.tokens"></span></div>
+          <div><strong class="text-muted w-24 inline-block">Est. Cost:</strong> <span x-text="formatCost(selectedLog.cost)"></span></div>
+          <div class="pt-2">
+            <h4 class="font-semibold text-light mb-2">Full Prompt:</h4>
+            <div class="bg-dark p-4 rounded-lg whitespace-pre-wrap text-muted" x-text="selectedLog.prompt"></div>
           </div>
-          <div x-show="selectedLog.response" class="mt-4">
-            <h4 class="font-semibold text-mint mb-2">AI Response:</h4>
-            <div class="bg-dark p-4 rounded whitespace-pre-line" x-text="selectedLog.response"></div>
+          <div x-show="selectedLog.response" class="pt-2">
+            <h4 class="font-semibold text-light mb-2">AI Response:</h4>
+            <div class="bg-dark p-4 rounded-lg whitespace-pre-wrap text-muted" x-text="selectedLog.response"></div>
+          </div>
+          <div class="pt-4 border-t border-dark flex items-center gap-4">
+            <button @click="toggleFlag(selectedLog)" class="flex items-center gap-2 text-sm px-3 py-2 rounded-lg hover:bg-slate-700" :class="selectedLog.flagged ? 'text-brand' : 'text-muted'">
+                <i data-lucide="flag" class="w-4 h-4"></i> <span x-text="selectedLog.flagged ? 'Unflag' : 'Flag for Review'"></span>
+            </button>
+            <button @click="retryRequest(selectedLog)" x-show="selectedLog.status === 'Error'" class="flex items-center gap-2 text-sm px-3 py-2 rounded-lg text-muted hover:bg-slate-700 hover:text-brand">
+                <i data-lucide="refresh-cw" class="w-4 h-4"></i> Retry Request
+            </button>
           </div>
         </div>
       </div>
@@ -162,61 +216,86 @@
 <script>
   function aiLogs() {
     return {
-      selectedTool: '',
-      selectedStatus: '',
-      search: '',
-      showModal: false,
-      selectedLog: {},
-      logs: [],
+      selectedTool: '', selectedStatus: '', search: '',
+      showModal: false, selectedLog: {}, logs: [],
+      sortColumn: 'time', sortDirection: 'desc',
+      currentPage: 1, perPage: 10,
+      costPerToken: 0.000002, // Example cost per token
 
       init() {
         this.logs = [
-          {
-            id: 1,
-            time: '2025-07-04 12:15',
-            user: 'admin@ContraktAI.com',
-            tool: 'Clause Explainer',
-            prompt: 'Explain the limitation of liability clause in simple words.',
-            response: 'This clause means the company won’t be liable for damages over a certain limit...',
-            status: 'Success',
-            tokens: 523
-          },
-          {
-            id: 2,
-            time: '2025-07-04 11:42',
-            user: 'parth@xyz.com',
-            tool: 'Doc Gen',
-            prompt: 'Generate NDA for freelancers',
-            response: 'Here is your NDA: ...',
-            status: 'Success',
-            tokens: 920
-          },
-          {
-            id: 3,
-            time: '2025-07-04 10:30',
-            user: 'john@abc.com',
-            tool: 'Email Gen',
-            prompt: 'Write an email apologizing for a delayed project delivery.',
-            response: '',
-            status: 'Error',
-            tokens: 0
-          }
-        ];
+          { id: 1, time: '2025-07-22 12:15', user: 'admin@ContraktAI.com', tool: 'Clause Explainer', prompt: 'Explain the limitation of liability clause in simple words.', response: 'This clause means the company won’t be liable for damages over a certain limit...', status: 'Success', tokens: 523, flagged: false },
+          { id: 2, time: '2025-07-22 11:42', user: 'parth@xyz.com', tool: 'Doc Gen', prompt: 'Generate NDA for freelancers', response: 'Here is your NDA: ...', status: 'Success', tokens: 920, flagged: true },
+          { id: 3, time: '2025-07-22 10:30', user: 'john@abc.com', tool: 'Email Gen', prompt: 'Write an email apologizing for a delayed project delivery.', response: '', status: 'Error', tokens: 0, flagged: false },
+        ].map(log => ({...log, cost: log.tokens * this.costPerToken }));
         lucide.createIcons();
       },
-
+      
+      formatCost(cost) {
+        return cost > 0 ? `$${cost.toFixed(4)}` : '$0.0000';
+      },
+      
       get filteredLogs() {
         return this.logs.filter(log =>
           (!this.selectedTool || log.tool === this.selectedTool) &&
-          (!this.selectedStatus || log.status === this.selectedStatus) &&
+          (this.selectedStatus === '' || (this.selectedStatus === 'Flagged' ? log.flagged : log.status === this.selectedStatus)) &&
           (!this.search || log.prompt.toLowerCase().includes(this.search.toLowerCase()) || log.user.toLowerCase().includes(this.search.toLowerCase()))
         );
+      },
+
+      get sortedLogs() {
+        const sorted = [...this.filteredLogs].sort((a, b) => {
+            const modifier = this.sortDirection === 'asc' ? 1 : -1;
+            if (a[this.sortColumn] < b[this.sortColumn]) return -1 * modifier;
+            if (a[this.sortColumn] > b[this.sortColumn]) return 1 * modifier;
+            return 0;
+        });
+        return sorted;
+      },
+
+      get paginatedLogs() {
+          const start = (this.currentPage - 1) * this.perPage;
+          return this.sortedLogs.slice(start, start + this.perPage);
+      },
+      
+      get totalPages() { return Math.ceil(this.sortedLogs.length / this.perPage) || 1; },
+      get totalCost() { return this.formatCost(this.sortedLogs.reduce((sum, log) => sum + log.cost, 0)); },
+      get errorCount() { return this.sortedLogs.filter(log => log.status === 'Error').length; },
+
+      prevPage() { this.currentPage = Math.max(1, this.currentPage - 1); },
+      nextPage() { this.currentPage = Math.min(this.totalPages, this.currentPage + 1); },
+
+      sortBy(column) {
+        if (this.sortColumn === column) {
+            this.sortDirection = this.sortDirection === 'asc' ? 'desc' : 'asc';
+        } else {
+            this.sortColumn = column;
+            this.sortDirection = 'asc';
+        }
       },
 
       openLog(log) {
         this.selectedLog = log;
         this.showModal = true;
-        this.$nextTick(() => lucide.createIcons());
+      },
+      
+      toggleFlag(log) {
+        const logInArray = this.logs.find(l => l.id === log.id);
+        if (logInArray) {
+            logInArray.flagged = !logInArray.flagged;
+        }
+      },
+      
+      retryRequest(log) {
+        alert(`Retrying request for user: ${log.user}...\n(This would re-trigger the API call with the same prompt)`);
+        const logInArray = this.logs.find(l => l.id === log.id);
+        if (logInArray) {
+            logInArray.status = 'Success';
+            logInArray.tokens = 500; // Example token count
+            logInArray.cost = logInArray.tokens * this.costPerToken;
+            logInArray.response = "Successfully retried and generated a response.";
+        }
+        this.showModal = false;
       }
     };
   }
@@ -225,4 +304,3 @@
 </script>
 </body>
 </html>
-
