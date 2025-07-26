@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en" x-data="{ sidebarOpen: false }">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Profile Settings – ContraktAI</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/alpinejs" defer></script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700&display=swap" rel="stylesheet">
+  <style>
+    body { font-family: 'Outfit', sans-serif; background-color: #0f172a; }
+    .bg-dark { background-color: #0f172a; }
+    .bg-panel { background-color: #1e293b; }
+    .text-light { color: #f1f5f9; }
+    .text-muted { color: #94a3b8; }
+    .border-dark { border-color: #334155; }
+    .icon { width: 18px; height: 18px; stroke-width: 1.8; }
+    .text-brand { color: #facc15; }
+    .border-brand { border-color: #facc15; }
+    input:focus, textarea:focus, select:focus, button:focus { outline: none; box-shadow: 0 0 0 2px #facc15; border-color: #facc15; }
+    a:hover { color: #facc15; }
+    [x-cloak] { display: none !important; }
+  </style>
+</head>
+
+<body class="text-light bg-dark">
+<div class="flex min-h-screen">
+
+  <!-- Main Application Sidebar -->
+  <aside x-cloak class="fixed z-40 inset-y-0 left-0 w-64 bg-panel shadow-lg sm:relative sm:translate-x-0 transform transition-transform duration-300 ease-in-out" :class="sidebarOpen ? 'translate-x-0' : '-translate-x-full'">
+    <div class="flex flex-col h-full">
+      <div class="flex items-center justify-between h-20 px-6 shrink-0 border-b border-slate-700">
+        <a href="../dashboard.html"><img src="https://placehold.co/160x32/1e293b/facc15?text=ContraktAI&font=outfit" alt="ContraktAI Logo" class="h-8 w-auto" /></a>
+        <button class="sm:hidden" @click="sidebarOpen = false"><i data-lucide="x" class="w-6 h-6 text-light"></i></button>
+      </div>
+      <nav class="flex-1 px-6 py-6 flex flex-col justify-between">
+          <div class="flex flex-col gap-4 text-sm font-medium text-light">
+            <a href="../dashboard.html" class="flex items-center gap-3 p-2 rounded-lg hover:bg-slate-700"><i data-lucide="layout-dashboard" class="icon"></i>Dashboard</a>
+            <a href="#" class="flex items-center gap-3 p-2 rounded-lg hover:bg-slate-700"><i data-lucide="file" class="icon"></i>My Documents</a>
+            <a href="../contract-reviewer.html" class="flex items-center gap-3 p-2 rounded-lg hover:bg-slate-700"><i data-lucide="scan-eye" class="icon"></i>Contract Reviewer</a>
+            <a href="../contract-comparison.html" class="flex items-center gap-3 p-2 rounded-lg hover:bg-slate-700"><i data-lucide="git-compare-arrows" class="icon"></i>Doc Comparison</a>
+            <a href="../custom-clause.html" class="flex items-center gap-3 p-2 rounded-lg hover:bg-slate-700"><i data-lucide="wrench" class="icon"></i>Clause Builder</a>
+            <a href="../legal-mail-gen.html" class="flex items-center gap-3 p-2 rounded-lg hover:bg-slate-700"><i data-lucide="mail" class="icon"></i>Legal Email Gen</a>
+            <a href="../clause-explainer.html" class="flex items-center gap-3 p-2 rounded-lg hover:bg-slate-700"><i data-lucide="file-text" class="icon"></i>Clause Explainer</a>
+            <a href="../multilingual-gen.html" class="flex items-center gap-3 p-2 rounded-lg hover:bg-slate-700"><i data-lucide="languages" class="icon"></i>Multilingual Gen</a>
+        </div>
+        <div>
+            <a href="profile.html" class="flex items-center gap-3 p-2 rounded-lg bg-slate-700 text-brand font-semibold"><i data-lucide="user-cog" class="icon"></i>Settings</a>
+            <a href="#" class="flex items-center gap-3 p-2 rounded-lg text-red-400 hover:bg-red-900/50 hover:text-red-300 mt-2"><i data-lucide="log-out" class="icon"></i>Logout</a>
+        </div>
+      </nav>
+    </div>
+  </aside>
+
+  <!-- Main Content -->
+  <main class="flex-1 p-4 sm:p-8 space-y-6 sm:space-y-8">
+    <!-- Header -->
+    <div class="flex items-center gap-4">
+        <button class="sm:hidden text-light" @click.stop="sidebarOpen = true"><i data-lucide="menu" class="w-7 h-7"></i></button>
+        <div class="flex items-center gap-3">
+            <i data-lucide="user-cog" class="w-8 h-8 text-brand"></i>
+            <div>
+                <h2 class="text-2xl sm:text-3xl font-bold">Account Settings</h2>
+                <p class="text-sm sm:text-base text-muted">Manage your profile, subscription, and notifications.</p>
+            </div>
+        </div>
+    </div>
+      
+    <!-- Settings Dashboard Layout -->
+    <div class="lg:grid lg:grid-cols-12 lg:gap-x-8">
+        <!-- Settings Sidebar -->
+        <aside class="py-6 px-2 sm:px-0 lg:py-0 lg:px-0 lg:col-span-3">
+            <nav class="space-y-1">
+                <a href="profile.html" class="bg-dark text-brand flex items-center px-3 py-2 text-sm font-medium rounded-md">
+                    <i data-lucide="user" class="w-5 h-5 mr-3"></i> Profile
+                </a>
+                <a href="billing.html" class="text-muted hover:bg-dark hover:text-light flex items-center px-3 py-2 text-sm font-medium rounded-md">
+                    <i data-lucide="credit-card" class="w-5 h-5 mr-3"></i> Subscription & Billing
+                </a>
+                <a href="notifications.html" class="text-muted hover:bg-dark hover:text-light flex items-center px-3 py-2 text-sm font-medium rounded-md">
+                    <i data-lucide="bell" class="w-5 h-5 mr-3"></i> Notifications
+                </a>
+            </nav>
+        </aside>
+
+        <!-- Profile Settings Content -->
+        <div class="space-y-6 sm:px-6 lg:px-0 lg:col-span-9">
+            <div class="bg-panel rounded-xl shadow p-6">
+                <h3 class="text-lg font-semibold text-light mb-4">Personal Information</h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div><label class="block text-sm font-medium text-muted mb-1">First Name</label><input type="text" value="Alex" class="w-full bg-dark border border-dark rounded-lg p-2 text-light"></div>
+                    <div><label class="block text-sm font-medium text-muted mb-1">Last Name</label><input type="text" value="Morgan" class="w-full bg-dark border border-dark rounded-lg p-2 text-light"></div>
+                    <div class="md:col-span-2"><label class="block text-sm font-medium text-muted mb-1">Email Address</label><input type="email" value="alex.morgan@example.com" class="w-full bg-dark border border-dark rounded-lg p-2 text-light"></div>
+                </div>
+                <hr class="border-dark my-6">
+                <h3 class="text-lg font-semibold text-light">Change Password</h3>
+                <div class="space-y-4 mt-4">
+                    <div><label class="block text-sm font-medium text-muted mb-1">Current Password</label><input type="password" class="w-full bg-dark border border-dark rounded-lg p-2 text-light"></div>
+                    <div><label class="block text-sm font-medium text-muted mb-1">New Password</label><input type="password" class="w-full bg-dark border border-dark rounded-lg p-2 text-light"></div>
+                    <div><label class="block text-sm font-medium text-muted mb-1">Confirm New Password</label><input type="password" class="w-full bg-dark border border-dark rounded-lg p-2 text-light"></div>
+                </div>
+                <div class="flex justify-end mt-6"><button class="bg-brand text-slate-900 px-4 py-2 rounded-lg text-sm font-semibold hover:bg-amber-500">Update Profile</button></div>
+            </div>
+        </div>
+    </div>
+  </main>
+</div>
+
+<script>
+  lucide.createIcons();
+</script>
+
+</body>
+</html>
